@@ -1,0 +1,24 @@
+@layer components {
+    html, body {
+        height: 100%;
+        margin: 0;
+        background: #d9d9d9;
+    }
+
+    /* header共通 */
+    .header { 
+        background: #000000;
+        min-height: 4rem; /* 64px */
+        display: flex;
+        padding-left: 2rem;
+        align-items: center;
+    }    
+
+    .header .title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: #FFFFFF;
+        line-height: 1.2;
+    }
+}
