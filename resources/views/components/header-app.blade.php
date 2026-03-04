@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header header-app">
     <h1 class="title">HOUSEHOLD BUDGET</h1>
     
     <div>

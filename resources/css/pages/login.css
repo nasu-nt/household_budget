@@ -1,11 +1,4 @@
 @layer components {
-    .login-main {
-    min-height: calc(100vh - 4rem); /* 100vh = ビューポート全体 */
-    display: flex;
-    justify-content: center; /* 横中央 */
-    align-items: center;     /* 縦中央 */
-    box-sizing: border-box; /* 子要素が親依存になる */
-    }
 
     .login-card {
         background: #000000;
@@ -18,7 +11,7 @@
     }
 
     .login-card .title {
-        margin: 0;
+        margin: 0 0 0.25rem;
         text-align: center;
         font-size: 1.25rem;
         font-weight: 700;
@@ -28,7 +21,7 @@
 
     .login-form label { 
         display: inline-block;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.45rem;
         width: 100%;
         color: #d9d9d9;
         font-size: 1rem;
@@ -36,7 +29,7 @@
     }
 
     .email-field, .password-field {
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 
     .login-form .textbox {
@@ -57,19 +50,19 @@
 
     .password-field .textbox {
         width: 100%;
-        padding-right: 3.5rem; /* アイコン分の余白 */
+        padding-right: 3.5rem;  /* アイコン分の余白 */
         box-sizing: border-box;
     }
 
     .password-field .toggle-password {
         position: absolute;
-        top: 50%; /* 要素の「上端」を親要素の中央に置く */
-        transform: translateY(-45%); /* 自分自身の高さの45%分だけ上にずらす(やや下め) */
-        right: 1rem; /* 右端から 0.75rem 内側 */
+        top: 50%;   /* 要素の「上端」を親要素の中央に置く */
+        transform: translateY(-45%);    /* 自分自身の高さの45%分だけ上にずらす(やや下め) */
+        right: 1rem;    /* 右端から 0.75rem 内側 */
 
         display: flex;
-        align-items: center; /* ボタンの中身の位置調整(縦) */
-        justify-content: center; /* ボタンの中身の位置調整(横) */
+        align-items: center;    /* ボタンの中身の位置調整(縦) */
+        justify-content: center;    /* ボタンの中身の位置調整(横) */
 
         border: none;
         padding: 0;
@@ -86,14 +79,14 @@
     .login-form .textbox:focus {
     outline: 0;
     background-color: #FFFFFF;
-    border: 2px solid #2563eb;
+    border: 2px solid #99c5ff;
     }
 
     .login-form .button {
         background: #99c5ff;
         height: auto;
         width: 100%;
-        margin: 1rem 0 0.5rem;
+        margin: 0.75rem 0 0.45rem;
         padding: 1rem 0;
         border: 2px solid #FFFFFF;
         border-radius: 1rem;
@@ -123,8 +116,8 @@
 
     hr {
         width: 100%;
-        margin: 2rem 0 1rem;
-        border-bottom: 1px solid #FFFFFF;
+        margin: 1.8rem 0 0.8rem;
+        border-bottom: 1px solid #919191;
     }
 
     .sign-up {
