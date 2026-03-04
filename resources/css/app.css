@@ -1,8 +1,10 @@
+@import './common/tokens.css';
 @import './common/base.css';
 @import './common/layout.css';
 @import './common/components.css';
 
 @import './pages/login.css';
+@import './pages/register.css';
 
 @tailwind base;
 @tailwind components;
