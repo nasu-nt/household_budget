@@ -1,0 +1,57 @@
+@layer base {
+  :root {
+        /* colors (palette) */
+        --c-black: #000000;
+        --c-black-soft: #111827;
+        --c-gray-dark: #545454;
+        --c-gray: #919191;
+        --c-gray-light: #d9d9d9;
+        --c-white: #ffffff;
+
+        --c-blue-vivid: #2563eb;
+        --c-blue-ice: #99c5ff;
+
+        --c-red-vivid: #ff6b5b;
+        --c-red-pastel: #ee8b8b;
+        --c-orange-pastel: #f3c38c;
+        --c-yellow-light: #f7e7a6;
+
+        --c-green-vivid: #4ca626;
+        --c-green-ultra-light: #f8fff0;
+
+        /* aliases (use these in app CSS) */
+        --c-bg: var(--c-gray-lighte);
+
+        --c-surface: var(--c-white);
+        --c-text: var(--c-black-soft);
+        --c-muted: var(--c-gray-dark);
+
+        --c-border: var(--c-gray-light);
+        --c-border-strong: var(--c-gray);
+
+        --c-textbox: var(--c-white);
+        --c-textbox-focus: var(--c-blue-ice);
+
+        --c-button: var(--c-blue-ice);
+        --c-button-border: var(--c-gray-light);
+
+        --c-primary: var(--c-blue-vivid);
+        --c-primary-weak: var(--c-blue-ice);
+
+        --c-warning: var(--c-red-vivid);
+
+        --c-success: var(--c-green-vivid);
+        --c-success-bg: var(--c-green-ultra-light);
+
+        /* calendar */
+        --all-good: var(--c-white);
+        --c-a-bit-much: var(--c-yellow-ligh);
+        --c-over-budget: var(--c-orange-pastel);
+        --c-over-limit: var(--c-red-pastel);
+
+
+        /* radius / spacing */
+        --r-md:10px;
+        --r-sm:6px;
+    }
+}
