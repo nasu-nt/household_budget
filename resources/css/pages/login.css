@@ -1,0 +1,112 @@
+@layer components {
+
+    /* 色指定 */
+    main.login {
+        --c-surface: var(--c-black);
+        --c-text: var(--c-white);
+        --c-muted: var(--c-gray-light);
+        --c-border: var(--c-gray);
+        --c-border-strong: var(--c-white);
+    }
+
+    .login-card {
+        background: var(--c-surface);
+        height: min(33rem, calc(100% - 1rem));
+        width: min(26rem, calc(100% - 1rem));
+        padding: 1.5rem 2rem 2rem; 
+        box-sizing: border-box; /* 子要素が親依存になる */
+        border: 4px solid var(--c-border-strong);
+        border-radius: 0.8rem;
+    }
+
+    .login-card .title {
+        margin: 0 0 0.25rem;
+        text-align: center;
+        font-size: var(--fs-page-title);
+        font-weight: 700;
+        color: var(--c-text);
+        line-height: 1.5; 
+    }
+
+    .login-form label { 
+        display: inline-block;
+        margin-bottom: 0.45rem;
+        width: 100%;
+        color: var(--c-muted);
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    .login-form .email-field,
+    .login-form .password-field {
+        margin-bottom: 0.75rem;
+    }
+
+    .login-form .textbox {
+        height: 2.2rem;
+        padding: 3px 7px;
+        background-color: var(--c-textbox);
+        border-radius: 5px;
+        border: 2px solid var(--c-border);
+    }
+
+    .login-form .textbox {
+        width: 100%;
+    }
+
+    .login-form .textbox:focus {
+        outline: 0;
+        background-color: var(--c-textbox);
+        border: 2px solid var(--c-textbox-focus);
+    }
+
+    .login-form .button {
+        background: var(--c-button);
+        height: auto;
+        width: 100%;
+        margin: 0.75rem 0 0.45rem;
+        padding: 1rem 0;
+        border: 2px solid var(--c-button-border);
+        border-radius: 0.75rem;
+        font-size: var(--fs-md);
+        line-height: 1.2; 
+    }
+
+    .login-form .error-message {
+        display: block;
+        text-align: center;
+        margin: 0;
+        font-size: var(--fs-sm);
+        color: var(--c-warning);
+        line-height: 1.4;
+    }
+
+    .login-form .is-invalid {
+        border: 2px solid var(--c-warning);
+    }
+
+    .login-form .forgot-password {
+        display: block;
+        text-align: center;
+        margin-top: 0.5rem;
+        font-size: var(--fs-sm);
+        color: var(--c-primary);
+    }
+
+    .login-form hr {
+        width: 100%;
+        margin: 1.8rem 0 0.8rem;
+        border-bottom: 1px solid var(--c-border);
+    }
+
+    .login-form .sign-up {
+        display: block;
+        text-align: center;
+        font-size: var(--fs-sm);
+        color: var(--c-muted);
+    }
+
+    .login-form .sign-up a{
+        color: var(--c-primary-weak);
+    }
+}
