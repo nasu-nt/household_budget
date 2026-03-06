@@ -22,7 +22,7 @@
     .login-card .title {
         margin: 0 0 0.25rem;
         text-align: center;
-        font-size: 1.25rem;
+        font-size: var(--fs-page-title);
         font-weight: 700;
         color: var(--c-text);
         line-height: 1.5; 
@@ -37,58 +37,27 @@
         text-align: left;
     }
 
-    .email-field, .password-field {
+    .login-form .email-field,
+    .login-form .password-field {
         margin-bottom: 0.75rem;
     }
 
     .login-form .textbox {
-        background-color: var(--c-textbox);
+        height: 2.2rem;
         padding: 3px 7px;
+        background-color: var(--c-textbox);
         border-radius: 5px;
         border: 2px solid var(--c-border);
     }
 
-    .email-field .textbox {
+    .login-form .textbox {
         width: 100%;
-    }
-
-    .password-field {
-        position: relative;
-        width: 100%;
-    }
-
-    .password-field .textbox {
-        width: 100%;
-        padding-right: 3.5rem;  /* アイコン分の余白 */
-        box-sizing: border-box;
-    }
-
-    .password-field .toggle-password {
-        position: absolute;
-        top: 50%;   /* 要素の「上端」を親要素の中央に置く */
-        transform: translateY(-45%);    /* 自分自身の高さの45%分だけ上にずらす(やや下め) */
-        right: 1rem;    /* 右端から 0.75rem 内側 */
-
-        display: flex;
-        align-items: center;    /* ボタンの中身の位置調整(縦) */
-        justify-content: center;    /* ボタンの中身の位置調整(横) */
-
-        border: none;
-        padding: 0;
-        margin: 0;
-        cursor: pointer;
-    }
-
-    #toggle-password-icon {
-        width: 1.6rem;
-        height: 1.6rem;
-        display: block;
     }
 
     .login-form .textbox:focus {
-    outline: 0;
-    background-color: var(--c-textbox);
-    border: 2px solid var(--c-textbox-focus);
+        outline: 0;
+        background-color: var(--c-textbox);
+        border: 2px solid var(--c-textbox-focus);
     }
 
     .login-form .button {
@@ -99,43 +68,45 @@
         padding: 1rem 0;
         border: 2px solid var(--c-button-border);
         border-radius: 0.75rem;
-        font-size: 1rem;
+        font-size: var(--fs-md);
         line-height: 1.2; 
     }
 
-    .error-message {
+    .login-form .error-message {
         display: block;
         text-align: center;
         margin: 0;
-        font-size: 0.85rem;
-        color: var(--c-warnin);
+        font-size: var(--fs-sm);
+        color: var(--c-warning);
         line-height: 1.4;
     }
 
     .login-form .is-invalid {
-        border: 2px solid var(--c-warnin);
+        border: 2px solid var(--c-warning);
     }
 
-    .forgot-password {
+    .login-form .forgot-password {
         display: block;
         text-align: center;
         margin-top: 0.5rem;
+        font-size: var(--fs-sm);
         color: var(--c-primary);
     }
 
-    hr {
+    .login-form hr {
         width: 100%;
         margin: 1.8rem 0 0.8rem;
         border-bottom: 1px solid var(--c-border);
     }
 
-    .sign-up {
+    .login-form .sign-up {
         display: block;
         text-align: center;
+        font-size: var(--fs-sm);
         color: var(--c-muted);
     }
 
-    .sign-up a{
+    .login-form .sign-up a{
         color: var(--c-primary-weak);
     }
 }

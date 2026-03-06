@@ -17,16 +17,13 @@ Emailをログイン画面に渡して初期値にしてもいい。
             <h2 class="title">Sign in</h2>
 
             <div class="login-form">
-                <form action="" method="">
-                {{-- <form method="POST" action="{{ route('login') }}"> --}}
+                <form method="POST" action="{{ route('login') }}">
                     @csrf {{-- CSRF攻撃対策 --}}
 
                     {{-- Email --}}
                     <div class="email-field">
                         <x-input-label for="email" value="Email" />
-                        <x-text-input
-                            id="email"
-                            class="textbox"
+                        <x-text-input id="email" class="textbox"
                             type="email"
                             name="email"
                             :value="old('email')"
@@ -41,9 +38,7 @@ Emailをログイン画面に渡して初期値にしてもいい。
                         <x-input-label for="password" value="Password" />
 
                         <div class="password-field">
-                            <x-text-input
-                                id="password"
-                                class="textbox {{ $error ? 'is-invalid' : '' }}"
+                            <x-text-input id="password" class="textbox {{ $error ? 'is-invalid' : '' }}"
                                 {{-- {{ $errors->has('email') || $errors->has('password') ? 'is-invalid' : '' }}" --}}
                                 type="password"
                                 name="password"
@@ -51,9 +46,13 @@ Emailをログイン画面に渡して初期値にしてもいい。
                                 autocomplete="current-password"
                             />
                             
-                        <button type="button" class="toggle-password" id="toggle-password" aria-label="Toggle password visibility">
-                            <img src="/images/icons/eye-slash.svg" alt="" id="toggle-password-icon">
-                        </button>
+                            <button type="button" class="toggle-password"
+                                data-toggle-password
+                                data-target="#password"
+                                aria-label="Show password"
+                            >
+                                <img src="/images/icons/eye-slash.svg" alt="" id="toggle-password-icon">
+                            </button>
                     </div>
 
                     {{-- Submit --}}
