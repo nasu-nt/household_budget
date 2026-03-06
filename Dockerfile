@@ -1,3 +1,15 @@
+# ---------- Vite build stage ----------
+FROM node:22 AS frontend
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# ---------- PHP / Apache stage ----------
 FROM php:8.4-apache
 
 RUN apt-get update && apt-get install -y \
@@ -30,7 +42,10 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction -vvv
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Viteで生成した build をコピー
+COPY --from=frontend /app/public/build /var/www/html/public/build
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
