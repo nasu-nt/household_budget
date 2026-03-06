@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -28,10 +28,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 
 WORKDIR /var/www/html
 
-# 先にアプリ全体をコピー
 COPY . /var/www/html
 
-# Laravel本体がある状態でcomposer install
 RUN composer install --no-dev --optimize-autoloader --no-interaction -vvv
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
