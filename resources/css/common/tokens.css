@@ -1,6 +1,11 @@
 @layer base {
   :root {
-        /* colors (palette) */
+
+        /*
+        /* color
+        /*
+
+        /* color palette */
         --c-black: #000000;
         --c-black-soft: #111827;
         --c-gray-dark: #545454;
@@ -20,7 +25,9 @@
         --c-green-ultra-light: #f8fff0;
 
         /* aliases (use these in app CSS) */
-        --c-bg: var(--c-gray-lighte);
+        --c-bg: var(--c-gray-light);
+        --c-header-bg: var(--c-black);
+        --c-site-title: var(--c-white);
 
         --c-surface: var(--c-white);
         --c-text: var(--c-black-soft);
@@ -49,9 +56,21 @@
         --c-over-budget: var(--c-orange-pastel);
         --c-over-limit: var(--c-red-pastel);
 
+        /*
+        /* font size
+        /*
 
-        /* radius / spacing */
-        --r-md:10px;
-        --r-sm:6px;
+        /* semantic (役割) */
+        --fs-site-title: 1.5rem;     /* ヘッダータイトル（サイト名） */
+        --fs-page-title: 1.25rem;    /* ページタイトル */
+        --fs-section-title: 1.2rem;  /* 項目ごとのタイトル */
+
+        /* scale (汎用サイズ) */
+        --fs-xl: 1.3rem;   /* 特大 */
+        --fs-lg: 1.2rem;   /* 大きい */
+        --fs-md: 1rem;     /* 普通 */
+        --fs-sm: 0.9rem;  /* やや小さい */
+        --fs-xs: 0.75rem;  /* 小さい */
+
     }
 }

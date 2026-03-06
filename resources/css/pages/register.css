@@ -1,0 +1,117 @@
+@layer components {
+
+    .register-card {
+        background: var(--c-surface);
+        height: min(36rem, calc(100% - 1rem));
+        width: min(38rem, calc(100% - 1rem));
+        padding: 1.75rem 2rem 2rem; 
+        box-sizing: border-box; /* 子要素が親依存になる */
+        border: 4px solid var(--c-border-strong);
+        border-radius: 0.8rem;
+        color: var(--c-black-soft);
+        text-align: center;
+    }
+
+    .register-card .title {
+        margin-bottom: 1.5rem;
+        font-size: var(--fs-page-title);
+        font-weight: 700;
+        line-height: 1.5; 
+    }
+
+    .register-form {
+        margin: 0 auto;
+    }
+
+    .input-field {
+        margin-right: 2rem;
+    }
+
+    .register-form .name-block,
+    .register-form .email-block,
+    .register-form .password-block  {
+        margin-bottom: 1rem;
+    }
+
+    .password-confirmation-block {
+        margin-bottom: 0.25rem;
+    }
+
+    .register-form .field-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;  /* ラベルと入力の間隔 */
+    }
+    
+    /* ラベルは右揃え & 幅固定 */
+    .register-form .field-label {
+        display: inline-block;
+        width: 30%;
+        text-align: right;
+        font-size: var(--fs-md);
+        flex: 0 0 auto;
+    }
+
+    /* 入力は左揃え（デフォ） */
+    .register-form .textbox {
+        min-width: 0;   /* 横幅が狭い時に崩れにくい */
+        height: 2.2rem;
+        padding: 3px 7px;
+        background-color: var(--c-textbox);
+        border-radius: 5px;
+        border: 2px solid var(--c-border);
+    }
+
+    .register-form .textbox:focus {
+        outline: 0;
+        background-color: var(--c-textbox);
+        border: 2px solid var(--c-textbox-focus);
+    }
+
+    .form-input--sm { width: 40%; }  /* Display Name用 */
+    .form-input--md { width: 70%; }
+    .form-input--lg { width: 100%; }  /* Email他 */
+
+    .register-form .button {
+        background: var(--c-button);
+        height: auto;
+        width: 22rem;
+        margin: 1.25rem 0 0.7rem;
+        padding: 1rem 0;
+        border: 2px solid var(--c-button-border);
+        border-radius: 0.75rem;
+        font-size: var(--fs-md);
+        line-height: 1.2; 
+    }
+
+    .register-form .error-message {
+        display: block;
+        text-align: center;
+        margin: 0;
+        font-size: var(--fs-sm);
+        color: var(--c-warning);
+        line-height: 1.4;
+    }
+
+    .register-form .is-invalid {
+        border: 2px solid var(--c-warning);
+    }
+
+    .register-form .password-hint {
+        font-size: var(--fs-xs);
+        color: var(--c-muted);
+        line-height: 1.4;
+    }
+
+    .register-form .log-in {
+        display: block;
+        font-size: var(--fs-sm);
+        color: var(--c-muted);
+    }
+
+    .register-form .log-in a{
+        color: var(--c-primary);
+    }
+
+}
