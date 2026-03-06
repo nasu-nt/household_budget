@@ -1,0 +1,42 @@
+@layer components {
+
+    /* パスワード表示ボタン */
+    .password-field,
+    .password-confirmation-field {
+        position: relative;
+        width: 100%;
+    }
+
+    /* 入力欄：右にアイコン分の余白を確保 */
+    .password-field .textbox,
+    .password-confirmation-field .textbox {
+        width: 100%;
+        box-sizing: border-box;
+        padding-right: 3.5rem;    /* クリック領域 */
+    }
+
+    /* ボタンを input の上に重ねる */
+    .toggle-password {
+        position: absolute;
+        right: 0.75rem; /* inputの右端から内側 */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2.25rem;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .toggle-password img {
+        width: 1.6rem;
+        height: 1.6rem;
+        display: block;
+    }
+
+}

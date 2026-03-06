@@ -1,0 +1,33 @@
+@layer components {
+    html, body {
+        height: 100%;
+        margin: 0;
+        background: var(--c-bg);
+    }
+
+    /* header共通 */
+    .header { 
+        background: var(--c-header-bg);
+        min-height: 4rem;
+        display: flex;
+        padding-left: 2rem;
+        align-items: center;
+    }    
+
+    .header .title {
+        margin: 0;
+        font-size: var(--fs-site-title);
+        font-weight: 900;
+        color: var(--c-site-title);
+        line-height: 1.2;
+    }
+
+    .guest-main {
+        min-height: calc(100vh - 4rem); /* 100vh = ビューポート全体 */
+        display: flex;
+        justify-content: center;    /* 横中央 */
+        align-items: center;        /* 縦中央 */
+        box-sizing: border-box;     /* 子要素が親依存になる */
+    }
+
+}

@@ -1,48 +1,84 @@
-@extends('layouts.guest')
-
-{{-- タイトル(タブ名)を変えたくなければなくてもいい --}}
-@section('title', 'Sign in')
+{{-- resources/views/auth/login.blade.php --}}
+<x-guest-layout>
+    <x-slot:title>Sign in</x-slot:title>
 
 {{-- テスト用 --}}
 @php
-    $error = false;
+    $error = 0;
 @endphp
-{{--         --}}
 
-@section('content')
-  <main class="login-main">
-    <div class="login-card">
-      <h2 class="title">Sign in</h2>
-      <div class="login-form">
-        <form action="" method="">
-          <div class="email-field">
-              <label>Email</label>
-              <input class="textbox" type="email" id="email" name="email" required>
-          </div>
-          <label>Password</label>
-          <div class="password-field">
-            <input
-              class="textbox @if($error) is-invalid @endif"
-              type="password" id="password" name="password" required
-            >
-            <button type="button" class="toggle-password" id="toggle-password">
-                <img src="/images/icons/eye-slash.svg" alt="" id="toggle-password-icon">
-            </button>
-          </div>
-          <input class="button" type="submit" value="Sign in">
-        </form>
-      </div>
+{{-- 
+PWリセット後、"Password has been reset. Please sign in."のトースト出す
+Emailをログイン画面に渡して初期値にしてもいい。
+--}}
 
-      @if ($error)
-        <p class="error-message" id="auth-error">The email address or password is incorrect.</p>
-      @endif
+    <main class="guest-main login">
+        <div class="login-card">
+            <h2 class="title">Sign in</h2>
 
-      <a class="forgot-password" href="">Forgot your password?</a>
-      <hr>
-      <div class="sign-up">
-        <span>Don’t have an account?</span>
-        <a href="">Sign up</a>
-      </div>    
-        
-  </main>
-@endsection
+            <div class="login-form">
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf {{-- CSRF攻撃対策 --}}
+
+                    {{-- Email --}}
+                    <div class="email-field">
+                        <x-input-label for="email" value="Email" />
+                        <x-text-input id="email" class="textbox"
+                            type="email"
+                            name="email"
+                            :value="old('email')"
+                            required
+                            autofocus
+                            autocomplete="username"
+                        />
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="password-block">
+                        <x-input-label for="password" value="Password" />
+
+                        <div class="password-field">
+                            <x-text-input id="password" class="textbox {{ $error ? 'is-invalid' : '' }}"
+                                {{-- {{ $errors->has('email') || $errors->has('password') ? 'is-invalid' : '' }}" --}}
+                                type="password"
+                                name="password"
+                                required
+                                autocomplete="current-password"
+                            />
+                            
+                            <button type="button" class="toggle-password"
+                                data-toggle-password
+                                data-target="#password"
+                                aria-label="Show password"
+                            >
+                                <img src="/images/icons/eye-slash.svg" alt="" id="toggle-password-icon">
+                            </button>
+                    </div>
+
+                    {{-- Submit --}}
+                    <input class="button" type="submit" value="Sign in">
+                </form>
+            </div>
+
+            {{-- Auth error --}}
+            @if ($error)
+            {{-- @if ($errors->has('email')) --}}
+                <p class="error-message" id="auth-error">
+                    The email address or password is incorrect.
+                </p>
+            @endif
+
+            <a class="forgot-password" href="{{ route('password.request') }}">
+                Forgot your password?
+            </a>
+
+            <hr>
+
+            <div class="sign-up">
+                <span>Don’t have an account?</span>
+                <a href="{{ route('register') }}">Sign up</a>
+            </div>
+        </div>
+    </main>
+
+</x-guest-layout>
