@@ -17,29 +17,20 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// ログインエラー文の削除
+// 各フォームのエラー文の削除
 document.addEventListener('DOMContentLoaded', function () {
-    const passwordInput = document.getElementById('password');
-    const errorMessages = document.querySelectorAll('.error-message');
+    const inputs = document.querySelectorAll('[data-error-target]');
 
-    if (passwordInput) {
-        passwordInput.addEventListener('input', function () {
-            passwordInput.classList.remove('is-invalid');
+    inputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+            input.classList.remove('is-invalid');
 
-            errorMessages.forEach(function (message) {
-                message.style.display = 'none';
-            });
+            const key = input.dataset.errorTarget;
+            const errorMessage = document.querySelector(`[data-error-message="${key}"]`);
+
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
         });
-    }
-
-    const confirmPasswordInput = document.getElementById('password_confirmation');
-    if(confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', function () {
-            confirmPasswordInput.classList.remove('is-invalid');
-
-            errorMessages.forEach(function (message) {
-                message.style.display = 'none';
-            });
-        });
-    }
+    });
 });
