@@ -2,11 +2,6 @@
 <x-guest-layout>
     <x-slot:title>Sign in</x-slot:title>
 
-{{-- テスト用 --}}
-@php
-    $error = 0;
-@endphp
-
 {{-- 
 PWリセット後、"Password has been reset. Please sign in."のトースト出す
 Emailをログイン画面に渡して初期値にしてもいい。
@@ -21,31 +16,35 @@ Emailをログイン画面に渡して初期値にしてもいい。
                     @csrf {{-- CSRF攻撃対策 --}}
 
                     {{-- Email --}}
-                    <div class="email-field">
-                        <x-input-label for="email" value="Email" />
-                        <x-text-input id="email" class="textbox"
-                            type="email"
-                            name="email"
-                            :value="old('email')"
-                            required
-                            autofocus
-                            autocomplete="username"
-                        />
+                    <div class="email-block">
+                        <label for="email">Email</label>
+                        <div class="email-field">
+                            <input id="email" class="textbox @error('email') is-invalid @enderror"
+                                type="email"
+                                name="email"
+                                required
+                                autofocus
+                                autocomplete="username"
+                                value="{{ old('email') }}"
+                                data-error-target="email"
+                            />
+                        </div>
+                        @error('email')
+                            <p class="error-message" data-error-message="email">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Password --}}
                     <div class="password-block">
-                        <x-input-label for="password" value="Password" />
-
+                        <label for="password">Password</label>
                         <div class="password-field">
-                            <x-text-input id="password" class="textbox {{ $error ? 'is-invalid' : '' }}"
-                                {{-- {{ $errors->has('email') || $errors->has('password') ? 'is-invalid' : '' }}" --}}
+                            <input id="password" class="textbox @error('password') is-invalid @enderror"
                                 type="password"
                                 name="password"
                                 required
                                 autocomplete="current-password"
+                                data-error-target="password"
                             />
-                            
                             <button type="button" class="toggle-password"
                                 data-toggle-password
                                 data-target="#password"
@@ -53,6 +52,10 @@ Emailをログイン画面に渡して初期値にしてもいい。
                             >
                                 <img src="/images/icons/eye-slash.svg" alt="" id="toggle-password-icon">
                             </button>
+                        </div>
+                        @error('password')
+                            <p class="error-message" data-error-message="password">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Submit --}}
@@ -61,12 +64,13 @@ Emailをログイン画面に渡して初期値にしてもいい。
             </div>
 
             {{-- Auth error --}}
-            @if ($error)
-            {{-- @if ($errors->has('email')) --}}
-                <p class="error-message" id="auth-error">
-                    The email address or password is incorrect.
-                </p>
-            @endif
+            @error('auth')
+                <p class="error-message auth-error">{{ $message }}</p>
+            @enderror
+
+            @error('throttle')
+                <p class="error-message auth-error">{{ $message }}</p>
+            @enderror
 
             <a class="forgot-password" href="{{ route('password.request') }}">
                 Forgot your password?
