@@ -2,12 +2,7 @@
 <x-guest-layout>
     <x-slot:title>Register</x-slot:title>
 
-{{-- テスト用 --}}
-@php
-    $error = 0;
-@endphp
-
-    <div class="guest-main register">
+    <main class="guest-main register">
         <div class="register-card">
             <h2 class="title">Create an Account</h2>
             <div class="register-form">
@@ -16,46 +11,58 @@
 
                     <div class="input-field">
 
-                        <!-- Display Name -->
+                        {{-- Display Name --}}
                         <div class="name-block">
                             <div class="field-row">
-                                <x-input-label for="name" class="field-label" :value="__('Display Name')" />
-                                <x-text-input id="name" class="textbox form-input--sm" 
+                                <label for="name">Display Name</label>
+                                <input id="name"
+                                    class="textbox form-input--sm @error('name') is-invalid @enderror" 
                                     type="text"
                                     name="name"
-                                    :value="old('name')"
                                     required
                                     autofocus
+                                    value="{{ old('name') }}"
+                                    maxlength="255"
+                                    data-error-target="name"
                                 />
                             </div>
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                            @error('name')
+                                <p class="error-message" data-error-message="name">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- Email Address -->
+                        {{-- Email Address --}}
                         <div class="email-block">
                             <div class="field-row">
-                                <x-input-label for="email" class="field-label" :value="__('Email')" />
-                                <x-text-input id="email" class="textbox form-input--lg"
+                                <label for="email">Email</label>
+                                <input id="email"
+                                    class="textbox form-input--lg @error('email') is-invalid @enderror" 
                                     type="email"
                                     name="email"
-                                    :value="old('email')"
                                     required
                                     autocomplete="username" {{-- ブラウザやパスワードマネージャに「この欄はユーザー名（ログインID）」って教える --}}
-                                    required
+                                    value="{{ old('email') }}"
+                                    maxlength="255"
+                                    data-error-target="email"
                                 />
                             </div>
-                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                            @error('email')
+                                <p class="error-message" data-error-message="email">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- Password -->
+                        {{-- Password --}}
                         <div class="password-block">
                             <div class="field-row">
-                                <x-input-label for="password" class="field-label" :value="__('Password')" />
+                                <label for="password">Password</label>
                                 <div class="password-field">
-                                    <x-text-input id="password" class="textbox form-input--lg {{ $error ? 'is-invalid' : '' }}"
+                                    <input id="password"
+                                        class="textbox form-input--lg @error('password') is-invalid @enderror" 
                                         type="password"
                                         name="password"
-                                        autocomplete="new-password" required
+                                        required
+                                        autocomplete="new-password"
+                                        data-error-target="password"
                                     />
                                     <button type="button" class="toggle-password"
                                         data-toggle-password
@@ -66,18 +73,23 @@
                                     </button>
                                 </div>
                             </div>
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                            @error('password')
+                                <p class="error-message" data-error-message="password">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- Confirm Password -->
+                        {{-- Confirm Password --}}
                         <div class="password-confirmation-block">
                             <div class="field-row">
-                                <x-input-label for="password_confirmation" class="field-label" :value="__('Confirm Password')" />
+                                <label for="password_confirmation">Confirm Password</label>
                                 <div class="password-confirmation-field">
-                                    <x-text-input id="password_confirmation" class="textbox form-input--lg {{ $error ? 'is-invalid' : '' }}"
+                                    <input id="password_confirmation"
+                                        class="textbox form-input--lg @error('password_confirmation') is-invalid @enderror"
                                         type="password"
                                         name="password_confirmation"
-                                        autocomplete="new-password" required
+                                        required
+                                        autocomplete="new-password"
+                                        data-error-target="password_confirmation"
                                     />
                                     <button type="button" class="toggle-password"
                                         data-toggle-password
@@ -88,15 +100,11 @@
                                     </button>
                                 </div>
                             </div>
-                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                            @error('password_confirmation')
+                                <p class="error-message" data-error-message="password_confirmation">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div> {{-- end input-field --}}
-
-                    @if ($error)
-                        <p class="error-message" id="password-error">
-                            Passwords do not match. Please try again.
-                        </p>
-                    @endif
                     
                     <p class="password-hint">
                         Use at least 8 characters. A mix of letters, numbers, and symbols is recommended.
@@ -104,14 +112,14 @@
                     
                     {{-- Submit --}}
                     <input class="button" type="submit" value="Register">
-
-                    <div class="log-in">
-                        <span>Already have an account?</span>
-                        <a href="{{ route('login') }}">Log in</a>
-                    </div>
-
                 </form>
+
+                <div class="log-in">
+                    <span>Already have an account?</span>
+                    <a href="{{ route('login') }}">Log in</a>
+                </div>
+
             </div>
         </div>
-    </div>
+    </main>
 </x-guest-layout>

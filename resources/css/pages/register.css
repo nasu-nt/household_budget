@@ -41,11 +41,11 @@
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 1.5rem;  /* ラベルと入力の間隔 */
+        gap: 5%;  /* ラベルと入力の間隔 */
     }
     
     /* ラベルは右揃え & 幅固定 */
-    .register-form .field-label {
+    .register-form label {
         display: inline-block;
         width: 30%;
         text-align: right;
@@ -87,13 +87,14 @@
 
     .register-form .error-message {
         display: block;
-        text-align: center;
-        margin: 0;
-        font-size: var(--fs-sm);
+        text-align: left;
+        margin-left: 35%;
+        width: 65%;
+        font-size: var(--fs-xs);
         color: var(--c-warning);
-        line-height: 1.4;
+        line-height: 1.5;
     }
-
+    
     .register-form .is-invalid {
         border: 2px solid var(--c-warning);
     }
@@ -104,13 +105,13 @@
         line-height: 1.4;
     }
 
-    .register-form .log-in {
+    .register-card .log-in {
         display: block;
         font-size: var(--fs-sm);
         color: var(--c-muted);
     }
 
-    .register-form .log-in a{
+    .register-card .log-in a{
         color: var(--c-primary);
     }
 
