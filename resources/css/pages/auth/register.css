@@ -23,7 +23,7 @@
         margin: 0 auto;
     }
 
-    .input-field {
+    .register-form .input-field {
         margin-right: 2rem;
     }
 
@@ -33,7 +33,7 @@
         margin-bottom: 1rem;
     }
 
-    .password-confirmation-block {
+    .register-form .password-confirmation-block {
         margin-bottom: 0.25rem;
     }
 
@@ -69,14 +69,14 @@
         border: 2px solid var(--c-textbox-focus);
     }
 
-    .form-input--sm { width: 40%; }  /* Display Name用 */
-    .form-input--md { width: 70%; }
-    .form-input--lg { width: 100%; }  /* Email他 */
+    .register-form .form-input--sm { width: 40%; }  /* Display Name用 */
+    .register-form .form-input--md { width: 70%; }
+    .register-form .form-input--lg { width: 100%; }  /* Email他 */
 
     .register-form .button {
         background: var(--c-button);
         height: auto;
-        width: 22rem;
+        width: 20rem;
         margin: 1.25rem 0 0.7rem;
         padding: 1rem 0;
         border: 2px solid var(--c-button-border);
@@ -101,14 +101,14 @@
 
     .register-form .password-hint {
         font-size: var(--fs-xs);
-        color: var(--c-muted);
+        color: var(--c-subtle);
         line-height: 1.4;
     }
 
     .register-card .log-in {
         display: block;
         font-size: var(--fs-sm);
-        color: var(--c-muted);
+        color: var(--c-subtle);
     }
 
     .register-card .log-in a{
