@@ -32,6 +32,7 @@
         --c-surface: var(--c-white);
         --c-text: var(--c-black-soft);
         --c-muted: var(--c-gray-dark);
+        --c-subtle: var(--c-gray);
 
         --c-border: var(--c-gray-light);
         --c-border-strong: var(--c-gray);

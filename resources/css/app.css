@@ -3,8 +3,9 @@
 @import './common/layout.css';
 @import './common/components.css';
 
-@import './pages/login.css';
-@import './pages/register.css';
+@import './pages/auth/login.css';
+@import './pages/auth/register.css';
+@import './pages/auth/forgot-password.css';
 
 @tailwind base;
 @tailwind components;
