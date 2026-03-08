@@ -1,33 +1,48 @@
-@extends('layouts.guest')
+<x-guest-layout>
+    <x-slot:title>Forgot your password?</x-slot:title>
 
-{{-- タイトル(タブ名)を変えたくなければなくてもいい --}}
-@section('title', 'Sign in')
+    <main class="guest-main forgot-password">
+        <div class="forgot-password-card">
 
-{{-- テスト用 --}}
-@php
-    $error = false;
-@endphp
-{{--         --}}
+            <h2 class="title">Forgot your password?</h2>
+            <p class="description">
+                Enter your email address and we’ll send you a password reset link.
+            </p>
 
-@section('content')
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+            <div class="forgot-password-form">
+                <form method="POST" action="{{ route('password.email') }}">
+                    @csrf
 
-    <form method="POST" action="">
-        @csrf
+                    {{-- Email Address --}}
+                    <div class="email-field">
+                        <label for="email">Email</label>
+                        <input id="email"
+                            class="textbox @error('email') is-invalid @enderror"
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            required
+                            autofocus
+                        >
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        @error('email')
+                            <div class="error-message">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="button">Send reset link</button>
+
+                </form>
+            </div>
+
+            @if (session('status'))
+                <div class="status-message">
+                    {{ session('status') }}
+                </div>
+            @endif
         </div>
+    </main>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-@endsection
+</x-guest-layout>
