@@ -180,7 +180,7 @@ docker run --rm \
 -v "$PWD":/var/www/html \
 -w /var/www/html \
 laravelsail/php84-composer:latest \
-php artisan sail:install --with=mariadb,redis,mailpit
+php artisan sail:install --with=pgsql,redis,mailpit
 ```
 
 ※”--with=”以降は必要に応じて変更。
