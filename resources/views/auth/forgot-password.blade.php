@@ -32,7 +32,7 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="button">Send reset link</button>
+                    <input class="button" type="submit" value="Send reset link">
 
                 </form>
             </div>
