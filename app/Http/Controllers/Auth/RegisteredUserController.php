@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        event(new Registered($user));   // 今は実装予定なし
+        event(new Registered($user)); // VerifyEmailとかの処理を入れると思うけど今は実装予定なし
 
         Auth::login($user);
 
