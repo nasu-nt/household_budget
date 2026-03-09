@@ -20,9 +20,10 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libpq-dev \
     && docker-php-ext-install \
         pdo \
-        pdo_mysql \
+        pdo_pgsql \
         mbstring \
         zip \
         exif \
@@ -40,16 +41,21 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 
 WORKDIR /var/www/html
 
+# アプリ本体をコピー
 COPY . /var/www/html
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Composer のキャッシュを効かせやすくする
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Viteで生成した build をコピー
+# Viteで生成したビルド成果物を反映
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
+# Laravel の実行に必要な権限
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Render のデフォルト公開ポート 10000 に合わせる
 RUN sed -i 's/80/10000/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
 EXPOSE 10000
 
