@@ -1,0 +1,76 @@
+@layer base {
+  :root {
+    /*
+     * color
+     */
+
+    /* color palette */
+    --c-black: #000000;
+    --c-black-soft: #111827;
+    --c-gray-dark: #545454;
+    --c-gray: #919191;
+    --c-gray-light: #d9d9d9;
+    --c-white: #ffffff;
+
+    --c-blue-vivid: #2563eb;
+    --c-blue-ice: #99c5ff;
+
+    --c-red-vivid: #ff6b5b;
+    --c-red-pastel: #ee8b8b;
+    --c-orange-pastel: #f3c38c;
+    --c-yellow-light: #f7e7a6;
+
+    --c-green-vivid: #4ca626;
+    --c-green-ultra-light: #f8fff0;
+
+    /* aliases (use these in app CSS) */
+    --c-bg: var(--c-gray-light);
+    --c-header-bg: var(--c-black);
+    --c-site-title: var(--c-white);
+
+    --c-surface: var(--c-white);
+    --c-text: var(--c-black-soft);
+    --c-muted: var(--c-gray-dark);
+    --c-subtle: var(--c-gray);
+
+    --c-border: var(--c-gray-light);
+    --c-border-strong: var(--c-gray);
+
+    --c-textbox: var(--c-white);
+    --c-textbox-focus: var(--c-blue-ice);
+
+    --c-button: var(--c-blue-ice);
+    --c-button-text: var(--c-black-soft);
+    --c-button-border: var(--c-gray-light);
+
+    --c-primary: var(--c-blue-vivid);
+    --c-primary-weak: var(--c-blue-ice);
+
+    --c-warning: var(--c-red-vivid);
+
+    --c-success: var(--c-green-vivid);
+    --c-success-bg: var(--c-green-ultra-light);
+
+    /* calendar */
+    --c-all-good: var(--c-white);
+    --c-a-bit-much: var(--c-yellow-light);
+    --c-over-budget: var(--c-orange-pastel);
+    --c-over-limit: var(--c-red-pastel);
+
+    /*
+     * font size
+     */
+
+    /* semantic */
+    --fs-site-title: 1.5rem;
+    --fs-page-title: 1.25rem;
+    --fs-section-title: 1.2rem;
+
+    /* scale */
+    --fs-xl: 1.3rem;
+    --fs-lg: 1.2rem;
+    --fs-md: 1rem;
+    --fs-sm: 0.9rem;
+    --fs-xs: 0.75rem;
+  }
+}

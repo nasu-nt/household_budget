@@ -1,0 +1,70 @@
+@use '../components/auth-card' as card;
+@use '../components/auth-form' as form;
+
+@layer components {
+
+  /* 色指定 */
+  main.login {
+    --c-surface: var(--c-black);
+    --c-text: var(--c-white);
+    --c-muted: var(--c-gray-light);
+    --c-border: var(--c-gray);
+    --c-border-strong: var(--c-white);
+  }
+
+  .login-card {
+    @include card.auth-card(33rem, 24rem, 1.5rem 2rem 2rem); 
+
+    .error-message {
+      @include form.auth-error(center);
+    }
+
+    .forgot-password {
+        display: block;
+        text-align: center;
+        margin-top: 0.5rem;
+        font-size: var(--fs-sm);
+        color: var(--c-primary);
+    }
+
+    hr {
+        width: 100%;
+        margin: 1.8rem 0 0.8rem;
+        border-bottom: 1px solid var(--c-border);
+    }
+
+    .sign-up {
+        display: block;
+        text-align: center;
+        font-size: var(--fs-sm);
+        color: var(--c-muted);
+        a{
+          color: var(--c-primary-weak);
+        }
+      }
+  }
+
+  .login-form {
+    label { 
+      display: inline-block;
+      width: 100%;
+      color: var(--c-muted);
+      font-size: var(--fs-md);
+      text-align: left;
+    }
+
+    .email-block, .password-block {
+      margin-bottom: 0.5rem;
+    }
+
+    .textbox {
+      @include form.auth-textbox;
+      width: 100%;
+      margin: 0.25rem 0;
+    }
+
+    .button {
+      @include form.auth-button(100%, 0.75rem 0 0.45rem);
+    }
+  }
+}

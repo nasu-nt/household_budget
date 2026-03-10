@@ -1,0 +1,18 @@
+@use './foundations/tokens';
+@use './foundations/mixins';
+@use './foundations/base';
+
+@use './components/layout.scss';
+@use './components/header.scss';
+@use './components/auth-form';
+@use './components/auth-card';
+@use './components/password-toggle';
+
+@use './pages/login';
+@use './pages/register';
+@use './pages/forgot-password';
+@use './pages/dashboard';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
