@@ -1,0 +1,18 @@
+@mixin auth-card($width: 33rem, $height:24rem, $padding: 1.5rem 2rem 2rem) {
+    background: var(--c-surface);
+    height: min($width, calc(100% - 1rem));
+    width: min($height, calc(100% - 1rem));
+    padding: $padding; 
+    box-sizing: border-box; /* 子要素が親依存になる */
+    border: 4px solid var(--c-border-strong);
+    border-radius: 0.8rem;
+    color: var(--c-text);
+    text-align: center;
+
+    .title {
+        margin-bottom: 0.25rem;
+        font-size: var(--fs-page-title);
+        font-weight: 700;
+        line-height: 1.5; 
+    }
+}

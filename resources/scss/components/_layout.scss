@@ -1,0 +1,9 @@
+@layer components {
+  .guest-main {
+    min-height: calc(100vh - 4rem); /* 100vh = ビューポート全体 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+}

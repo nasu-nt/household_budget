@@ -1,0 +1,74 @@
+@use '../components/auth-card' as card;
+@use '../components/auth-form' as form;
+
+@layer components {
+
+  .register-card {
+    @include card.auth-card(36rem, 38rem, 1.75rem 2rem 2rem); 
+
+    .title {
+      margin-bottom: 1.5rem;
+    }
+
+    .log-in {
+      display: block;
+      font-size: var(--fs-sm);
+      color: var(--c-subtle);
+      a{
+        color: var(--c-primary);
+      }
+    }
+  }
+
+  .register-form {
+    margin: 0 auto;
+
+    .input-field {
+        margin-right: 2rem;
+    }
+
+    .name-block,
+    .email-block,
+    .password-block  {
+        margin-bottom: 1rem;
+    }
+
+    .password-confirmation-block {
+        margin-bottom: 0.25rem;
+    }
+
+    .field-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 5%;  /* ラベルと入力の間隔 */
+    }
+    
+    /* ラベルは右揃え & 幅固定 */
+    label {
+        display: inline-block;
+        width: 30%;
+        text-align: right;
+        font-size: var(--fs-md);
+        flex: 0 0 auto;
+    }
+
+    .textbox {
+      @include form.auth-textbox;
+    }
+
+    .error-message {
+      @include form.auth-error(left, 35%, 65%);
+    }
+
+    .button {
+      @include form.auth-button(20rem, 1.25rem 0 0.7rem);
+    }
+
+    .password-hint {
+        font-size: var(--fs-xs);
+        color: var(--c-subtle);
+        line-height: 1.4;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@layer components {
+  .header {
+    background: var(--c-header-bg);
+    min-height: 4rem;
+    display: flex;
+    padding-left: 2rem;
+    align-items: center;
+
+    .title {
+      margin: 0;
+      font-size: var(--fs-site-title);
+      font-weight: 900;
+      color: var(--c-site-title);
+      line-height: 1.2;
+    }
+  }
+}
