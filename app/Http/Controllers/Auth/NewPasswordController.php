@@ -30,11 +30,29 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'token' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $request->validate(
+            [
+                // rules
+                'token' => ['required'],
+                'email' => ['required', 'email'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'password_confirmation' => ['required', 'same:password'],
+            ],
+            [
+                // messages
+                'email.required' => __('validation.required'),
+                'email.email' => __('validation.email'),
+                'password.required' => __('validation.required'),
+                'password_confirmation.required' => 'Please confirm your password.',
+                'password_confirmation.same' => __('validation.same'),
+            ],
+            [
+                // attributes
+                'email' => 'mail address',
+                'password' => 'password',
+                'password_confirmation' => 'password confirmation',
+            ]
+        );
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
@@ -55,8 +73,12 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+                    ? redirect()
+                        ->route('login')
+                        ->with('status', __('passwords.reset'))
+                        ->withInput(['email' => $request->email])
+                    : back()
+                        ->withInput($request->only('email'))
+                        ->withErrors(['reset' => __('passwords.token')]);
     }
 }

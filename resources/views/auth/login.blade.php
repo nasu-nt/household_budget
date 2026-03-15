@@ -2,10 +2,15 @@
 <x-guest-layout>
     <x-slot:title>Sign in</x-slot:title>
 
-{{-- 
-PWリセット後、"Password has been reset. Please sign in."のトースト出す
-Emailをログイン画面に渡して初期値にしてもいい。
---}}
+    @session('status')
+        <div id="toast-success"
+            class="toast toast--success"
+            data-toast role="status"
+            aria-live="polite"
+        >
+            {{ $value }}
+        </div>
+    @endsession
 
     <main class="guest-main login">
         <div class="login-card">
@@ -25,7 +30,7 @@ Emailをログイン画面に渡して初期値にしてもいい。
                                 required
                                 autofocus
                                 autocomplete="username"
-                                value="{{ old('email') }}"
+                                value="{{ old('email', '') }}"
                                 data-error-target="email"
                             />
                         </div>

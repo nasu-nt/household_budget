@@ -4,6 +4,7 @@
 
 @use './components/layout.scss';
 @use './components/header.scss';
+@use './components/toast.scss';
 @use './components/auth-form';
 @use './components/auth-card';
 @use './components/password-toggle';
@@ -11,6 +12,8 @@
 @use './pages/login';
 @use './pages/register';
 @use './pages/forgot-password';
+@use './pages/reset-password';
+
 @use './pages/dashboard';
 
 @tailwind base;
