@@ -1,42 +1,49 @@
 @mixin auth-textbox {
-  min-width: 0;
-  height: 2.2rem;
-  padding: 3px 7px;
-  background-color: var(--c-textbox);
-  border-radius: 5px;
-  border: 2px solid var(--c-border);
-
-  &:focus {
-    outline: 0;
+    min-width: 0;
+    height: 2.2rem;
+    padding: 3px 7px;
     background-color: var(--c-textbox);
-    border: 2px solid var(--c-textbox-focus);
-  }
+    border-radius: 5px;
+    border: 2px solid var(--c-border);
+    color: var(--c-input-text);
 
-  &.is-invalid {
-    border: 2px solid var(--c-warning);
-  }
+    &:focus {
+        outline: 0;
+        background-color: var(--c-textbox);
+        border: 2px solid var(--c-textbox-focus);
+    }
+
+    &.is-invalid {
+        border: 2px solid var(--c-warning);
+    }
 }
 
 @mixin auth-button($width: 100%, $margin: 1rem 0 0.5rem) {
-  background: var(--c-button);
-  height: auto;
-  width: $width;
-  margin: $margin;
-  padding: 1rem 0;
-  border: 2px solid var(--c-button-border);
-  border-radius: 0.75rem;
-  color: var(--c-button-text);
-  font-size: var(--fs-md);
-  line-height: 1.2;
+    background: var(--c-button);
+    height: auto;
+    width: $width;
+    margin: $margin;
+    padding: 1rem 0;
+    border: 2px solid var(--c-button-border);
+    border-radius: 0.75rem;
+    color: var(--c-button-text);
+    font-size: var(--fs-md);
+    line-height: 1.2;
 }
 
 @mixin auth-error($align: center, $margin-left: 0, $width: 100%) {
-  display: block;
-  text-align: $align;
-  margin: 0;
-  margin-left: $margin-left;
-  width: $width;
-  font-size: var(--fs-xs);
-  color: var(--c-warning);
-  line-height: 1.5;
+    display: block;
+    text-align: $align;
+    margin: 0;
+    margin-left: $margin-left;
+    width: $width;
+    font-size: var(--fs-xs);
+    color: var(--c-warning);
+    line-height: 1.5;
+}
+
+@mixin password-hint {
+    font-size: var(--fs-xs);
+    color: var(--c-subtle);
+    line-height: 1.4;
 }
