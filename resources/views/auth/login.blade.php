@@ -5,10 +5,12 @@
     @session('status')
         <div id="toast-success"
             class="toast toast--success"
-            data-toast role="status"
+            data-toast
+            role="status"
             aria-live="polite"
         >
-            {{ $value }}
+            <span>{{ $value }}</span>
+            <button type="button" id="toast-close" data-toast-close aria-label="Close">×</button>
         </div>
     @endsession
 

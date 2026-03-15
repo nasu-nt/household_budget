@@ -14,6 +14,7 @@ return [
     */
 
     'login_failed' => 'The email address or password is incorrect.',
+    'register_success' => 'Account created successfully!',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
 ];
