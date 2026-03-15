@@ -1,3 +1,4 @@
+{{-- resources\views\auth\reset-password.blade.php --}}
 <x-guest-layout>
     <x-slot:title>Reset password</x-slot:title>
 

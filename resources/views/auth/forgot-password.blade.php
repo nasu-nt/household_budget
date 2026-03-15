@@ -1,3 +1,4 @@
+{{-- resources\views\auth\forgot-password.blade.php --}}
 <x-guest-layout>
     <x-slot:title>Forgot your password?</x-slot:title>
 

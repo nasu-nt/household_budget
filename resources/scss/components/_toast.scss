@@ -12,8 +12,13 @@
         box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 0.15);
         font-size: var(--fs-sm);
         line-height: 1.4;
+
         opacity: 1;
         transition: opacity 0.5s;
+
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
     }
 
     .toast--success {
@@ -28,5 +33,15 @@
 
     .toast.is-hidden {
         display: none;
+    }
+
+    .toast button {
+        margin-left: auto;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font-size: 1rem;
+        cursor: pointer;
+        flex-shrink: 0;
     }
 }
