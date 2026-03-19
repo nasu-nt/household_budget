@@ -9,9 +9,11 @@ Alpine.start();
 import { initToast } from './components/toast';
 import { initPasswordToggle } from './components/password-toggle';
 import { initFormErrorClear } from './components/form-error-clear';
+import { initDashboardSidebar } from './features/dashboard/sidebar';
 
 document.addEventListener('DOMContentLoaded', () => {
     initToast();
     initPasswordToggle();
     initFormErrorClear();
+    initDashboardSidebar();
 });
