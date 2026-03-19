@@ -1,17 +1,53 @@
 @layer components {
-  .header {
-    background: var(--c-header-bg);
-    min-height: 4rem;
-    display: flex;
-    padding-left: 2rem;
-    align-items: center;
+    .header__inner {
+        background: var(--c-header-bg);
+        padding: 0 2.6rem 0 2rem;
+        min-height: 4rem;
+        width: 100%;
 
-    .title {
-      margin: 0;
-      font-size: var(--fs-site-title);
-      font-weight: 900;
-      color: var(--c-site-title);
-      line-height: 1.2;
+        display: flex;
+        align-items: center;
+
+        .title {
+            margin: 0;
+            font-size: var(--fs-site-title);
+            font-weight: 900;
+            color: var(--c-site-title);
+            line-height: 1.2;
+            text-decoration: none;
+        }
     }
-  }
+
+    /* app-header */
+    .app-header__nav {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 1.5rem;
+        color: var(--c-header-nav);
+    
+        .app-header__link {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font: inherit;
+            text-decoration: none;
+            font-size: var(--fs-md);
+            /* cursor: pointer; */
+        }
+
+        .app-header__link:hover {
+            color: var(--c-header-link-hover);
+        }
+
+        .app-header__link.is-active {
+            color: var(--c-header-link-active);
+            font-weight: 700;
+        }
+
+        .app-header__logout-form {
+            margin: 0;
+        }
+    }
 }
