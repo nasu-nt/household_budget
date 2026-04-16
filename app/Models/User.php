@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -47,17 +48,33 @@ class User extends Authenticatable
         ];
     }
 
+    /* 各テーブルとのrelation */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function categoryBudgets(): HasMany
+    {
+        return $this->hasMany(CategoryBudget::class);
+    }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+
     /**
      * Send a password reset notification to the user.
      */
     public function sendPasswordResetNotification($token): void
     {
         // Password::sendResetLink(...)
-        // →broker が User を取得
+        // →brokerがUserを取得
         // →$user->sendPasswordResetNotification($token)
-        //     User モデルで override していればそっちが呼ばれる←今ココ
+        //     Userモデルでoverrideしていればそっちが呼ばれる←今ココ
         // →$this->notify(new CustomResetPasswordNotification($token))
-        // →CustomResetPasswordNotification::toMail()
+        // →CustomResetPasswordNotification::toMail()←自分で作ったやつ
         $this->notify(new CustomResetPasswordNotification($token));
     }
 
