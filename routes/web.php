@@ -10,12 +10,12 @@ Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard/index')->name('dashboard');
 });
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-// 
+ Route::middleware('auth')->group(function () {
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('settings.profile.edit');
+     Route::patch('/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
+     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('settings.profile.destroy');
+ });
+ 
 // Route::prefix('settings')->middleware('auth')->name('settings.')->group(function () {
 //     Route::get('/account', [SettingsAccountController::class, 'edit'])->name('account.edit');
 //     Route::patch('/account', [SettingsAccountController::class, 'update'])->name('account.update');
