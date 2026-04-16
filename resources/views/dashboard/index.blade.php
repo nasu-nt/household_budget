@@ -1,5 +1,8 @@
 {{-- resources\views\dashboard\index.blade.php --}}
 <x-app-layout>
+    <x-slot:title>Dashboard</x-slot:title>
+
+    {{-- 登録画面から遷移してきた場合 --}}
     @if (session('success'))
         <div id="toast-success"
             class="toast toast--success"
@@ -12,13 +15,14 @@
         </div>
     @endif
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    You're logged in!!
-                </div>
-            </div>
-        </div>
+    <div class="dashboard-layout">
+        {{-- サイドバー --}}
+        @include('dashboard.partials._sidebar')
+
+        {{-- メイン --}}
+        <section class="dashboard-main">
+            <h1>Dashboard</h1>
+        </section>
     </div>
+
 </x-app-layout>

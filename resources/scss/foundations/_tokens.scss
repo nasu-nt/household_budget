@@ -25,6 +25,7 @@
         
         /* aliases (use these in app CSS) */
         --c-bg: var(--c-gray-light);
+
         --c-header-bg: var(--c-black);
         --c-site-title: var(--c-white);
         --c-header-nav: var(--c-white);
@@ -76,5 +77,10 @@
         --fs-md: 1rem;
         --fs-sm: 0.9rem;
         --fs-xs: 0.75rem;
+
+        /*
+         * layout
+         */
+        --l-header-h: 4rem;
     }
 }

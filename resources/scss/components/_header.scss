@@ -2,7 +2,7 @@
     .header__inner {
         background: var(--c-header-bg);
         padding: 0 2.6rem 0 2rem;
-        min-height: 4rem;
+        min-height: var(--l-header-h);
         width: 100%;
 
         display: flex;
