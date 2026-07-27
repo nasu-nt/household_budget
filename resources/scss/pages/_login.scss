@@ -2,69 +2,206 @@
 @use '../components/auth-form' as form;
 
 @layer components {
-
-  /* 色指定 */
   main.login {
-    --c-surface: var(--c-black);
-    --c-text: var(--c-white);
-    --c-muted: var(--c-gray-light);
-    --c-border: var(--c-gray);
-    --c-border-strong: var(--c-white);
+    min-height: calc(100vh - 4rem);
+    padding: 2rem 1rem;
   }
 
-  .login-card {
-    @include card.auth-card(33rem, 24rem, 1.5rem 2rem 2rem); 
+.login-card {
+    @include card.auth-card(
+      37.5rem,
+      26.75rem,
+      2.25rem 2.5rem 2rem
+    );  
+
+    box-sizing: border-box;
+    width: min(100%, 26.75rem);
+    height: auto;
+    min-height: 37.5rem;
+
+    background-color: var(--c-surface);
+    border: var(--border-width) solid var(--c-border);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow-card);
+    color: var(--c-text);
+
+    .title {
+      margin: 0 0 1.5rem;
+
+      color: var(--c-text);
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+    }
 
     .error-message {
       @include form.auth-error(center);
     }
 
     .forgot-password {
-        display: block;
-        text-align: center;
-        margin-top: 0.5rem;
-        font-size: var(--fs-sm);
-        color: var(--c-primary);
+      display: block;
+
+      margin-top: 0.875rem;
+
+      color: #2563eb;
+      font-size: 1rem;
+      text-align: center;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
-    hr {
-        width: 100%;
-        margin: 1.8rem 0 0.8rem;
-        border-bottom: 1px solid var(--c-border);
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      width: 100%;
+      margin: 1.75rem 0 1.5rem;
+
+      color: #9ca3af;
+      font-size: 0.875rem;
+
+      &::before,
+      &::after {
+        content: '';
+
+        flex: 1;
+
+        border-top: 1px solid #9ca3af;
+      }
+    }
+
+    .demo-login-form {
+      width: 100%;
+    }
+
+    .demo-login-button {
+      width: 100%;
+      height: 3rem;
+      padding: 0 1rem;
+
+      background-color: #ffffff;
+      border: 2px solid #111827;
+      border-radius: 0.5rem;
+
+      color: #374151;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 400;
+
+      cursor: pointer;
+
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+
+      &:hover {
+        background-color: #f8fafc;
+      }
+
+      &:focus-visible {
+        outline: 3px solid rgb(37 99 235 / 25%);
+        outline-offset: 2px;
+      }
     }
 
     .sign-up {
-        display: block;
-        text-align: center;
-        font-size: var(--fs-sm);
-        color: var(--c-muted);
-        a{
-          color: var(--c-primary-weak);
+      display: block;
+
+      margin-top: 3.25rem;
+
+      color: #374151;
+      font-size: 1rem;
+      text-align: center;
+
+      a {
+        color: #2563eb;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
         }
       }
+    }
   }
 
   .login-form {
-    label { 
+    label {
       display: inline-block;
+
       width: 100%;
-      color: var(--c-muted);
-      font-size: var(--fs-md);
+
+      color: #374151;
+      font-size: 1.125rem;
       text-align: left;
     }
 
-    .email-block, .password-block {
-      margin-bottom: 0.5rem;
+    .email-block,
+    .password-block {
+      margin-bottom: 0.75rem;
     }
 
     .textbox {
       @include form.auth-textbox;
+
+      box-sizing: border-box;
       width: 100%;
-      margin: 0.25rem 0;
+      height: 3rem;
+      margin: 0.375rem 0;
+      padding-right: 3rem;
+
+      background-color: #ffffff;
+      border: 1px solid #9ca3af;
+      border-radius: 0.5rem;
+
+      color: #111827;
+
+      &:focus {
+        border-color: #2563eb;
+        outline: 3px solid rgb(37 99 235 / 15%);
+      }
     }
 
     .button {
-      @include form.auth-button(100%, 0.75rem 0 0.45rem);
+      @include form.auth-button(100%, 1.25rem 0 0);
+
+      width: 100%;
+      height: 3rem;
+
+      background-color: var(--c-button-primary-bg);
+      border: 1px solid var(--c-button-primary-border);
+      border-radius: 0.5rem;
+
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      &:hover {
+        background-color: #1f2937;
+      }
+
+      &:focus-visible {
+        outline: 3px solid rgb(37 99 235 / 25%);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .login-card {
+      width: 100%;
+      min-height: auto;
+      padding: 2rem 1.5rem;
+
+      .sign-up {
+        margin-top: 2.5rem;
+      }
     }
   }
 }
