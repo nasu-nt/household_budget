@@ -4,7 +4,7 @@
 @layer components {
 
   .register-card {
-    @include card.auth-card(36rem, 38rem, 1.75rem 2rem 2rem); 
+    @include card.auth-card(36rem, 38rem, 1.75rem 2rem 2rem);
 
     .title {
       margin-bottom: 1.5rem;
@@ -12,10 +12,21 @@
 
     .log-in {
       display: block;
-      font-size: var(--fs-sm);
       color: var(--c-subtle);
-      a{
+      font-size: var(--fs-sm);
+
+      a {
         color: var(--c-primary);
+
+        &:hover {
+          color: var(--c-primary-hover);
+        }
+
+        &:focus-visible {
+          outline: 0;
+          border-radius: var(--r-swatch);
+          box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+        }
       }
     }
   }
@@ -24,33 +35,32 @@
     margin: 0 auto;
 
     .input-field {
-        margin-right: 2rem;
+      margin-right: 2rem;
     }
 
     .name-block,
     .email-block,
-    .password-block  {
-        margin-bottom: 1rem;
+    .password-block {
+      margin-bottom: 1rem;
     }
 
     .password-confirmation-block {
-        margin-bottom: 0.25rem;
+      margin-bottom: 0.25rem;
     }
 
     .field-row {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 5%;  /* ラベルと入力の間隔 */
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 5%;
     }
-    
-    /* ラベルは右揃え & 幅固定 */
+
     label {
-        display: inline-block;
-        width: 30%;
-        text-align: right;
-        font-size: var(--fs-md);
-        flex: 0 0 auto;
+      display: inline-block;
+      flex: 0 0 auto;
+      width: 30%;
+      font-size: var(--fs-md);
+      text-align: right;
     }
 
     .textbox {
@@ -66,7 +76,7 @@
     }
 
     .password-hint {
-        @include form.password-hint;
+      @include form.password-hint;
     }
   }
 }
