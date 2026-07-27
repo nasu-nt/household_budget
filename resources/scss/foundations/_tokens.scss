@@ -1,77 +1,92 @@
 @layer base {
     :root {
         /*
-         * color
+         * Color
          */
-        
-        /* color palette */
-        --c-black: #000000;
-        --c-black-soft: #111827;
-        --c-gray-dark: #545454;
-        --c-gray: #919191;
-        --c-gray-light: #d9d9d9;
-        --c-white: #ffffff;
-        
-        --c-blue-vivid: #2563eb;
-        --c-blue-ice: #99c5ff;
-        
-        --c-red-vivid: #ff6b5b;
-        --c-red-pastel: #ee8b8b;
-        --c-orange-pastel: #f3c38c;
-        --c-yellow-light: #f7e7a6;
-        
-        --c-green-vivid: #4ca626;
-        --c-green-ultra-light: #f8fff0;
-        
-        /* aliases (use these in app CSS) */
-        --c-bg: var(--c-gray-light);
 
-        --c-header-bg: var(--c-black);
-        --c-site-title: var(--c-white);
-        --c-header-nav: var(--c-white);
-        --c-header-link-hover: var(--c-blue-ice);
-        --c-header-link-active: var(--c-gray);
-        
-        --c-surface: var(--c-white);
-        --c-text: var(--c-black-soft);
-        --c-muted: var(--c-gray-dark);
-        --c-subtle: var(--c-gray);
-        
-        --c-border: var(--c-gray-light);
-        --c-border-strong: var(--c-gray);
-        
-        --c-textbox: var(--c-white);
-        --c-textbox-focus: var(--c-blue-ice);
-        --c-input-text: var(--c-black-soft);
-        
-        --c-button: var(--c-blue-ice);
-        --c-button-text: var(--c-black-soft);
-        --c-button-border: var(--c-gray-light);
-        
-        --c-primary: var(--c-blue-vivid);
-        --c-primary-weak: var(--c-blue-ice);
-        
-        --c-warning: var(--c-red-vivid);
-        
-        --c-success: var(--c-green-vivid);
-        --c-success-bg: var(--c-green-ultra-light);
-        
-        /* calendar */
-        --c-all-good: var(--c-white);
-        --c-a-bit-much: var(--c-yellow-light);
-        --c-over-budget: var(--c-orange-pastel);
-        --c-over-limit: var(--c-red-pastel);
-        
+        /* Background / surface */
+        --c-bg: #f4f6f8;
+        --c-surface: #ffffff;
+        --c-surface-subtle: #f8fafc;
+        --c-surface-disabled: #f1f5f9;
+
+        /* Header */
+        --c-header-bg: #000000;
+        --c-site-title: #ffffff;
+        --c-header-nav: #ffffff;
+        --c-header-link-hover: #99c5ff;
+        --c-header-link-active: #ffffff;
+        --c-active-indicator: #2563eb;
+
+        /* Text */
+        --c-text: #111827;
+        --c-muted: #374151;
+        --c-subtle: #6b7280;
+        --c-disabled: #94a3b8;
+
+        /* Border */
+        --c-border: #cbd5e1;
+        --c-border-muted: #e2e8f0;
+        --c-border-strong: #111827;
+
+        /* Input */
+        --c-textbox: #ffffff;
+        --c-input-text: #111827;
+        --c-input-placeholder: #94a3b8;
+        --c-textbox-focus: #2563eb;
+        --c-focus-ring: rgb(37 99 235 / 20%);
+
+        /* Link / primary accent */
+        --c-primary: #2563eb;
+        --c-primary-hover: #1d4ed8;
+        --c-primary-weak: #99c5ff;
+
+        /* Primary button */
+        --c-button-primary-bg: #111827;
+        --c-button-primary-bg-hover: #1f2937;
+        --c-button-primary-text: #ffffff;
+        --c-button-primary-border: #111827;
+
+        /* Secondary button */
+        --c-button-secondary-bg: #ffffff;
+        --c-button-secondary-bg-hover: #f8fafc;
+        --c-button-secondary-text: #111827;
+        --c-button-secondary-border: #111827;
+
+        /* Disabled control */
+        --c-button-disabled-bg: #e2e8f0;
+        --c-button-disabled-text: #94a3b8;
+        --c-button-disabled-border: #cbd5e1;
+
+        /* Feedback */
+        --c-success: #15803d;
+        --c-success-bg: #f0fdf4;
+
+        --c-warning: #d97706;
+        --c-warning-bg: #fffbeb;
+
+        --c-danger: #dc2626;
+        --c-danger-hover: #b91c1c;
+        --c-danger-bg: #fef2f2;
+
         /*
-         * font size
+         * Spending status
          */
-        
-        /* semantic */
+        --c-all-good: #f8fafc;
+        --c-slightly-high: #f7e7a6;
+        --c-over-budget: #f3c38c;
+        --c-over-limit: #ee8b8b;
+
+        /*
+         * Font size
+         */
+
+        /* Semantic */
         --fs-site-title: 1.5rem;
         --fs-page-title: 1.25rem;
         --fs-section-title: 1.2rem;
-        
-        /* scale */
+
+        /* Scale */
         --fs-xl: 1.3rem;
         --fs-lg: 1.2rem;
         --fs-md: 1rem;
@@ -79,8 +94,29 @@
         --fs-xs: 0.75rem;
 
         /*
-         * layout
+         * Border radius
+         */
+        --r-card: 0.625rem;   /* 10px */
+        --r-control: 0.5rem;  /* 8px */
+        --r-swatch: 0.25rem;  /* 4px */
+        --r-pill: 9999px;
+
+        /*
+         * Border width
+         */
+        --border-width: 1px;
+        --border-width-strong: 2px;
+
+        /*
+         * Shadow
+         */
+        --shadow-card: 0 1px 2px rgb(15 23 42 / 8%);
+
+        /*
+         * Layout
          */
         --l-header-h: 4rem;
+        --l-control-h: 3rem;       /* 48px */
+        --l-control-h-small: 2.25rem; /* 36px */
     }
 }
