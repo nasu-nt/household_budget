@@ -3,14 +3,23 @@
     <x-slot:title>Sign in</x-slot:title>
 
     @session('status')
-        <div id="toast-success"
+        <div
+            id="toast-success"
             class="toast toast--success"
             data-toast
             role="status"
             aria-live="polite"
         >
             <span>{{ $value }}</span>
-            <button type="button" id="toast-close" data-toast-close aria-label="Close">×</button>
+
+            <button
+                type="button"
+                id="toast-close"
+                data-toast-close
+                aria-label="Close"
+            >
+                ×
+            </button>
         </div>
     @endsession
 
@@ -20,13 +29,16 @@
 
             <div class="login-form">
                 <form method="POST" action="{{ route('login') }}">
-                    @csrf {{-- CSRF攻撃対策 --}}
+                    @csrf
 
                     {{-- Email --}}
                     <div class="email-block">
                         <label for="email">Email</label>
+
                         <div class="email-field">
-                            <input id="email" class="textbox @error('email') is-invalid @enderror"
+                            <input
+                                id="email"
+                                class="textbox @error('email') is-invalid @enderror"
                                 type="email"
                                 name="email"
                                 required
@@ -34,43 +46,65 @@
                                 autocomplete="username"
                                 value="{{ old('email', '') }}"
                                 data-error-target="email"
-                            />
+                            >
                         </div>
+
                         @error('email')
-                            <p class="error-message" data-error-message="email">{{ $message }}</p>
+                            <p
+                                class="error-message"
+                                data-error-message="email"
+                            >
+                                {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
                     {{-- Password --}}
                     <div class="password-block">
                         <label for="password">Password</label>
+
                         <div class="password-field">
-                            <input id="password" class="textbox @error('password') is-invalid @enderror"
+                            <input
+                                id="password"
+                                class="textbox @error('password') is-invalid @enderror"
                                 type="password"
                                 name="password"
                                 required
                                 autocomplete="current-password"
                                 data-error-target="password"
-                            />
-                            <button type="button" class="toggle-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
                                 data-toggle-password
                                 data-target="#password"
                                 aria-label="Show password"
                             >
-                                <img src="/images/icons/eye-slash.svg" alt="" id="toggle-password-icon">
+                                <img
+                                    src="/images/icons/eye-slash.svg"
+                                    alt=""
+                                    id="toggle-password-icon"
+                                >
                             </button>
                         </div>
+
                         @error('password')
-                            <p class="error-message" data-error-message="password">{{ $message }}</p>
+                            <p
+                                class="error-message"
+                                data-error-message="password"
+                            >
+                                {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
-                    {{-- Submit --}}
-                    <input class="button" type="submit" value="Sign in">
+                    <button class="button" type="submit">
+                        Sign in
+                    </button>
                 </form>
             </div>
 
-            {{-- Auth error --}}
             @error('auth')
                 <p class="error-message auth-error">{{ $message }}</p>
             @enderror
@@ -79,11 +113,28 @@
                 <p class="error-message auth-error">{{ $message }}</p>
             @enderror
 
-            <a class="forgot-password" href="{{ route('password.request') }}">
+            <a
+                class="forgot-password"
+                href="{{ route('password.request') }}"
+            >
                 Forgot your password?
             </a>
 
-            <hr>
+            <div class="login-divider">
+                <span>or</span>
+            </div>
+
+            <form
+                class="demo-login-form"
+                method="POST"
+                action="{{ route('demo.login') }}"
+            >
+                @csrf
+
+                <button class="demo-login-button" type="submit">
+                    Try the demo account
+                </button>
+            </form>
 
             <div class="sign-up">
                 <span>Don’t have an account?</span>
@@ -91,5 +142,4 @@
             </div>
         </div>
     </main>
-
 </x-guest-layout>
