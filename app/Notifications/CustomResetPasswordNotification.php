@@ -2,14 +2,11 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class CustomResetPasswordNotification extends Notification
 {
-    use Queueable;
-
     public function __construct(
         private string $token
     ) {
@@ -17,6 +14,8 @@ class CustomResetPasswordNotification extends Notification
 
     /**
      * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
      */
     public function via(object $notifiable): array
     {
@@ -31,17 +30,45 @@ class CustomResetPasswordNotification extends Notification
         $url = url(route('password.reset', [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
-        ], false));
+        ], absolute: false));
 
-        $expireMinutes = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire');
+        $passwordBroker = (string) config('auth.defaults.passwords');
+        $expireMinutes = (int) config(
+            "auth.passwords.{$passwordBroker}.expire",
+            60
+        );
+
+        $appName = str_replace(
+            '_',
+            ' ',
+            (string) config('app.name', 'Household Budget')
+        );
+
+        $name = trim((string) ($notifiable->name ?? ''));
+
+        $greeting = $name !== ''
+            ? __('notifications.password_reset.greeting', ['name' => $name])
+            : __('notifications.password_reset.greeting_without_name');
 
         return (new MailMessage)
-            ->subject('【HOUSEHOLD_BUDGET】Reset Password Notification')
-            ->greeting('こんにちは、' . $notifiable->name . 'さん！')
-            ->line('パスワード再設定のリクエストを受け付けました。')
-            ->line('下のボタンから、パスワードを再設定してください。')
-            ->action('Reset Password', $url)
-            ->line("このリンクの有効期限は{$expireMinutes}分です。")
-            ->line('このメールに心当たりがない場合は、対応不要です。');
+            ->subject(__('notifications.password_reset.subject', [
+                'app' => $appName,
+            ]))
+            ->greeting($greeting)
+            ->line(__('notifications.password_reset.request_received'))
+            ->line(__('notifications.password_reset.instructions'))
+            ->action(
+                __('notifications.password_reset.action'),
+                $url
+            )
+            ->line(trans_choice(
+                'notifications.password_reset.expires',
+                $expireMinutes,
+                ['count' => $expireMinutes]
+            ))
+            ->line(__('notifications.password_reset.ignore'))
+            ->salutation(__('notifications.password_reset.salutation', [
+                'app' => $appName,
+            ]));
     }
 }
