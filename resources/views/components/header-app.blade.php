@@ -8,7 +8,7 @@
             {{-- Dashboard --}}
             <a
                 href="{{ route('dashboard') }}"
-                class="app-header__link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}"
+                class="app-header__link {{ request()->routeIs('dashboard') ? 'is-active disable' : '' }}"
             >
                 Dashboard
             </a>

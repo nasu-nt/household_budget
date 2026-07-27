@@ -44,6 +44,7 @@
         .app-header__link.is-active {
             color: var(--c-header-link-active);
             font-weight: 700;
+            pointer-events: none;
         }
 
         .app-header__logout-form {
