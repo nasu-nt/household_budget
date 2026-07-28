@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Expense extends Model
 {
     protected $fillable = [
-        'user_id',
         'category_id',
         'amount',
         'expense_date',
@@ -17,6 +16,7 @@ class Expense extends Model
 
     protected $casts = [
         'expense_date' => 'date',
+        'amount' => 'integer',
     ];
 
     public function user(): BelongsTo

@@ -1,64 +1,162 @@
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
+    <header class="settings-card__header">
+        <h2 class="settings-card__title">
             {{ __('Profile Information') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="settings-card__description">
             {{ __("Update your account's profile information and email address.") }}
         </p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+    <form
+        id="send-verification"
+        method="post"
+        action="{{ route('verification.send') }}"
+    >
         @csrf
     </form>
 
-    <form method="post" action="{{ route('settings.profile.update') }}" class="mt-6 space-y-6">
+    <form
+        method="post"
+        action="{{ route('settings.profile.update') }}"
+        class="settings-form"
+    >
         @csrf
         @method('patch')
 
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-        </div>
+        <div class="settings-form__fields">
+            <div class="settings-form__row">
+                <label
+                    for="name"
+                    class="settings-form__label"
+                >
+                    {{ __('Display Name') }}
+                </label>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                <div class="settings-form__control">
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        class="settings-form__input
+                            @error('name') is-invalid @enderror"
+                        value="{{ old('name', $user->name) }}"
+                        required
+                        autofocus
+                        autocomplete="name"
+                        maxlength="255"
+                        data-error-target="name"
+                        @error('name')
+                            aria-invalid="true"
+                            aria-describedby="name-error"
+                        @enderror
+                    >
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                    @error('name')
+                        <p
+                            id="name-error"
+                            class="settings-form__error"
+                            data-error-message="name"
+                            role="alert"
+                        >
+                            {{ $message }}
                         </p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="settings-form__row">
+                <label
+                    for="email"
+                    class="settings-form__label"
+                >
+                    {{ __('Email') }}
+                </label>
+
+                <div class="settings-form__control">
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="settings-form__input
+                            @error('email') is-invalid @enderror"
+                        value="{{ old('email', $user->email) }}"
+                        required
+                        autocomplete="username"
+                        maxlength="255"
+                        data-error-target="email"
+                        @error('email')
+                            aria-invalid="true"
+                            aria-describedby="email-error"
+                        @enderror
+                    >
+
+                    @error('email')
+                        <p
+                            id="email-error"
+                            class="settings-form__error"
+                            data-error-message="email"
+                            role="alert"
+                        >
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                    @if (
+                        $user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail
+                        && ! $user->hasVerifiedEmail()
+                    )
+                        <div class="settings-form__verification">
+                            <p>
+                                {{ __('Your email address is unverified.') }}
+
+                                <button
+                                    type="submit"
+                                    form="send-verification"
+                                    class="settings-form__link-button"
+                                >
+                                    {{ __('Re-send verification email') }}
+                                </button>
+                            </p>
+
+                            @if (session('status') === 'verification-link-sent')
+                                <p
+                                    class="settings-form__verification-status"
+                                    role="status"
+                                >
+                                    {{ __('A new verification link has been sent to your email address.') }}
+                                </p>
+                            @endif
+                        </div>
                     @endif
                 </div>
-            @endif
+            </div>
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+        <div class="settings-form__actions">
+            <div class="settings-form__action-content">
+                <button
+                    type="submit"
+                    class="settings-form__button"
+                >
+                    {{ __('Update Profile') }}
+                </button>
 
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
-            @endif
+                @if (session('status') === 'profile-updated')
+                    <p
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-transition
+                        x-init="setTimeout(() => show = false, 2000)"
+                        class="settings-form__success"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        {{ __('Profile updated successfully.') }}
+                    </p>
+                @endif
+            </div>
         </div>
     </form>
 </section>
