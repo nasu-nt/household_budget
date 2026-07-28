@@ -13,7 +13,11 @@
         /* Header */
         --c-header-bg: #000000;
         --c-site-title: #ffffff;
+<<<<<<< HEAD
         --c-header-nav: #ffffff;
+=======
+        --c-header-nav: #b8c0cc;
+>>>>>>> origin/main
         --c-header-link-hover: #99c5ff;
         --c-header-link-active: #ffffff;
         --c-active-indicator: #2563eb;
@@ -110,7 +114,7 @@
         /*
          * Shadow
          */
-        --shadow-card: 0 1px 2px rgb(15 23 42 / 8%);
+        --shadow-card: 0 0.25rem 1rem rgb(15 23 42 / 10%);
 
         /*
          * Layout
