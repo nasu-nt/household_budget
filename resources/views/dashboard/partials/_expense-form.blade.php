@@ -1,13 +1,96 @@
 {{-- resources\views\dashboard\partials\_expense-form.blade.php --}}
 <section class="dashboard__record-expense-area">
-    <h2 class="dashboard__record-expense-title">Log your spending</h2>
-    <form class="dashboard__record-expense-form" method="POST" action="#">
+    <form
+    class="dashboard__record-expense-form"
+    method="POST"
+    action="{{ route('expenses.store') }}"
+>
+    @csrf
+
+    <form
+        class="dashboard__record-expense-form"
+        method="POST"
+        action="{{ route('expenses.store') }}"
+    >
         @csrf
-        
-        {{-- ここに input を足していく想定 --}}
-        <div class="dashboard__record-expense-actions">
-            <button type="button" class="dashboard__add-expense-row">+ Add another expense</button>
-            <button type="submit" class="dashboard__save-expense">Save expense</button>
+
+        <div>
+            <label for="expense_date">Date</label>
+
+            <input
+                id="expense_date"
+                name="expense_date"
+                type="date"
+                value="{{ old('expense_date', now()->format('Y-m-d')) }}"
+                required
+            >
+
+            @error('expense_date')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
+
+        <div>
+            <label for="category_id">Category</label>
+
+            <select
+                id="category_id"
+                name="category_id"
+                required
+            >
+                <option value="">Select category</option>
+
+                @foreach ($categories as $category)
+                    <option
+                        value="{{ $category->id }}"
+                        @selected(old('category_id') == $category->id)
+                    >
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            @error('category_id')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="amount">Amount</label>
+
+            <input
+                id="amount"
+                name="amount"
+                type="number"
+                min="1"
+                step="1"
+                value="{{ old('amount') }}"
+                required
+            >
+
+            @error('amount')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="memo">Memo</label>
+
+            <input
+                id="memo"
+                name="memo"
+                type="text"
+                maxlength="255"
+                value="{{ old('memo') }}"
+            >
+
+            @error('memo')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <button type="submit">
+            Save expense
+        </button>
     </form>
 </section>
