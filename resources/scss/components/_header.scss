@@ -24,27 +24,44 @@
         align-items: center;
         margin-left: auto;
         gap: 1.5rem;
-        color: var(--c-header-nav);
-    
+
         .app-header__link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+
             background: none;
             border: none;
-            padding: 0;
+            padding: 0.15rem 0 0.25rem;
             margin: 0;
+
+            color: var(--c-header-nav);
             font: inherit;
-            text-decoration: none;
             font-size: var(--fs-md);
-            /* cursor: pointer; */
+            line-height: 1.2;
+            text-decoration: none;
+            cursor: pointer;
+
+            transition: color 0.2s ease;
         }
 
-        .app-header__link:hover {
+        .app-header__link:not(.is-active):hover {
             color: var(--c-header-link-hover);
         }
 
         .app-header__link.is-active {
             color: var(--c-header-link-active);
-            font-weight: 700;
             pointer-events: none;
+        }
+
+        .app-header__link.is-active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: var(--border-width-strong);
+            background: var(--c-active-indicator);
         }
 
         .app-header__logout-form {
