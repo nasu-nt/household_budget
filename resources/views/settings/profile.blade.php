@@ -1,5 +1,23 @@
 <x-app-layout>
     <main class="settings-page">
+        @if (session('success'))
+            <div
+                class="toast toast--success"
+                data-toast
+                role="status"
+                aria-live="polite"
+            >
+                <span>{{ session('success') }}</span>
+
+                <button
+                    type="button"
+                    data-toast-close
+                    aria-label="{{ __('Close') }}"
+                >
+                    ×
+                </button>
+            </div>
+        @endif
         <div class="settings-page__layout">
             <aside class="settings-page__sidebar">
                 @include('settings.partials.settings-menu')

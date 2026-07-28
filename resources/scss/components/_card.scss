@@ -1,5 +1,7 @@
 @mixin card(
-    $padding: 1.5rem,
+    $height: 33rem,
+    $width: 24rem,
+    $padding: 1.5rem 2rem 2rem,
     $border-radius: var(--r-card),
     $box-shadow: var(--shadow-card)
 ) {
