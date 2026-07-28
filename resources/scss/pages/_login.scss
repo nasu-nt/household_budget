@@ -1,5 +1,5 @@
-@use '../components/auth-card' as card;
-@use '../components/auth-form' as form;
+@use '../components/card' as card;
+@use '../components/form';
 
 @layer components {
 
@@ -13,10 +13,10 @@
   }
 
   .login-card {
-    @include card.auth-card(33rem, 24rem, 1.5rem 2rem 2rem); 
+    @include card.card(33rem, 24rem, 1.5rem 2rem 2rem); 
 
     .error-message {
-      @include form.auth-error(center);
+      @include form.error(center);
     }
 
     .forgot-password {
@@ -58,13 +58,26 @@
     }
 
     .textbox {
-      @include form.auth-textbox;
+      @include form.textbox;
+
       width: 100%;
       margin: 0.25rem 0;
     }
 
     .button {
-      @include form.auth-button(100%, 0.75rem 0 0.45rem);
+      @include form.button(100%, 1.25rem 0 0);
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .login-card {
+      width: 100%;
+      min-height: auto;
+      padding: 2rem 1.5rem;
+
+      .sign-up {
+        margin-top: 2.5rem;
+      }
     }
   }
 }

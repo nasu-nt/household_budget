@@ -1,10 +1,10 @@
-@use '../components/auth-card' as card;
-@use '../components/auth-form' as form;
+@use '../components/card' as card;
+@use '../components/form' as form;
 
 @layer components {
 
   .register-card {
-    @include card.auth-card(36rem, 38rem, 1.75rem 2rem 2rem); 
+    @include card.card(36rem, 38rem, 1.75rem 2rem 2rem); 
 
     .title {
       margin-bottom: 1.5rem;
@@ -54,19 +54,19 @@
     }
 
     .textbox {
-      @include form.auth-textbox;
+      @include form.textbox;
     }
 
     .error-message {
-      @include form.auth-error(left, 35%, 65%);
+      @include form.error(left, 35%, 65%);
     }
 
     .button {
-      @include form.auth-button(20rem, 1.25rem 0 0.7rem);
+      @include form.button(20rem, 1.25rem 0 0.7rem);
     }
 
     .password-hint {
-        @include form.password-hint;
+      @include form.hint;
     }
   }
 }
