@@ -1,7 +1,7 @@
 @layer components {
     .header__inner {
         background: var(--c-header-bg);
-        padding: 0 2.6rem 0 2rem;
+        padding: 0 3rem 0 2rem;
         min-height: var(--l-header-h);
         width: 100%;
 
@@ -11,7 +11,8 @@
         .header__title {
             margin: 0;
             font-size: var(--fs-site-title);
-            font-weight: 900;
+            font-weight: 1000;
+            letter-spacing: 0.1em;
             color: var(--c-site-title);
             line-height: 1.2;
             text-decoration: none;
@@ -25,7 +26,8 @@
         align-items: center;
         margin-left: auto;
         gap: 1.5rem;
-
+        color: var(--c-header-nav);
+        
         .app-header__link {
             position: relative;
             display: inline-flex;
@@ -39,17 +41,17 @@
             color: var(--c-header-nav);
             font: inherit;
             font-size: var(--fs-md);
+
             line-height: 1.2;
             text-decoration: none;
-            cursor: pointer;
-
+            // cursor: pointer;
             transition: color 0.2s ease;
         }
-
+        
         .app-header__link:not(.is-active):hover {
             color: var(--c-header-link-hover);
         }
-
+        
         .app-header__link.is-active {
             color: var(--c-header-link-active);
             pointer-events: none;
@@ -64,7 +66,7 @@
             height: var(--border-width-strong);
             background: var(--c-active-indicator);
         }
-
+        
         .app-header__logout-form {
             margin: 0;
         }
