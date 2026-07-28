@@ -8,7 +8,8 @@
             {{-- Dashboard --}}
             <a
                 href="{{ route('dashboard') }}"
-                class="app-header__link {{ request()->routeIs('dashboard') ? 'is-active disable' : '' }}"
+                class="app-header__link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}"
+                @if (request()->routeIs('dashboard')) aria-current="page" @endif
             >
                 Dashboard
             </a>
@@ -16,6 +17,7 @@
             <a
                 href=""
                 class="app-header__link {{ request()->routeIs('insights.*') ? 'is-active' : '' }}"
+                @if (request()->routeIs('insights.*')) aria-current="page" @endif
             >
                 Insights
             </a>
@@ -23,6 +25,7 @@
             <a
                 href=""
                 class="app-header__link {{ request()->routeIs('settings.*') ? 'is-active' : '' }}"
+                @if (request()->routeIs('settings.*')) aria-current="page" @endif
             >
                 Settings
             </a>
