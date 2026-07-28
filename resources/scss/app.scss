@@ -5,9 +5,12 @@
 @use './components/layout.scss';
 @use './components/header.scss';
 @use './components/toast.scss';
-@use './components/auth-form';
-@use './components/auth-card';
+
+@use './components/form';
 @use './components/password-toggle';
+
+@use './components/auth-card';
+@use './components/settings-menu';
 
 @use './pages/login';
 @use './pages/register';
@@ -15,6 +18,8 @@
 @use './pages/reset-password';
 
 @use './pages/dashboard';
+@use './pages/settings';
+
 
 @tailwind base;
 @tailwind components;
