@@ -3,80 +3,90 @@
 
 @layer components {
 
-  .register-card {
-    @include card.card(36rem, 38rem, 1.75rem 2rem 2rem); 
+    .register-card {
+        text-align: center;
 
-    .title {
-      margin-bottom: 1.5rem;
-    }
+        @include card.card(
+            $height: 36rem,
+            $width: 42rem,
+            $padding: 1.75rem 2rem
+        );
 
-    .log-in {
-      display: block;
-      color: var(--c-subtle);
-      font-size: var(--fs-sm);
-
-      a {
-        color: var(--c-primary);
-
-        &:hover {
-          color: var(--c-primary-hover);
+        .title {
+            margin-bottom: 1.5rem;
+            color: var(--c-text);
+            font-size: var(--fs-xl);
+            font-weight: 700;
+            line-height: 1.4;
         }
 
-        &:focus-visible {
-          outline: 0;
-          border-radius: var(--r-swatch);
-          box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+        .log-in {
+            display: block;
+            color: var(--c-subtle);
+            font-size: var(--fs-sm);
+
+            a {
+                color: var(--c-primary);
+
+                &:hover {
+                    color: var(--c-primary-hover);
+                }
+
+                &:focus-visible {
+                    outline: 0;
+                    border-radius: var(--r-swatch);
+                    box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+                }
+            }
         }
-      }
-    }
-  }
-
-  .register-form {
-    margin: 0 auto;
-
-    .input-field {
-      margin-right: 2rem;
     }
 
-    .name-block,
-    .email-block,
-    .password-block {
-      margin-bottom: 1rem;
-    }
+        .register-form {
+            margin: 0 auto;
 
-    .password-confirmation-block {
-      margin-bottom: 0.25rem;
-    }
+            .input-field {
+                margin-right: 2rem;
+            }
 
-    .field-row {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      gap: 5%;
-    }
+            .name-block,
+            .email-block,
+            .password-block {
+                margin-bottom: 1rem;
+            }
 
-    label {
-      display: inline-block;
-      flex: 0 0 auto;
-      width: 30%;
-      font-size: var(--fs-md);
-      text-align: right;
-    }
+            .password-confirmation-block {
+                margin-bottom: 0.25rem;
+            }
 
-    .textbox {
-      @include form.textbox;
-    }
+            .field-row {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                gap: 5%;
+            }
 
-    .error-message {
-      @include form.error(left, 35%, 65%);
-    }
+            label {
+                display: inline-block;
+                flex: 0 0 auto;
+                width: 40%;
+                font-size: var(--fs-md);
+                text-align: right;
+            }
 
-    .button {
-      @include form.button(20rem, 1.25rem 0 0.7rem);
-    }
+            .textbox {
+                @include form.textbox;
+            }
 
-    .password-hint {
-      @include form.hint;
-    }
-  }
+            .error-message {
+                @include form.error(left, 35%, 65%);
+            }
+
+            .button {
+                @include form.button(20rem, 1.25rem 0 0.7rem);
+            }
+
+            .password-hint {
+                @include form.hint;
+            }
+        }
 }

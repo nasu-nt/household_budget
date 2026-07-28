@@ -142,20 +142,6 @@
                 >
                     {{ __('Update Profile') }}
                 </button>
-
-                @if (session('status') === 'profile-updated')
-                    <p
-                        x-data="{ show: true }"
-                        x-show="show"
-                        x-transition
-                        x-init="setTimeout(() => show = false, 2000)"
-                        class="settings-form__success"
-                        role="status"
-                        aria-live="polite"
-                    >
-                        {{ __('Profile updated successfully.') }}
-                    </p>
-                @endif
             </div>
         </div>
     </form>

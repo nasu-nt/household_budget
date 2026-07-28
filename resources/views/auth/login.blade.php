@@ -26,7 +26,6 @@
     <main class="guest-main login">
         <div class="login-card">
             <h2 class="title">Sign in</h2>
-
             <div class="login-form">
                 <form method="POST" action="{{ route('login') }}">
                     @csrf

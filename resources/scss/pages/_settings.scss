@@ -50,10 +50,9 @@
     }
 }
 
-.settings-card {
+.settings-card {  
     @include card.card(
         $padding: 2rem 3.25rem 1.5rem,
-        $box-shadow: 0 0.125rem 0.5rem rgb(15 23 42 / 4%)
     );
 
     min-width: 0;
