@@ -1,6 +1,6 @@
 <header class="header app-header">
     <div class="header__inner">
-        <a href="{{ route('dashboard') }}" class="title app-header__title">
+        <a href="{{ route('dashboard') }}" class="header__title app-header__title">
             HOUSEHOLD BUDGET
         </a>
 
@@ -23,7 +23,7 @@
             </a>
             {{-- Settings --}}
             <a
-                href=""
+                href="{{ route('settings.profile.edit') }}"
                 class="app-header__link {{ request()->routeIs('settings.*') ? 'is-active' : '' }}"
                 @if (request()->routeIs('settings.*')) aria-current="page" @endif
             >

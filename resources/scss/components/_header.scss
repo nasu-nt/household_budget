@@ -8,13 +8,14 @@
         display: flex;
         align-items: center;
 
-        .title {
+        .header__title {
             margin: 0;
             font-size: var(--fs-site-title);
             font-weight: 900;
             color: var(--c-site-title);
             line-height: 1.2;
             text-decoration: none;
+            outline: none;
         }
     }
 
