@@ -23,7 +23,7 @@
             </a>
             {{-- Settings --}}
             <a
-                href="{{ route('settings.profile.edit') }}"
+                href="{{ route('settings.index') }}"
                 class="app-header__link {{ request()->routeIs('settings.*') ? 'is-active' : '' }}"
                 @if (request()->routeIs('settings.*')) aria-current="page" @endif
             >
