@@ -6,18 +6,20 @@
 @use './components/header.scss';
 @use './components/toast.scss';
 
+@use './components/card.scss';
 @use './components/form';
 @use './components/password-toggle';
+@use './components/color-picker.scss';
 
 @use './components/settings-menu';
 
-@use './pages/login';
-@use './pages/register';
-@use './pages/forgot-password';
-@use './pages/reset-password';
+@use './pages/auth/login';
+@use './pages/auth/register';
+@use './pages/auth/forgot-password';
+@use './pages/auth/reset-password';
 
-@use './pages/dashboard';
-@use './pages/settings';
+@use './pages/dashboard/dashboard';
+@use './pages/settings/settings';
 
 
 @tailwind base;
