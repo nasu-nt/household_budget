@@ -1,3 +1,5 @@
+@use 'form';
+
 .color-picker {
     display: grid;
     gap: 0.5rem;
@@ -36,6 +38,11 @@
             box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
         }
 
+        &.is-invalid {
+            background-color: var(--c-danger-bg);
+            border-color: var(--c-danger);
+        }
+
         &::-webkit-color-swatch-wrapper {
             padding: 0.2rem;
         }
@@ -56,5 +63,26 @@
         font-family: monospace;
         font-size: var(--fs-sm);
         text-transform: uppercase;
+    }
+
+    &--compact {
+        .color-picker__control {
+            gap: 0.75rem;
+        }
+
+        .color-picker__input {
+            width: 2.25rem;
+            height: 2.25rem;
+        }
+
+        .color-picker__value {
+            @include form.textbox;
+
+            display: inline-flex;
+            align-items: center;
+            min-width: 8.5rem;
+            padding-inline: 1rem;
+            color: var(--c-input-text);
+        }
     }
 }

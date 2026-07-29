@@ -66,16 +66,16 @@
         text-wrap: balance;
     }
 
-    &__item:not(.is-disabled):hover &__label {
+    &__item:not(.is-active, .is-disabled):hover &__label {
         color: var(--c-primary-hover);
         background-color: var(--c-surface-subtle);
     }
 
-    &__item:not(.is-disabled):focus-visible {
+    &__item:not(.is-active, .is-disabled):focus-visible {
         outline: none;
     }
 
-    &__item:not(.is-disabled):focus-visible &__label {
+    &__item:not(.is-active, .is-disabled):focus-visible &__label {
         outline:
             var(--border-width-strong)
             solid
@@ -87,7 +87,6 @@
         color: var(--c-text);
         background-color: var(--c-surface-disabled);
     }
-    
 }
 
 @media (max-width: 48rem) {
