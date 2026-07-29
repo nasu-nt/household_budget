@@ -16,15 +16,25 @@ class UpdateCategoryRequest extends FormRequest
 
         return $category instanceof Category
             && $this->user() !== null
-            && (int) $category->user_id === (int) $this->user()->id;
+            && (int) $category->user_id === (int) $this->user()->id
+            && $category->archived_at === null;
     }
 
     protected function prepareForValidation(): void
     {
-        $this->merge([
-            'name' => trim((string) $this->input('name')),
-            'color_code' => strtoupper((string) $this->input('color_code')),
-        ]);
+        $input = [];
+
+        if ($this->has('name')) {
+            $input['name'] = trim((string) $this->input('name'));
+        }
+
+        if ($this->has('color_code')) {
+            $input['color_code'] = strtoupper(
+                (string) $this->input('color_code')
+            );
+        }
+
+        $this->merge($input);
     }
 
     public function rules(): array
@@ -38,7 +48,12 @@ class UpdateCategoryRequest extends FormRequest
                 'integer',
                 Rule::in([$category->id]),
             ],
+            'intent' => [
+                'required',
+                Rule::in(['save', 'enable', 'disable', 'archive']),
+            ],
             'name' => [
+                'exclude_unless:intent,save',
                 'required',
                 'string',
                 'max:50',
@@ -50,13 +65,10 @@ class UpdateCategoryRequest extends FormRequest
                     ->ignore($category->id),
             ],
             'color_code' => [
+                'exclude_unless:intent,save',
                 'required',
                 'string',
                 'regex:/^#[0-9A-F]{6}$/',
-            ],
-            'intent' => [
-                'required',
-                Rule::in(['save', 'enable', 'disable']),
             ],
         ];
     }
@@ -64,8 +76,12 @@ class UpdateCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => __('A category with this name already exists.'),
-            'color_code.regex' => __('Select a valid category color.'),
+            'name.unique' => __(
+                'A category with this name already exists.'
+            ),
+            'color_code.regex' => __(
+                'Select a valid category color.'
+            ),
         ];
     }
 }

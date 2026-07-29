@@ -1,5 +1,6 @@
 @use '../../components/card';
 @use '../../components/form';
+@use './categories';
 
 .settings-page {
     min-height: calc(100dvh - var(--l-header-h));
@@ -256,6 +257,7 @@
     .settings-card {
         padding-inline: 2rem;
     }
+
 }
 
 @media (max-width: 48rem) {
@@ -306,4 +308,5 @@
             width: 100%;
         }
     }
+
 }

@@ -15,6 +15,7 @@ class CategoryController extends Controller
     {
         $categories = Category::query()
             ->where('user_id', $request->user()->id)
+            ->whereNull('archived_at')
             ->orderBy('sort_order')
             ->orderBy('id')
             ->get();
@@ -57,14 +58,23 @@ class CategoryController extends Controller
                 'name' => $validated['name'],
                 'color_code' => $validated['color_code'],
             ]),
-            'enable' => $category->update(['is_active' => true]),
-            'disable' => $category->update(['is_active' => false]),
+            'enable' => $category->update([
+                'is_active' => true,
+            ]),
+            'disable' => $category->update([
+                'is_active' => false,
+            ]),
+            'archive' => $category->update([
+                'is_active' => false,
+                'archived_at' => now(),
+            ]),
         };
 
         $message = match ($validated['intent']) {
             'save' => __('Category updated successfully.'),
             'enable' => __('Category enabled successfully.'),
             'disable' => __('Category disabled successfully.'),
+            'archive' => __('Category archived successfully.'),
         };
 
         return redirect()

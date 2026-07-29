@@ -1,6 +1,12 @@
-<section class="settings-card category-settings-card">
+<section
+    class="settings-card category-settings-card"
+    aria-labelledby="existing-categories-title"
+>
     <header class="settings-card__header">
-        <h2 class="settings-card__title">
+        <h2
+            id="existing-categories-title"
+            class="settings-card__title"
+        >
             {{ __('Existing Categories') }}
         </h2>
 

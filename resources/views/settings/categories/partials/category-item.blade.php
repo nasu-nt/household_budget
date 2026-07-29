@@ -135,6 +135,7 @@
                                 @if ($hasUpdateErrors && $errors->updateCategory->has('color_code'))
                                     is-invalid
                                 @endif"
+                            value="{{ $categoryColor }}"
                             x-model="color"
                             required
                             @if ($hasUpdateErrors && $errors->updateCategory->has('color_code'))
@@ -185,20 +186,42 @@
 
             <div class="category-editor__action-buttons">
                 <button
-                    type="button"
-                    class="category-editor__button category-editor__button--cancel"
-                    x-on:click="isEditing = false"
+                    type="submit"
+                    name="intent"
+                    value="{{ $category->is_active ? 'disable' : 'enable' }}"
+                    class="category-editor__button category-editor__button--status"
+                    formnovalidate
                 >
-                    {{ __('Cancel') }}
+                    {{ $category->is_active ? __('Disable') : __('Enable') }}
                 </button>
 
                 <button
                     type="submit"
                     name="intent"
-                    value="{{ $category->is_active ? 'disable' : 'enable' }}"
-                    class="category-editor__button category-editor__button--status"
+                    value="archive"
+                    class="category-editor__button category-editor__button--archive"
+                    formnovalidate
+                    x-on:click="
+                        if (! window.confirm(
+                            @js(__('Archive this category? It will no longer be available for new expense records.'))
+                        )) {
+                            $event.preventDefault();
+                        }
+                    "
                 >
-                    {{ $category->is_active ? __('Disable') : __('Enable') }}
+                    {{ __('Archive') }}
+                </button>
+
+                <button
+                    type="button"
+                    class="category-editor__button category-editor__button--cancel"
+                    x-on:click="
+                        $el.closest('form').reset();
+                        color = @js($category->color_code);
+                        isEditing = false;
+                    "
+                >
+                    {{ __('Cancel') }}
                 </button>
             </div>
         </div>
