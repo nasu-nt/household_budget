@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -43,5 +44,33 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+     * Log in as the demo user.
+     */
+    public function demo(Request $request): RedirectResponse
+    {
+        abort_unless(config('demo.enabled'), 404);
+
+        $demoUser = User::query()
+            ->where('email', config('demo.email'))
+            ->first();
+
+        if ($demoUser === null) {
+            return back()->withErrors([
+                'auth' => __('auth.demo_account_unavailable'),
+            ]);
+        }
+
+        Auth::login($demoUser);
+
+        // セッション固定攻撃への対策として、
+        // ログイン後にセッションIDを再生成する
+        $request->session()->regenerate();
+
+        return redirect()->intended(
+            route('dashboard', absolute: false)
+        );
     }
 }

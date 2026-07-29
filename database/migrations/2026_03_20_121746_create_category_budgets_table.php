@@ -33,6 +33,18 @@ return new class extends Migration
 
         DB::statement('
             ALTER TABLE category_budgets
+            ADD CONSTRAINT category_budgets_target_amount_non_negative_check
+            CHECK (target_amount >= 0)
+        ');
+
+        DB::statement('
+            ALTER TABLE category_budgets
+            ADD CONSTRAINT category_budgets_limit_amount_non_negative_check
+            CHECK (limit_amount >= 0)
+        ');
+
+        DB::statement('
+            ALTER TABLE category_budgets
             ADD CONSTRAINT category_budgets_limit_amount_check
             CHECK (limit_amount >= target_amount)
         ');

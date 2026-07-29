@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,6 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('expenses', function (Blueprint $table) {
+
             $table->id();
 
             $table->foreignId('user_id')
@@ -28,10 +30,18 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // 下記1→2の検索を速くするためのインデックス
-            $table->index(['user_id', 'expense_date']); // 1.user_idで絞る
-            $table->index(['category_id', 'expense_date']); // 2.そのあとexpense_dateで絞る
+            // ユーザーごとの日付検索を速くする
+            $table->index(['user_id', 'expense_date']);
+
+            // カテゴリーごとの日付検索を速くする
+            $table->index(['category_id', 'expense_date']);
         });
+        
+        DB::statement('
+            ALTER TABLE expenses
+            ADD CONSTRAINT expenses_amount_positive_check
+            CHECK (amount >= 0)
+        ');
     }
 
     /**
