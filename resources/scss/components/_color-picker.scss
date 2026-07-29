@@ -1,0 +1,88 @@
+@use 'form';
+
+.color-picker {
+    display: grid;
+    gap: 0.5rem;
+
+    &__label {
+        color: var(--c-text);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+    }
+
+    &__control {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    &__input {
+        flex: 0 0 auto;
+
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+
+        background: transparent;
+        border: var(--border-width) solid var(--c-border);
+        border-radius: var(--r-control);
+        cursor: pointer;
+
+        &:hover {
+            border-color: var(--c-textbox-focus);
+        }
+
+        &:focus-visible {
+            outline: none;
+            border-color: var(--c-textbox-focus);
+            box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+        }
+
+        &.is-invalid {
+            background-color: var(--c-danger-bg);
+            border-color: var(--c-danger);
+        }
+
+        &::-webkit-color-swatch-wrapper {
+            padding: 0.2rem;
+        }
+
+        &::-webkit-color-swatch {
+            border: 0;
+            border-radius: calc(var(--r-control) - 0.2rem);
+        }
+
+        &::-moz-color-swatch {
+            border: 0;
+            border-radius: calc(var(--r-control) - 0.2rem);
+        }
+    }
+
+    &__value {
+        color: var(--c-subtle);
+        font-family: monospace;
+        font-size: var(--fs-sm);
+        text-transform: uppercase;
+    }
+
+    &--compact {
+        .color-picker__control {
+            gap: 0.75rem;
+        }
+
+        .color-picker__input {
+            width: 2.25rem;
+            height: 2.25rem;
+        }
+
+        .color-picker__value {
+            @include form.textbox;
+
+            display: inline-flex;
+            align-items: center;
+            min-width: 8.5rem;
+            padding-inline: 1rem;
+            color: var(--c-input-text);
+        }
+    }
+}
