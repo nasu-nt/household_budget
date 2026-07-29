@@ -12,6 +12,7 @@ class Category extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'color_code',
         'sort_order',
         'is_active',
     ];
