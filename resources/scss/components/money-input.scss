@@ -1,0 +1,20 @@
+.money-input {
+    position: relative;
+    width: 100%;
+
+    &__currency {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 0.75rem;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    &__field {
+        width: 100%;
+        padding-left: 2rem;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+}
