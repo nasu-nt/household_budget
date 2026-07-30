@@ -14,7 +14,7 @@
         ];
     }
 
-    // JavaScriptを無効化されても6件以上表示しない
+    // JavaScriptを無効化されても5件を超えて表示しない
     $expenseRows = array_slice(
         array_values($expenseRows),
         0,
@@ -47,6 +47,7 @@
         method="POST"
         action="{{ route('expenses.store') }}"
         data-expense-form
+        data-default-date="{{ now()->format('Y-m-d') }}"
     >
         @csrf
 
@@ -184,38 +185,49 @@
                         </label>
 
                         <div class="expense-entry__control">
-                            <input
-                                id="expense_amount_{{ $index }}"
-                                name="expenses[{{ $index }}][amount]"
-                                type="text"
-                                class="expense-entry__input
-                                    @error("expenses.{$index}.amount")
-                                        is-invalid
-                                    @enderror"
-                                inputmode="numeric"
-                                autocomplete="off"
-                                maxlength="10"
-                                pattern="[0-9,]*"
-                                value="{{ data_get($expense, 'amount') }}"
-                                required
-                                data-expense-field="amount"
-                                data-expense-amount
-                                @error("expenses.{$index}.amount")
-                                    aria-invalid="true"
-                                    aria-describedby="expense_amount_{{ $index }}_error"
-                                @enderror
-                            >
-
-                            @error("expenses.{$index}.amount")
-                                <p
-                                    id="expense_amount_{{ $index }}_error"
-                                    class="expense-entry__error"
-                                    role="alert"
-                                    data-expense-error="amount"
+                            <div class="money-input">
+                                <span
+                                    class="money-input__currency"
+                                    aria-hidden="true"
                                 >
-                                    {{ $message }}
-                                </p>
-                            @enderror
+                                    ¥
+                                </span>
+                                <input
+                                    id="expense_amount_{{ $index }}"
+                                    name="expenses[{{ $index }}][amount]"
+                                    type="text"
+                                    class="expense-entry__input money-input__field
+                                        oney-input__field
+                                        @error("expenses.{$index}.amount")
+                                            is-invalid
+                                        @enderror"
+                                    inputmode="numeric"
+                                    autocomplete="off"
+                                    maxlength="13"
+                                    pattern="[0-9,]*"
+                                    data-max-digits="10"
+                                    value="{{ data_get($expense, 'amount') }}"
+                                    required
+                                    data-expense-field="amount"
+                                    data-expense-amount
+                                    data-money-input
+                                    @error("expenses.{$index}.amount")
+                                        aria-invalid="true"
+                                        aria-describedby="expense_amount_{{ $index }}_error"
+                                    @enderror
+                                >
+
+                                @error("expenses.{$index}.amount")
+                                    <p
+                                        id="expense_amount_{{ $index }}_error"
+                                        class="expense-entry__error"
+                                        role="alert"
+                                        data-expense-error="amount"
+                                    >
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 

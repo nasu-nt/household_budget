@@ -1,12 +1,34 @@
-{{-- resources\views\dashboard\partials\_recurring-expenses-cta.blade.php --}}
-<section class="dashboard__recurring-expenses-link">
-    <h2 class="dashboard__recurring-expenses-link-title">Recurring expenses</h2>
+{{-- resources/views/dashboard/partials/_recurring-expenses-cta.blade.php --}}
+<section
+    class="subscription-cta"
+    aria-labelledby="subscription-cta-title"
+>
+    <div class="subscription-cta__content">
+        <div class="subscription-cta__heading">
+            <img
+                class="subscription-cta__icon"
+                src="{{ asset('images/icons/subscription_2.svg') }}"
+                alt=""
+                aria-hidden="true"
+            >
 
-    <a class="dashboard__recurring-expenses-cta" href="#">
-        Manage subscriptions
-    </a>
+            <h2
+                id="subscription-cta-title"
+                class="subscription-cta__title"
+            >
+                {{ __('Subscriptions') }}
+            </h2>
+        </div>
 
-    <p class="dashboard__recurring-expenses-desc">
-        Set recurring expenses once and auto-add them every month.
-    </p>
+        <a
+            class="subscription-cta__link"
+            href="{{ route('settings.subscriptions.index') }}"
+        >
+            {{ __('Manage subscriptions') }}
+        </a>
+
+        <p class="subscription-cta__description">
+            {{ __('Set up subscriptions once and add them automatically every month.') }}
+        </p>
+    </div>
 </section>
