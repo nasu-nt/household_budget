@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppearanceSettingController;
 use App\Http\Controllers\BudgetSettingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')
