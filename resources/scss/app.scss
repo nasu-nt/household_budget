@@ -20,6 +20,8 @@
 @use './pages/auth/reset-password';
 
 @use './pages/dashboard/dashboard';
+@use './pages/dashboard/recurring-expenses-cta';
+
 @use './pages/settings/settings';
 @use './pages/settings/categories';
 @use './pages/settings/budget';

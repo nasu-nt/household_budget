@@ -1,56 +1,119 @@
 @use '../../components/form';
 
-.budget-settings-card {
-    padding-bottom: 1.75rem;
-}
-
 .budget-form {
-    --form-width: 39rem;
+    --form-width: 48rem;
     --form-offset-x: -1.25rem;
+
+    .settings-form__label {
+        text-align: right;
+    }
 
     &__amount-input {
         max-width: 22rem;
     }
 
-    &__closing-row {
+    &__closing-fieldset {
+        min-width: 0;
+        margin: 0;
         padding: 0;
+
         border: 0;
     }
 
     &__closing-controls {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 1rem 1.25rem;
         align-items: center;
+
         min-height: var(--l-control-h-small);
+
+        white-space: nowrap;
     }
 
     &__radio {
         display: inline-flex;
         gap: 0.5rem;
         align-items: center;
+
         cursor: pointer;
 
         input {
             width: 1.125rem;
             height: 1.125rem;
             margin: 0;
+
             accent-color: var(--c-primary);
+        }
+    }
+
+    &__select-wrapper {
+        position: relative;
+
+        flex: 0 0 8rem;
+
+        width: 8rem;
+
+        &::after {
+            content: "▼";
+
+            position: absolute;
+            top: 0;
+            right: 0;
+
+            display: grid;
+            place-items: center;
+
+            width: var(--l-control-h-small);
+            height: 100%;
+
+            color: var(--c-button-primary-text);
+            font-size: var(--fs-sm);
+
+            background-color: var(--c-primary-weak);
+            border-radius:
+                0
+                var(--r-control)
+                var(--r-control)
+                0;
+
+            pointer-events: none;
+        }
+
+        &.is-disabled::after {
+            color: var(--c-muted);
+            background-color: var(--c-border-muted);
         }
     }
 
     &__closing-select {
         @include form.textbox;
 
-        width: 6.5rem;
+        display: block;
+
+        width: 100%;
+        min-width: 0;
         height: var(--l-control-h-small);
-        padding-block: 0;
+        padding:
+            0.25rem
+            calc(var(--l-control-h-small) + 0.5rem)
+            0.25rem
+            0.75rem;
+
+        appearance: none;
         cursor: pointer;
 
         &:disabled {
             color: var(--c-muted);
+
             background-color: var(--c-surface-disabled);
+
             cursor: not-allowed;
+            opacity: 1;
+        }
+
+        &.is-invalid {
+            border-color: var(--c-danger);
         }
     }
 
@@ -200,18 +263,35 @@
 }
 
 @media (max-width: 48rem) {
-    .budget-form {
-        &__amount-input {
-            max-width: none;
-        }
+    @media (max-width: 48rem) {
+        .budget-form {
+            --form-width: 100%;
+            --form-offset-x: 0;
 
-        &__closing-controls {
-            align-items: flex-start;
-            flex-direction: column;
-        }
+            .settings-form__label {
+                text-align: left;
+            }
 
-        &__closing-select {
-            width: 100%;
+            &__amount-input {
+                max-width: none;
+            }
+
+            &__closing-controls {
+                flex-direction: column;
+                align-items: flex-start;
+
+                white-space: normal;
+            }
+
+            &__select-wrapper {
+                flex: 0 0 auto;
+
+                width: 100%;
+            }
+
+            &__closing-select {
+                width: 100%;
+            }
         }
     }
 
