@@ -35,22 +35,7 @@
     }
 
     &__color-picker {
-        display: grid;
-        grid-template-columns: 2.25rem 8.375rem;
-        gap: 1rem;
-        align-items: center;
-
-        .color-picker__input {
-            width: 2.25rem;
-            height: 2.25rem;
-        }
-
-        .color-picker__code {
-            width: 8.375rem;
-            min-height: 2.5rem;
-            text-align: center;
-            text-transform: uppercase;
-        }
+        gap: 0;
     }
 
     &__error {
@@ -73,10 +58,10 @@
         font-size: var(--fs-md);
 
         &--secondary {
-            border-color: var(--c-border);
             color: var(--c-text);
-            background-color: var(--c-surface);
             font-weight: 400;
+            background-color: var(--c-surface);
+            border-color: var(--c-border);
 
             &:hover {
                 background-color: var(--c-bg);

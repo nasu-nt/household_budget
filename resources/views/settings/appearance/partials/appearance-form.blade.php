@@ -37,7 +37,10 @@
             <div class="appearance-settings-form__colors">
                 @foreach ($colorFields as $field => $label)
                     @php
-                        $color = old($field, $appearanceSetting->{$field});
+                        $color = old(
+                            $field,
+                            $appearanceSetting->{$field}
+                        );
                     @endphp
 
                     <div class="appearance-settings-form__row">
@@ -50,43 +53,51 @@
 
                         <div class="appearance-settings-form__control">
                             <div
-                                class="color-picker appearance-settings-form__color-picker"
+                                class="color-picker color-picker--compact
+                                    appearance-settings-form__color-picker"
                                 data-color-pair
                                 data-default-color="{{ \App\Models\AppearanceSetting::DEFAULT_COLORS[$field] }}"
                             >
-                                <input
-                                    id="{{ $field }}-picker"
-                                    type="color"
-                                    value="{{ $color }}"
-                                    class="color-picker__input"
-                                    data-color-input
-                                    aria-label="{{ __(':status color picker', ['status' => $label]) }}"
-                                    aria-controls="{{ $field }}-code"
-                                >
+                                <div class="color-picker__control">
+                                    <input
+                                        id="{{ $field }}-picker"
+                                        type="color"
+                                        value="{{ $color }}"
+                                        class="color-picker__input"
+                                        data-color-input
+                                        aria-label="{{ __(':status color picker', [
+                                            'status' => $label,
+                                        ]) }}"
+                                        aria-controls="{{ $field }}-code"
+                                    >
 
-                                <input
-                                    id="{{ $field }}-code"
-                                    type="text"
-                                    name="{{ $field }}"
-                                    value="{{ $color }}"
-                                    class="color-picker__code @error($field) color-picker__code--error @enderror"
-                                    data-color-code
-                                    maxlength="7"
-                                    pattern="^#[0-9A-Fa-f]{6}$"
-                                    inputmode="text"
-                                    autocomplete="off"
-                                    spellcheck="false"
-                                    @error($field)
-                                        aria-invalid="true"
-                                        aria-describedby="{{ $field }}-error"
-                                    @enderror
-                                >
+                                    <input
+                                        id="{{ $field }}-code"
+                                        type="text"
+                                        name="{{ $field }}"
+                                        value="{{ strtoupper($color) }}"
+                                        class="color-picker__code
+                                            @error($field) color-picker__code--error @enderror"
+                                        data-color-code
+                                        maxlength="7"
+                                        pattern="^#[0-9A-Fa-f]{6}$"
+                                        inputmode="text"
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                        @error($field)
+                                            aria-invalid="true"
+                                            aria-describedby="{{ $field }}-error"
+                                        @enderror
+                                    >
+                                </div>
                             </div>
 
                             @error($field)
                                 <p
                                     id="{{ $field }}-error"
-                                    class="settings-form__error appearance-settings-form__error"
+                                    class="settings-form__error
+                                        appearance-settings-form__error"
+                                    role="alert"
                                 >
                                     {{ $message }}
                                 </p>
@@ -99,7 +110,9 @@
             <div class="appearance-settings-form__actions">
                 <button
                     type="button"
-                    class="settings-form__button appearance-settings-form__button appearance-settings-form__button--secondary"
+                    class="settings-form__button
+                        appearance-settings-form__button
+                        appearance-settings-form__button--secondary"
                     data-reset-colors
                 >
                     {{ __('Reset to Default') }}
@@ -107,7 +120,8 @@
 
                 <button
                     type="submit"
-                    class="settings-form__button appearance-settings-form__button"
+                    class="settings-form__button
+                        appearance-settings-form__button"
                 >
                     {{ __('Save Appearance Settings') }}
                 </button>
