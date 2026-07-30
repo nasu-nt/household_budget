@@ -8,11 +8,10 @@ Alpine.start();
 import { initToast } from './components/toast';
 import { initPasswordToggle } from './components/password-toggle';
 import { initFormErrorClear } from './components/form-error-clear';
+import { initDashboardSidebar } from './pages/dashboard/sidebar';
 import { initColorPickers } from './components/color-picker';
 import { initAppearanceSettings } from './components/appearance-settings';
 import { initMoneyInputs } from './components/money-input';
-
-import { initDashboardSidebar } from './pages/dashboard/sidebar';
 
 document.addEventListener('DOMContentLoaded', () => {
     initToast();
@@ -23,4 +22,3 @@ document.addEventListener('DOMContentLoaded', () => {
     initAppearanceSettings();
     initMoneyInputs();
 });
-
