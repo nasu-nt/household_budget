@@ -1,20 +1,22 @@
 @layer components {
     .header__inner {
         background: var(--c-header-bg);
-        padding: 0 2.6rem 0 2rem;
+        padding: 0 3rem 0 2rem;
         min-height: var(--l-header-h);
         width: 100%;
 
         display: flex;
         align-items: center;
 
-        .title {
+        .header__title {
             margin: 0;
             font-size: var(--fs-site-title);
-            font-weight: 900;
+            font-weight: 1000;
+            letter-spacing: 0.1em;
             color: var(--c-site-title);
             line-height: 1.2;
             text-decoration: none;
+            outline: none;
         }
     }
 
@@ -25,28 +27,46 @@
         margin-left: auto;
         gap: 1.5rem;
         color: var(--c-header-nav);
-    
+        
         .app-header__link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+
             background: none;
             border: none;
-            padding: 0;
+            padding: 0.15rem 0 0.25rem;
             margin: 0;
-            font: inherit;
-            text-decoration: none;
-            font-size: var(--fs-md);
-            /* cursor: pointer; */
-        }
 
-        .app-header__link:hover {
+            color: var(--c-header-nav);
+            font: inherit;
+            font-size: var(--fs-md);
+
+            line-height: 1.2;
+            text-decoration: none;
+            // cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .app-header__link:not(.is-active):hover {
             color: var(--c-header-link-hover);
         }
-
+        
         .app-header__link.is-active {
             color: var(--c-header-link-active);
-            font-weight: 700;
             pointer-events: none;
         }
 
+        .app-header__link.is-active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: var(--border-width-strong);
+            background: var(--c-active-indicator);
+        }
+        
         .app-header__logout-form {
             margin: 0;
         }

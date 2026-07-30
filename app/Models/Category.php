@@ -12,13 +12,19 @@ class Category extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'color_code',
         'sort_order',
         'is_active',
+        'archived_at',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'archived_at' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {
