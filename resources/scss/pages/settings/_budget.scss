@@ -1,0 +1,284 @@
+@use '../../components/form';
+
+.budget-settings-card {
+    padding-bottom: 1.75rem;
+}
+
+.budget-form {
+    --form-width: 39rem;
+    --form-offset-x: -1.25rem;
+
+    &__amount-input {
+        max-width: 22rem;
+    }
+
+    &__closing-row {
+        padding: 0;
+        border: 0;
+    }
+
+    &__closing-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem 1.25rem;
+        align-items: center;
+        min-height: var(--l-control-h-small);
+    }
+
+    &__radio {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+        cursor: pointer;
+
+        input {
+            width: 1.125rem;
+            height: 1.125rem;
+            margin: 0;
+            accent-color: var(--c-primary);
+        }
+    }
+
+    &__closing-select {
+        @include form.textbox;
+
+        width: 6.5rem;
+        height: var(--l-control-h-small);
+        padding-block: 0;
+        cursor: pointer;
+
+        &:disabled {
+            color: var(--c-muted);
+            background-color: var(--c-surface-disabled);
+            cursor: not-allowed;
+        }
+    }
+
+    &__submit {
+        width: 21.875rem;
+        max-width: 100%;
+    }
+}
+
+.budget-guide {
+    margin-top: 2rem;
+    padding: 1.75rem 1.75rem 1.5rem;
+    background-color: var(--c-surface-disabled);
+    border: var(--border-width) solid var(--c-border);
+    border-radius: var(--r-swatch);
+
+    &__summary {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding-bottom: 1.75rem;
+        border-bottom:
+            var(--border-width-strong)
+            solid
+            var(--c-border);
+    }
+
+    &__metric {
+        min-width: 0;
+        padding-inline: 2rem;
+        text-align: center;
+
+        & + & {
+            border-left:
+                var(--border-width)
+                solid
+                var(--c-border);
+        }
+    }
+
+    &__metric-title,
+    &__metric-value {
+        margin: 0;
+    }
+
+    &__metric-title {
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    &__metric-value {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: baseline;
+        justify-content: center;
+        margin-top: 1.5rem;
+        line-height: 1.2;
+
+        strong {
+            font-size: 1.7rem;
+            font-weight: 800;
+        }
+
+        span {
+            font-size: var(--fs-sm);
+        }
+    }
+
+    &__status {
+        padding-top: 1.5rem;
+    }
+
+    &__status-title {
+        margin: 0 0 0.75rem;
+        font-size: var(--fs-lg);
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    &__table {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    &__table-header,
+    &__table-row {
+        display: grid;
+        grid-template-columns:
+            7rem
+            2.5rem
+            minmax(12rem, 1fr)
+            minmax(14rem, 1.2fr);
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    &__table-header {
+        font-size: var(--fs-sm);
+
+        strong {
+            padding: 0 0.5rem 0.35rem;
+            border-bottom:
+                var(--border-width)
+                solid
+                var(--c-border);
+        }
+    }
+
+    &__table-row {
+        font-size: var(--fs-sm);
+        line-height: 1.4;
+    }
+
+    &__status-label {
+        text-align: right;
+    }
+
+    &__swatch {
+        display: block;
+        width: 1.75rem;
+        height: 1.75rem;
+        background-color: var(--status-color);
+        border: var(--border-width) solid var(--c-border);
+        border-radius: var(--r-swatch);
+    }
+}
+
+@media (max-width: 64rem) {
+    .budget-guide {
+        padding-inline: 1.25rem;
+
+        &__metric {
+            padding-inline: 1rem;
+        }
+
+        &__table-header,
+        &__table-row {
+            grid-template-columns:
+                6rem
+                2rem
+                minmax(10rem, 1fr)
+                minmax(11rem, 1fr);
+            gap: 0.625rem;
+        }
+    }
+}
+
+@media (max-width: 48rem) {
+    .budget-form {
+        &__amount-input {
+            max-width: none;
+        }
+
+        &__closing-controls {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        &__closing-select {
+            width: 100%;
+        }
+    }
+
+    .budget-guide {
+        margin-top: 1.5rem;
+        padding: 1.25rem 1rem;
+
+        &__summary {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.25rem;
+        }
+
+        &__metric {
+            padding-inline: 0;
+
+            & + & {
+                padding-top: 1.25rem;
+                border-top:
+                    var(--border-width)
+                    solid
+                    var(--c-border);
+                border-left: 0;
+            }
+        }
+
+        &__metric-value {
+            margin-top: 0.75rem;
+        }
+
+        &__table-header {
+            display: none;
+        }
+
+        &__table-row {
+            grid-template-columns: auto 1.75rem minmax(0, 1fr);
+            gap: 0.5rem 0.75rem;
+            align-items: start;
+            padding-bottom: 0.75rem;
+            border-bottom:
+                var(--border-width)
+                solid
+                var(--c-border);
+
+            > :nth-child(3),
+            > :nth-child(4) {
+                grid-column: 1 / -1;
+                padding-left: 0;
+            }
+
+            > :nth-child(3)::before {
+                content: 'Daily: ';
+                font-weight: 700;
+            }
+
+            > :nth-child(4)::before {
+                content: 'Monthly: ';
+                font-weight: 700;
+            }
+        }
+
+        &__status-label {
+            align-self: center;
+            text-align: left;
+        }
+
+        &__swatch {
+            align-self: center;
+        }
+    }
+}
