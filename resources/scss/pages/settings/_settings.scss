@@ -1,5 +1,6 @@
 @use '../../components/card';
 @use '../../components/form';
+@use './categories';
 
 .settings-page {
     min-height: calc(100dvh - var(--l-header-h));

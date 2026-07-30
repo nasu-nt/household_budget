@@ -1,20 +1,25 @@
-// カラーピッカーからカラーコードを取り出す
+// カラーピッカーの表示値を更新する
 export function initColorPickers() {
     const colorPickers = document.querySelectorAll('.color-picker');
 
     colorPickers.forEach((colorPicker) => {
         const input = colorPicker.querySelector('.color-picker__input');
-        const value = colorPicker.querySelector('.color-picker__value');
+        const output = colorPicker.querySelector('.color-picker__value');
 
-        if (!(input instanceof HTMLInputElement) || !(value instanceof HTMLElement)) {
+        if (
+            !(input instanceof HTMLInputElement)
+            || !(output instanceof HTMLElement)
+        ) {
             return;
         }
 
-        const updateValue = () => {
-            value.textContent = input.value.toUpperCase();
+        const updateColorValue = () => {
+            output.textContent = input.value.toUpperCase();
         };
 
-        input.addEventListener('input', updateValue);
-        updateValue();
+        input.addEventListener('input', updateColorValue);
+        input.addEventListener('change', updateColorValue);
+
+        updateColorValue();
     });
 }
