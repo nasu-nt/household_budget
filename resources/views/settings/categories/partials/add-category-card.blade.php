@@ -1,8 +1,9 @@
 @php
-    $hasStoreErrors = $errors->storeCategory->isNotEmpty();
-    $newCategoryColor = $hasStoreErrors
-        ? old('color_code', '#808080')
-        : '#808080';
+    $archivedCategoryConflict = session(
+        'archived_category_conflict'
+    );
+    $newCategoryName = old('name', '');
+    $newCategoryColor = old('color_code', '#808080');
 @endphp
 
 <section class="settings-card category-settings-card">
@@ -16,10 +17,94 @@
         </p>
     </header>
 
+    @if ($archivedCategoryConflict !== null)
+        <div
+            class="category-archive-prompt"
+            role="alert"
+            aria-labelledby="category-archive-prompt-title"
+        >
+            <div class="category-archive-prompt__content">
+                <p
+                    id="category-archive-prompt-title"
+                    class="category-archive-prompt__title"
+                >
+                    {{ __('“:name” is archived.', [
+                        'name' => $archivedCategoryConflict['name'],
+                    ]) }}
+                </p>
+
+                <p class="category-archive-prompt__description">
+                    {{ __('Restore the previous category or create a new category with the same name.') }}
+                </p>
+            </div>
+
+            <div class="category-archive-prompt__actions">
+                <form
+                    method="post"
+                    action="{{ route(
+                        'settings.categories.restore',
+                        $archivedCategoryConflict['id']
+                    ) }}"
+                >
+                    @csrf
+                    @method('patch')
+
+                    <input
+                        type="hidden"
+                        name="color_code"
+                        value="{{ $newCategoryColor }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="category-archive-prompt__button
+                            category-archive-prompt__button--restore"
+                    >
+                        {{ __('Restore & Use') }}
+                    </button>
+                </form>
+
+                <form
+                    method="post"
+                    action="{{ route('settings.categories.store') }}"
+                >
+                    @csrf
+
+                    <input
+                        type="hidden"
+                        name="intent"
+                        value="create_new"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="name"
+                        value="{{ $newCategoryName }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="color_code"
+                        value="{{ $newCategoryColor }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="category-archive-prompt__button
+                            category-archive-prompt__button--new"
+                    >
+                        {{ __('Use Another Category') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endif
+
     <form
         method="post"
         action="{{ route('settings.categories.store') }}"
         class="settings-form category-form"
+        x-data="{ color: @js($newCategoryColor) }"
     >
         @csrf
 
@@ -38,8 +123,9 @@
                         name="name"
                         type="text"
                         class="settings-form__input
-                            @error('name', 'storeCategory') is-invalid @enderror"
-                        value="{{ $hasStoreErrors ? old('name') : '' }}"
+                            @error('name', 'storeCategory') is-invalid @enderror
+                            color-picker__code"
+                         value="{{ $newCategoryName }}"
                         required
                         maxlength="50"
                         autocomplete="off"
@@ -79,6 +165,7 @@
                                 class="color-picker__input
                                     @error('color_code', 'storeCategory') is-invalid @enderror"
                                 value="{{ $newCategoryColor }}"
+                                x-model="color"
                                 required
                                 @error('color_code', 'storeCategory')
                                     aria-invalid="true"
@@ -89,6 +176,7 @@
                             <output
                                 class="color-picker__value"
                                 for="new_category_color"
+                                x-text="color.toUpperCase()"
                             >
                                 {{ strtoupper($newCategoryColor) }}
                             </output>

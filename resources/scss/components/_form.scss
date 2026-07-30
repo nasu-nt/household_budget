@@ -1,7 +1,7 @@
 @mixin textbox {
     min-width: 0;
     height: var(--l-control-h-small);
-    padding: 0 0.5rem;
+    padding: 0 1.0rem;
     box-sizing: border-box;
     background-color: var(--c-textbox);
     border: var(--border-width) solid var(--c-border);

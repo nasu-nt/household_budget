@@ -2,6 +2,76 @@
 
 .category-settings-card {
     padding-bottom: 2rem;
+
+    .color-picker__code {
+        text-align: center;
+    }
+}
+
+.category-archive-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    background-color: var(--c-surface-disabled);
+    border: var(--border-width) solid var(--c-border);
+    border-radius: var(--r-control);
+
+    &__content {
+        min-width: 0;
+    }
+
+    &__title,
+    &__description {
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    &__title {
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        font-weight: 600;
+    }
+
+    &__description {
+        margin-top: 0.25rem;
+        color: var(--c-subtle);
+        font-size: var(--fs-sm);
+    }
+
+    &__actions {
+        display: flex;
+        flex: 0 0 auto;
+        gap: 0.75rem;
+    }
+
+    &__actions form {
+        margin: 0;
+    }
+
+    &__button {
+        @include form.button(
+            $width: auto,
+            $margin: 0
+        );
+
+        min-width: 8.5rem;
+        height: 2.25rem;
+        padding-inline: 1rem;
+        font-size: var(--fs-sm);
+
+        &--new {
+            color: var(--c-button-secondary-text);
+            background-color: var(--c-button-secondary-bg);
+            border-color: var(--c-button-secondary-border);
+
+            &:hover:not(:disabled) {
+                background-color: var(--c-button-secondary-bg-hover);
+            }
+        }
+    }
 }
 
 .category-list {
@@ -234,6 +304,15 @@
 }
 
 @media (max-width: 64rem) {
+    .category-archive-prompt {
+        align-items: flex-start;
+        flex-direction: column;
+
+        &__actions {
+            flex-wrap: wrap;
+        }
+    }
+
     .category-list {
         --category-list-columns: minmax(10rem, 1fr) 5rem 6rem 5.5rem;
 
@@ -255,6 +334,19 @@
 }
 
 @media (max-width: 48rem) {
+    .category-archive-prompt {
+        padding: 1rem;
+
+        &__actions {
+            display: grid;
+            width: 100%;
+        }
+
+        &__button {
+            width: 100%;
+        }
+    }
+
     .category-list {
         margin-top: 1rem;
 

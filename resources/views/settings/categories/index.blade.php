@@ -35,7 +35,8 @@
                     )
 
                     @include(
-                        'settings.categories.partials.existing-categories-card'
+                        'settings.categories.partials.existing-categories-card',
+                        ['categories' => $categories]
                     )
                 </div>
             </div>

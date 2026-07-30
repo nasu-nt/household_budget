@@ -58,10 +58,10 @@ class UpdateCategoryRequest extends FormRequest
                 'string',
                 'max:50',
                 Rule::unique('categories', 'name')
-                    ->where(fn ($query) => $query->where(
-                        'user_id',
-                        $this->user()->id
-                    ))
+                    ->where(fn ($query) => $query
+                        ->where('user_id', $this->user()->id)
+                        ->whereNull('archived_at')
+                    )
                     ->ignore($category->id),
             ],
             'color_code' => [
@@ -77,7 +77,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name.unique' => __(
-                'A category with this name already exists.'
+                'A current category with this name already exists.'
             ),
             'color_code.regex' => __(
                 'Select a valid category color.'
