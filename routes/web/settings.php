@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppearanceSettingController;
 use App\Http\Controllers\BudgetSettingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')
@@ -60,4 +61,22 @@ Route::middleware('auth')
             '/appearance',
             [AppearanceSettingController::class, 'update']
         )->name('appearance.update');
+
+        // Subscription
+        Route::get(
+            '/subscriptions',
+            [SubscriptionController::class, 'index']
+        )->name('subscriptions.index');
+
+        Route::post(
+            '/subscriptions',
+            [SubscriptionController::class, 'store']
+        )->name('subscriptions.store');
+
+        Route::patch(
+            '/subscriptions/{subscription}',
+            [SubscriptionController::class, 'update']
+        )
+            ->whereNumber('subscription')
+            ->name('subscriptions.update');
     });
