@@ -128,33 +128,35 @@
                 </label>
 
                 <div class="settings-form__control">
-                    <select
-                        id="new_subscription_category"
-                        name="category_id"
-                        class="subscription-form__select
-                            @error('category_id', 'storeSubscription') is-invalid @enderror"
-                        required
-                        @error('category_id', 'storeSubscription')
-                            aria-invalid="true"
-                            aria-describedby="new-subscription-category-error"
-                        @enderror
-                    >
-                        <option value="">
-                            {{ __('Select category') }}
-                        </option>
-
-                        @foreach ($activeCategories as $category)
-                            <option
-                                value="{{ $category->id }}"
-                                @selected(
-                                    $hasStoreErrors
-                                    && (int) old('category_id') === $category->id
-                                )
-                            >
-                                {{ $category->name }}
+                    <div class="subscription-form__select-wrapper">
+                        <select
+                            id="new_subscription_category"
+                            name="category_id"
+                            class="subscription-form__select
+                                @error('category_id', 'storeSubscription') is-invalid @enderror"
+                            required
+                            @error('category_id', 'storeSubscription')
+                                aria-invalid="true"
+                                aria-describedby="new-subscription-category-error"
+                            @enderror
+                        >
+                            <option value="">
+                                {{ __('Select category') }}
                             </option>
-                        @endforeach
-                    </select>
+
+                            @foreach ($activeCategories as $category)
+                                <option
+                                    value="{{ $category->id }}"
+                                    @selected(
+                                        $hasStoreErrors
+                                        && (int) old('category_id') === $category->id
+                                    )
+                                >
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     @error('category_id', 'storeSubscription')
                         <p
@@ -174,12 +176,17 @@
                 </div>
             </div>
 
-            <fieldset
+            <div
                 class="settings-form__row subscription-form__billing-row"
+                role="group"
+                aria-labelledby="new-subscription-billing-label"
             >
-                <legend class="settings-form__label">
+                <span
+                    id="new-subscription-billing-label"
+                    class="settings-form__label"
+                >
                     {{ __('Billing Day') }}
-                </legend>
+                </span>
 
                 <div class="settings-form__control">
                     <div class="subscription-billing">
@@ -209,27 +216,36 @@
                             <span>{{ __('Specific day') }}</span>
                         </label>
 
-                        <select
-                            id="new_subscription_billing_day"
-                            name="billing_day"
-                            class="subscription-billing__select
-                                @error('billing_day', 'storeSubscription') is-invalid @enderror"
-                            x-bind:disabled="isEndOfMonth"
-                            aria-label="{{ __('Specific billing day') }}"
-                            @error('billing_day', 'storeSubscription')
-                                aria-invalid="true"
-                                aria-describedby="new-subscription-billing-day-error"
-                            @enderror
+                        <div
+                            class="subscription-form__select-wrapper
+                                subscription-billing__day-select-wrapper"
+                            x-bind:class="{
+                                'is-disabled': isEndOfMonth
+                            }"
                         >
-                            @for ($day = 1; $day <= 31; $day++)
-                                <option
-                                    value="{{ $day }}"
-                                    @selected($newBillingDay === $day)
-                                >
-                                    {{ $day }}
-                                </option>
-                            @endfor
-                        </select>
+                            <select
+                                id="new_subscription_billing_day"
+                                name="billing_day"
+                                class="subscription-form__select
+                                    subscription-billing__select
+                                    @error('billing_day', 'storeSubscription') is-invalid @enderror"
+                                x-bind:disabled="isEndOfMonth"
+                                aria-label="{{ __('Specific billing day') }}"
+                                @error('billing_day', 'storeSubscription')
+                                    aria-invalid="true"
+                                    aria-describedby="new-subscription-billing-day-error"
+                                @enderror
+                            >
+                                @for ($day = 1; $day <= 31; $day++)
+                                    <option
+                                        value="{{ $day }}"
+                                        @selected($newBillingDay === $day)
+                                    >
+                                        {{ $day }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
                     </div>
 
                     @error('is_end_of_month', 'storeSubscription')
@@ -251,7 +267,7 @@
                         </p>
                     @enderror
                 </div>
-            </fieldset>
+            </div>
         </div>
 
         <div class="settings-form__actions">
