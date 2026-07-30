@@ -11,6 +11,8 @@ import { initPasswordToggle } from './components/password-toggle';
 import { initFormErrorClear } from './components/form-error-clear';
 import { initDashboardSidebar } from './features/dashboard/sidebar';
 import { initColorPickers } from './components/color-picker';
+import { initAppearanceSettings } from './components/appearance-settings';
+import { initMoneyInputs } from './components/money-input';
 
 document.addEventListener('DOMContentLoaded', () => {
     initToast();
@@ -18,4 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initFormErrorClear();
     initDashboardSidebar();
     initColorPickers();
+    initAppearanceSettings();
+    initMoneyInputs();
 });

@@ -1,11 +1,5 @@
 {{-- resources\views\dashboard\partials\_expense-form.blade.php --}}
 <section class="dashboard__record-expense-area">
-    <form
-    class="dashboard__record-expense-form"
-    method="POST"
-    action="{{ route('expenses.store') }}"
->
-    @csrf
 
     <form
         class="dashboard__record-expense-form"
@@ -58,15 +52,26 @@
         <div>
             <label for="amount">Amount</label>
 
-            <input
-                id="amount"
-                name="amount"
-                type="number"
-                min="1"
-                step="1"
-                value="{{ old('amount') }}"
-                required
-            >
+            <div class="money-input">
+                <span
+                    class="money-input__currency"
+                    aria-hidden="true"
+                >
+                    ¥
+                </span>
+
+                <input
+                    id="amount"
+                    class="money-input__field"
+                    data-money-input
+                    name="amount"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    value="{{ old('amount') ? number_format((int) old('amount')) : '' }}"
+                    required
+                >
+            </div>
 
             @error('amount')
                 <p>{{ $message }}</p>
