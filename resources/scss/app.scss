@@ -21,6 +21,8 @@
 
 @use './pages/dashboard/dashboard';
 @use './pages/settings/settings';
+@use './pages/settings/categories';
+@use './pages/settings/appearance';
 
 
 @tailwind base;
