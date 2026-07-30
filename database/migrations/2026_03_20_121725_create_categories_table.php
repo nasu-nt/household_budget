@@ -6,19 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+public function up(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->timestamp('archived_at')
-                ->nullable()
-                ->index();
+            Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->string('name', 50);
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->unique(['user_id', 'name']);
         });
     }
 
     public function down(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('archived_at');
-        });
+        Schema::dropIfExists('categories');
     }
+
 };

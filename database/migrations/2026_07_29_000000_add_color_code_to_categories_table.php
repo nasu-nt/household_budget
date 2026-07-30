@@ -9,7 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->string('color_code', 7)->default('#808080');
+            $table->string('color_code', 7)
+                ->default('#808080');
         });
     }
 

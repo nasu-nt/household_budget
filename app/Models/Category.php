@@ -18,10 +18,13 @@ class Category extends Model
         'archived_at',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'archived_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'archived_at' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {
