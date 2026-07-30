@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::redirect('/', '/login');
 
 Route::middleware('auth')->group(function () {
     require __DIR__.'/web/dashboard.php';
@@ -11,6 +11,8 @@ Route::middleware('auth')->group(function () {
     require __DIR__.'/web/settings.php';
     require __DIR__.'/web/profile.php';
     require __DIR__.'/web/category.php';
+
+    require __DIR__.'/web/appearance.php';
 });
 
 require __DIR__.'/auth.php';

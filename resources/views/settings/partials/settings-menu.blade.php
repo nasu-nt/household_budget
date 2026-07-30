@@ -21,7 +21,7 @@
         [
             'label' => __('Appearance'),
             'description' => __('Customize colors used to show spending status.'),
-            'route' => 'settings.appearance.edit',
+            'route' => 'settings.appearance.index',
             'active' => 'settings.appearance.*',
         ],
         [
