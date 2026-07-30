@@ -11,7 +11,7 @@ Route::middleware('auth')
     ->group(function () {
         // Account
         Route::get('/', function () {
-            return redirect()->route('settings.profile.index');
+            return redirect()->route('settings.profile.edit');
         })->name('index');
 
         // Category
