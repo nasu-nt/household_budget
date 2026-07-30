@@ -1,96 +1,326 @@
-{{-- resources\views\dashboard\partials\_expense-form.blade.php --}}
-<section class="dashboard__record-expense-area">
-    <form
-    class="dashboard__record-expense-form"
-    method="POST"
-    action="{{ route('expenses.store') }}"
+{{-- resources/views/dashboard/partials/_expense-form.blade.php --}}
+
+@php
+    $expenseRows = old('expenses');
+
+    if (! is_array($expenseRows) || $expenseRows === []) {
+        $expenseRows = [
+            [
+                'expense_date' => now()->format('Y-m-d'),
+                'category_id' => '',
+                'amount' => '',
+                'memo' => '',
+            ],
+        ];
+    }
+
+    // JavaScriptを無効化されても5件を超えて表示しない
+    $expenseRows = array_slice(
+        array_values($expenseRows),
+        0,
+        5
+    );
+@endphp
+
+<section
+    class="dashboard__record-expense-area"
+    aria-labelledby="expense-form-title"
 >
-    @csrf
+    <header class="expense-form__header">
+        <h2
+            id="expense-form-title"
+            class="expense-form__title"
+        >
+            <img
+                class="expense-form__title-icon"
+                src="{{ asset('images/icons/pen_1.svg') }}"
+                alt=""
+                aria-hidden="true"
+            >
+
+            <span>{{ __('Log your spending') }}</span>
+        </h2>
+    </header>
 
     <form
-        class="dashboard__record-expense-form"
+        class="expense-form"
         method="POST"
         action="{{ route('expenses.store') }}"
+        data-expense-form
+        data-default-date="{{ now()->format('Y-m-d') }}"
     >
         @csrf
 
-        <div>
-            <label for="expense_date">Date</label>
-
-            <input
-                id="expense_date"
-                name="expense_date"
-                type="date"
-                value="{{ old('expense_date', now()->format('Y-m-d')) }}"
-                required
-            >
-
-            @error('expense_date')
-                <p>{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div>
-            <label for="category_id">Category</label>
-
-            <select
-                id="category_id"
-                name="category_id"
-                required
-            >
-                <option value="">Select category</option>
-
-                @foreach ($categories as $category)
-                    <option
-                        value="{{ $category->id }}"
-                        @selected(old('category_id') == $category->id)
+        <div
+            class="expense-form__entries"
+            data-expense-list
+        >
+            @foreach ($expenseRows as $index => $expense)
+                <fieldset
+                    class="expense-entry"
+                    data-expense-card
+                >
+                    <legend
+                        class="sr-only"
+                        data-expense-legend
                     >
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
+                        {{ __('Expense :number', [
+                            'number' => $index + 1,
+                        ]) }}
+                    </legend>
 
-            @error('category_id')
-                <p>{{ $message }}</p>
-            @enderror
+                    {{-- Date --}}
+                    <div class="expense-entry__row">
+                        <label
+                            for="expense_expense_date_{{ $index }}"
+                            class="expense-entry__label"
+                            data-expense-label="expense_date"
+                        >
+                            {{ __('Date') }}
+                        </label>
+
+                        <div class="expense-entry__control">
+                            <input
+                                id="expense_expense_date_{{ $index }}"
+                                name="expenses[{{ $index }}][expense_date]"
+                                type="date"
+                                class="expense-entry__input
+                                    @error("expenses.{$index}.expense_date")
+                                        is-invalid
+                                    @enderror"
+                                value="{{ data_get(
+                                    $expense,
+                                    'expense_date',
+                                    now()->format('Y-m-d')
+                                ) }}"
+                                required
+                                data-expense-field="expense_date"
+                                @error("expenses.{$index}.expense_date")
+                                    aria-invalid="true"
+                                    aria-describedby="expense_expense_date_{{ $index }}_error"
+                                @enderror
+                            >
+
+                            @error("expenses.{$index}.expense_date")
+                                <p
+                                    id="expense_expense_date_{{ $index }}_error"
+                                    class="expense-entry__error"
+                                    role="alert"
+                                    data-expense-error="expense_date"
+                                >
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Category --}}
+                    <div class="expense-entry__row">
+                        <label
+                            for="expense_category_id_{{ $index }}"
+                            class="expense-entry__label"
+                            data-expense-label="category_id"
+                        >
+                            {{ __('Category') }}
+                        </label>
+
+                        <div class="expense-entry__control">
+                            <div class="expense-entry__select-wrapper">
+                                <select
+                                    id="expense_category_id_{{ $index }}"
+                                    name="expenses[{{ $index }}][category_id]"
+                                    class="expense-entry__select
+                                        @error("expenses.{$index}.category_id")
+                                            is-invalid
+                                        @enderror"
+                                    required
+                                    data-expense-field="category_id"
+                                    @error("expenses.{$index}.category_id")
+                                        aria-invalid="true"
+                                        aria-describedby="expense_category_id_{{ $index }}_error"
+                                    @enderror
+                                >
+                                    <option value="">
+                                        {{ __('Select category') }}
+                                    </option>
+
+                                    @foreach ($categories as $category)
+                                        <option
+                                            value="{{ $category->id }}"
+                                            @selected(
+                                                (string) data_get(
+                                                    $expense,
+                                                    'category_id'
+                                                )
+                                                === (string) $category->id
+                                            )
+                                        >
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            @error("expenses.{$index}.category_id")
+                                <p
+                                    id="expense_category_id_{{ $index }}_error"
+                                    class="expense-entry__error"
+                                    role="alert"
+                                    data-expense-error="category_id"
+                                >
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Amount --}}
+                    <div class="expense-entry__row">
+                        <label
+                            for="expense_amount_{{ $index }}"
+                            class="expense-entry__label"
+                            data-expense-label="amount"
+                        >
+                            {{ __('Amount') }}
+                        </label>
+
+                        <div class="expense-entry__control">
+                            <div class="money-input">
+                                <span
+                                    class="money-input__currency"
+                                    aria-hidden="true"
+                                >
+                                    ¥
+                                </span>
+                                <input
+                                    id="expense_amount_{{ $index }}"
+                                    name="expenses[{{ $index }}][amount]"
+                                    type="text"
+                                    class="expense-entry__input money-input__field
+                                        oney-input__field
+                                        @error("expenses.{$index}.amount")
+                                            is-invalid
+                                        @enderror"
+                                    inputmode="numeric"
+                                    autocomplete="off"
+                                    maxlength="13"
+                                    pattern="[0-9,]*"
+                                    data-max-digits="10"
+                                    value="{{ data_get($expense, 'amount') }}"
+                                    required
+                                    data-expense-field="amount"
+                                    data-expense-amount
+                                    data-money-input
+                                    @error("expenses.{$index}.amount")
+                                        aria-invalid="true"
+                                        aria-describedby="expense_amount_{{ $index }}_error"
+                                    @enderror
+                                >
+
+                                @error("expenses.{$index}.amount")
+                                    <p
+                                        id="expense_amount_{{ $index }}_error"
+                                        class="expense-entry__error"
+                                        role="alert"
+                                        data-expense-error="amount"
+                                    >
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Memo --}}
+                    <div class="expense-entry__row">
+                        <label
+                            for="expense_memo_{{ $index }}"
+                            class="expense-entry__label"
+                            data-expense-label="memo"
+                        >
+                            {{ __('Memo') }}
+                        </label>
+
+                        <div class="expense-entry__control">
+                            <input
+                                id="expense_memo_{{ $index }}"
+                                name="expenses[{{ $index }}][memo]"
+                                type="text"
+                                class="expense-entry__input
+                                    @error("expenses.{$index}.memo")
+                                        is-invalid
+                                    @enderror"
+                                maxlength="255"
+                                value="{{ data_get($expense, 'memo') }}"
+                                data-expense-field="memo"
+                                @error("expenses.{$index}.memo")
+                                    aria-invalid="true"
+                                    aria-describedby="expense_memo_{{ $index }}_error"
+                                @enderror
+                            >
+
+                            @error("expenses.{$index}.memo")
+                                <p
+                                    id="expense_memo_{{ $index }}_error"
+                                    class="expense-entry__error"
+                                    role="alert"
+                                    data-expense-error="memo"
+                                >
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="expense-entry__actions">
+                        <button
+                            type="button"
+                            class="expense-entry__remove"
+                            data-remove-expense
+                            @if (count($expenseRows) === 1)
+                                hidden
+                            @endif
+                        >
+                            {{ __('Remove this expense') }}
+                        </button>
+                    </div>
+                </fieldset>
+            @endforeach
         </div>
 
-        <div>
-            <label for="amount">Amount</label>
+        <button
+            type="button"
+            class="expense-form__add"
+            data-add-expense
+            @if (count($expenseRows) >= 5)
+                hidden
+            @endif
+        >
+            <span aria-hidden="true">＋</span>
+            {{ __('Add another expense') }}
+        </button>
 
-            <input
-                id="amount"
-                name="amount"
-                type="number"
-                min="1"
-                step="1"
-                value="{{ old('amount') }}"
-                required
-            >
+        <p
+            class="expense-form__limit"
+            data-expense-limit
+            @if (count($expenseRows) < 5)
+                hidden
+            @endif
+        >
+            {{ __('Up to 5 expenses can be added at once.') }}
+        </p>
 
-            @error('amount')
-                <p>{{ $message }}</p>
-            @enderror
-        </div>
+        <span
+            class="sr-only"
+            aria-live="polite"
+            data-expense-count
+        ></span>
 
-        <div>
-            <label for="memo">Memo</label>
-
-            <input
-                id="memo"
-                name="memo"
-                type="text"
-                maxlength="255"
-                value="{{ old('memo') }}"
-            >
-
-            @error('memo')
-                <p>{{ $message }}</p>
-            @enderror
-        </div>
-
-        <button type="submit">
-            Save expense
+        <button
+            type="submit"
+            class="expense-form__submit"
+        >
+            {{ __('Save expense') }}
         </button>
     </form>
 </section>

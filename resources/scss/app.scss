@@ -5,6 +5,7 @@
 @use './components/layout.scss';
 @use './components/header.scss';
 @use './components/toast.scss';
+@use './components/money-input';
 
 @use './components/card.scss';
 @use './components/form';
@@ -20,6 +21,10 @@
 
 @use './pages/dashboard/dashboard';
 @use './pages/settings/settings';
+@use './pages/settings/categories';
+@use './pages/settings/budget';
+@use './pages/settings/appearance';
+@use './pages/settings/subscriptions';
 
 
 @tailwind base;

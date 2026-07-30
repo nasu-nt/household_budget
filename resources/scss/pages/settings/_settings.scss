@@ -1,5 +1,6 @@
 @use '../../components/card';
 @use '../../components/form';
+@use './categories';
 
 .settings-page {
     min-height: calc(100dvh - var(--l-header-h));
@@ -41,8 +42,8 @@
     }
 
     &__danger-zone {
-        margin-top: 1.125rem;
-        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+        padding-top: 1.75rem;
         border-top:
             var(--border-width)
             solid

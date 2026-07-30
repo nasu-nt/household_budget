@@ -21,7 +21,7 @@
         [
             'label' => __('Appearance'),
             'description' => __('Customize colors used to show spending status.'),
-            'route' => 'settings.appearance.edit',
+            'route' => 'settings.appearance.index',
             'active' => 'settings.appearance.*',
         ],
         [
@@ -52,22 +52,24 @@
             @endphp
 
             <li class="settings-menu__list-item">
-                @if ($routeExists)
+                @if ($routeExists && ! $isActive)
                     <a
                         href="{{ route($item['route']) }}"
-                        class="settings-menu__item{{ $isActive ? ' is-active' : '' }}"
-                        @if ($isActive)
-                            aria-current="page"
-                        @endif
+                        class="settings-menu__item"
                     >
                         <span class="settings-menu__label">
                             {{ $item['label'] }}
                         </span>
-
-                        <span class="settings-menu__description">
-                            {{ $item['description'] }}
-                        </span>
                     </a>
+                @elseif ($isActive)
+                    <span
+                        class="settings-menu__item is-active"
+                        aria-current="page"
+                    >
+                        <span class="settings-menu__label">
+                            {{ $item['label'] }}
+                        </span>
+                    </span>
                 @else
                     <span
                         class="settings-menu__item is-disabled"
@@ -76,12 +78,12 @@
                         <span class="settings-menu__label">
                             {{ $item['label'] }}
                         </span>
-
-                        <span class="settings-menu__description">
-                            {{ $item['description'] }}
-                        </span>
                     </span>
                 @endif
+
+                <span class="settings-menu__description">
+                    {{ $item['description'] }}
+                </span>
             </li>
         @endforeach
     </ul>
