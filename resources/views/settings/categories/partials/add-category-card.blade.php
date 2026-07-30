@@ -123,9 +123,8 @@
                         name="name"
                         type="text"
                         class="settings-form__input
-                            @error('name', 'storeCategory') is-invalid @enderror
-                            color-picker__code"
-                         value="{{ $newCategoryName }}"
+                            @error('name', 'storeCategory') is-invalid @enderror"
+                        value="{{ $newCategoryName }}"
                         required
                         maxlength="50"
                         autocomplete="off"
