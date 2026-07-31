@@ -27,6 +27,7 @@
                                     autocomplete="username"
                                     readonly
                                     data-error-target="email"
+                                    disabled
                                 >
                             </div>
                             @error('email')
