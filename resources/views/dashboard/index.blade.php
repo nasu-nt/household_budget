@@ -1,6 +1,5 @@
 {{-- resources/views/dashboard/index.blade.php --}}
 <x-app-layout>
-    <x-slot:title>Dashboard</x-slot:title>
 
     {{-- 登録画面から遷移してきた場合 --}}
     @if (session('success'))
@@ -29,8 +28,6 @@
 
         {{-- メイン --}}
         <section class="dashboard-main">
-            <h1>Dashboard</h1>
-
             @include('dashboard.partials._calendar')
         </section>
     </div>
