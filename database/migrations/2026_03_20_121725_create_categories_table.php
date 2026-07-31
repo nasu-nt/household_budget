@@ -6,12 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+            Schema::create('categories', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('user_id')
@@ -21,18 +18,15 @@ return new class extends Migration
             $table->string('name', 50);
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
-
             $table->timestamps();
 
-            $table->unique(['user_id', 'name']);    // 同じユーザーが同じ名前のカテゴリを2個作るのを防ぐ
+            $table->unique(['user_id', 'name']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('categories');
     }
+
 };

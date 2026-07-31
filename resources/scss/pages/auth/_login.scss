@@ -1,0 +1,168 @@
+@use '../../components/card' as card;
+@use '../../components/form' as form;
+
+@layer components {
+    main.login {
+        min-height: calc(100vh - var(--l-header-h));
+        padding: 2rem 1rem;
+    }
+
+   .login-card {
+        @include card.card(
+            37.5rem, 26.75rem, 2.25rem 2.5rem 2rem
+        );
+
+        width: min(24rem, calc(100% - 1rem));
+
+        .title {
+            text-align: center;
+            margin: 0;
+            color: var(--c-text);
+            font-size: var(--fs-xl);
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .error-message {
+            @include form.error(center);
+        }
+
+        .forgot-password {
+            display: block;
+            margin-top: 0.875rem;
+            color: var(--c-primary);
+            font-size: var(--fs-md);
+            text-align: center;
+            text-decoration: none;
+
+            &:hover {
+                color: var(--c-primary-hover);
+                text-decoration: underline;
+            }
+
+            &:focus-visible {
+                outline: 0;
+                border-radius: var(--r-swatch);
+                box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+            }
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            margin: 1.75rem 0 1.5rem;
+            color: var(--c-disabled);
+            font-size: var(--fs-sm);
+
+            &::before,
+            &::after {
+                content: '';
+                flex: 1;
+                border-top: var(--border-width) solid var(--c-border);
+            }
+        }
+
+        .demo-login-form {
+        width: 100%;
+        }
+
+        .demo-login-button {
+        width: 100%;
+        height: var(--l-control-h);
+        padding: 0 1rem;
+        background-color: var(--c-button-secondary-bg);
+        border: var(--border-width-strong) solid var(--c-button-secondary-border);
+        border-radius: var(--r-control);
+        color: var(--c-button-secondary-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 400;
+        cursor: pointer;
+        transition:
+            background-color 0.15s ease,
+            color 0.15s ease;
+
+        &:hover:not(:disabled) {
+            background-color: var(--c-button-secondary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+        }
+
+        &:disabled {
+            background-color: var(--c-button-disabled-bg);
+            border-color: var(--c-button-disabled-border);
+            color: var(--c-button-disabled-text);
+            cursor: not-allowed;
+        }
+    }
+
+    .sign-up {
+        display: block;
+        margin-top: 3.25rem;
+        color: var(--c-muted);
+        font-size: var(--fs-md);
+        text-align: center;
+
+        a {
+            color: var(--c-primary);
+            text-decoration: none;
+
+            &:hover {
+                color: var(--c-primary-hover);
+                text-decoration: underline;
+            }
+
+            &:focus-visible {
+                outline: 0;
+                border-radius: var(--r-swatch);
+                box-shadow: 0 0 0 0.2rem var(--c-focus-ring);
+            }
+        }
+    }
+}
+
+    .login-form {
+        label {
+            display: inline-block;
+            width: 100%;
+            color: var(--c-muted);
+            font-size: var(--fs-lg);
+            text-align: left;
+        }
+
+        .email-block,
+        .password-block {
+            margin-bottom: 0.75rem;
+        }
+
+        .textbox {
+            @include form.textbox;
+
+            width: 100%;
+            height: var(--l-control-h);
+            margin: 0.375rem 0;
+            padding-right: 3rem;
+        }
+
+        .button {
+            @include form.button(100%, 1.25rem 0 0);
+        }
+    }
+
+    @media (max-width: 30rem) {
+        .login-card {
+            width: 100%;
+            min-height: auto;
+            padding: 2rem 1.5rem;
+
+            .sign-up {
+                margin-top: 2.5rem;
+            }
+        }
+    }
+}

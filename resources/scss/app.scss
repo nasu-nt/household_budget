@@ -5,16 +5,29 @@
 @use './components/layout.scss';
 @use './components/header.scss';
 @use './components/toast.scss';
-@use './components/auth-form';
-@use './components/auth-card';
+@use './components/money-input';
+
+@use './components/card.scss';
+@use './components/form';
 @use './components/password-toggle';
+@use './components/color-picker.scss';
 
-@use './pages/login';
-@use './pages/register';
-@use './pages/forgot-password';
-@use './pages/reset-password';
+@use './components/settings-menu';
 
-@use './pages/dashboard';
+@use './pages/auth/login';
+@use './pages/auth/register';
+@use './pages/auth/forgot-password';
+@use './pages/auth/reset-password';
+
+@use './pages/dashboard/dashboard';
+@use './pages/dashboard/recurring-expenses-cta';
+
+@use './pages/settings/settings';
+@use './pages/settings/categories';
+@use './pages/settings/budget';
+@use './pages/settings/appearance';
+@use './pages/settings/subscriptions';
+
 
 @tailwind base;
 @tailwind components;
