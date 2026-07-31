@@ -8,36 +8,14 @@
     --form-width: 42rem;
     --form-offset-x: -1rem;
 
-    .settings-form__row {
-        grid-template-columns: 8rem minmax(0, 36rem);
-        justify-content: end;
-    }
-
-    .settings-form__label {
-        text-align: right;
-    }
-
-    .settings-form__control {
-        min-width: 0;
-    }
-
-    .settings-form__input {
-        width: 100%;
-    }
-
     &__amount-input {
-        max-width: none;
-        text-align: right;
+        max-width: 22rem;
     }
 
     &__select-wrapper {
         position: relative;
 
-        width: 100%;
-
         &::after {
-            content: "▼";
-
             position: absolute;
             top: 0;
             right: 0;
@@ -58,12 +36,13 @@
                 var(--r-control)
                 0;
 
+            content: '▼';
             pointer-events: none;
         }
 
         &.is-disabled::after {
             color: var(--c-muted);
-            background-color: var(--c-border-muted);
+            background-color: var(--c-border);
         }
     }
 
@@ -71,10 +50,9 @@
         @include form.textbox;
 
         display: block;
-
         width: 100%;
-        min-width: 0;
         height: var(--l-control-h-small);
+        padding-block: 0;
         padding-right:
             calc(
                 var(--l-control-h-small) + 0.5rem
@@ -82,16 +60,11 @@
 
         appearance: none;
         cursor: pointer;
-
-        &:disabled {
-            color: var(--c-muted);
-            background-color: var(--c-surface-disabled);
-            cursor: not-allowed;
-        }
     }
 
     &__billing-row {
-        align-items: center;
+        padding: 0;
+        border: 0;
     }
 
     &__submit {
@@ -130,14 +103,21 @@
     }
 
     &__day-select-wrapper {
+        flex: 0 0 6.5rem;
         width: 6.5rem;
     }
 
     &__select {
-        height: var(--l-control-h-small);
-        padding-block: 0;
+        width: 100%;
+
+        &:disabled {
+            color: var(--c-muted);
+            background-color: var(--c-surface-disabled);
+            cursor: not-allowed;
+        }
     }
 }
+
 .subscription-list {
     --subscription-list-columns:
         minmax(9rem, 1.25fr)
@@ -466,13 +446,8 @@
 
 @media (max-width: 48rem) {
     .subscription-form {
-        .settings-form__row {
-            grid-template-columns: minmax(0, 1fr);
-            justify-content: stretch;
-        }
-
-        .settings-form__label {
-            text-align: left;
+        &__amount-input {
+            max-width: none;
         }
     }
 
@@ -481,7 +456,8 @@
         flex-direction: column;
 
         &__day-select-wrapper {
-            width: 100%;
+            flex-basis: auto;
+            width: 6.5rem;
         }
     }
 
