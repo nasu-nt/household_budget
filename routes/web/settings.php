@@ -12,7 +12,7 @@ Route::middleware('auth')
     ->group(function () {
         // Account
         Route::get('/', function () {
-            return redirect()->route('settings.profile.index');
+            return redirect()->route('settings.profile.edit');
         })->name('index');
 
         // Category
@@ -61,4 +61,22 @@ Route::middleware('auth')
             '/appearance',
             [AppearanceSettingController::class, 'update']
         )->name('appearance.update');
+
+        // Subscription
+        Route::get(
+            '/subscriptions',
+            [SubscriptionController::class, 'index']
+        )->name('subscriptions.index');
+
+        Route::post(
+            '/subscriptions',
+            [SubscriptionController::class, 'store']
+        )->name('subscriptions.store');
+
+        Route::patch(
+            '/subscriptions/{subscription}',
+            [SubscriptionController::class, 'update']
+        )
+            ->whereNumber('subscription')
+            ->name('subscriptions.update');
     });

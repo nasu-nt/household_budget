@@ -32,9 +32,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initColorPickers();
     initAppearanceSettings();
     initMoneyInputs();
-<<<<<<< Updated upstream
 });
 
-=======
-});
->>>>>>> Stashed changes

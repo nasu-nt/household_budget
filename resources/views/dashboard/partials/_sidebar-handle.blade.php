@@ -1,18 +1,19 @@
-{{-- resources\views\dashboard\partials\_sidebar-handle.blade.php --}}
+{{-- resources/views/dashboard/partials/_sidebar-handle.blade.php --}}
 <button
-    id="sidebarToggle"
-    class="dashboard__sidebar-handle sidebar-handle"
     type="button"
-    aria-label="Close add expense form"
+    class="dashboard__sidebar-handle"
+    data-dashboard-sidebar-toggle
+    aria-controls="dashboard-sidebar-content"
     aria-expanded="true"
-    aria-controls="sidebar"
+    aria-label="{{ __('Close expense sidebar') }}"
 >
-    <img class="sidebar-handle__close sidebar-handle__icon--close"
-        src="/images/icons/arrow-l_1.svg"
-        alt=""
-    >
-    <img class="sidebar-handle__open sidebar-handle__icon--open"
-        src="/images/icons/arrow-r_1.svg"
-        alt=""
-    >
+    <span
+        class="sidebar-handle__icon sidebar-handle__icon--close"
+        aria-hidden="true"
+    ></span>
+
+    <span
+        class="sidebar-handle__icon sidebar-handle__icon--open"
+        aria-hidden="true"
+    ></span>
 </button>
