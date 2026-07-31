@@ -48,7 +48,7 @@ class Category extends Model
         ],
         [
             'name' => 'Rent',
-            'color_code' => '#BE123C',
+            'color_code' => '#475569',
         ],
     ];
 

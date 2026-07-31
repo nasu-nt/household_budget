@@ -91,7 +91,7 @@
          * Chrome / Edge / Safari
          */
         &::-webkit-scrollbar {
-            width: 0.25rem;
+            width: 0.125rem;
         }
 
         &::-webkit-scrollbar-track {
@@ -184,6 +184,14 @@
                 translateX(-0.125rem)
                 rotate(225deg);
         }
+    }
+
+    /*
+     * Dashboard main area
+     */
+    .dashboard-main {
+        flex: 1 1 auto;
+        min-width: 0;
     }
 
     /*
@@ -510,6 +518,7 @@
                 100vw - var(--sidebar-handle-half)
             );
     }
+}
 
     .dashboard__sidebar-inner {
         padding-inline: 0.75rem;
