@@ -195,6 +195,14 @@
     }
 
     /*
+     * Dashboard main area
+     */
+    .dashboard-main {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /*
      * Expense form
      */
     .dashboard__record-expense-area {
@@ -510,6 +518,7 @@
                 100vw - var(--sidebar-handle-half)
             );
     }
+}
 
     .dashboard__sidebar-inner {
         padding-inline: 0.75rem;

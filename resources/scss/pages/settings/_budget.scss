@@ -12,18 +12,22 @@
         max-width: 22rem;
     }
 
-    &__closing-fieldset {
-        min-width: 0;
-        margin: 0;
-        padding: 0;
+    &__closing-row {
+        align-items: center;
+    }
 
-        border: 0;
+    &__closing-label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        min-height: var(--l-control-h-small);
+        padding-top: 0;
     }
 
     &__closing-controls {
         display: flex;
-        flex-wrap: nowrap;
-        gap: 1rem 1.25rem;
+        flex-wrap: wrap;
+        gap: 0.75rem 1rem;
         align-items: center;
 
         min-height: var(--l-control-h-small);
@@ -35,10 +39,13 @@
         display: inline-flex;
         gap: 0.5rem;
         align-items: center;
-
+        min-height: var(--l-control-h-small);
+        line-height: 1.4;
+        white-space: nowrap;
         cursor: pointer;
 
         input {
+            flex: 0 0 auto;
             width: 1.125rem;
             height: 1.125rem;
             margin: 0;
@@ -50,9 +57,8 @@
     &__select-wrapper {
         position: relative;
 
-        flex: 0 0 8rem;
-
-        width: 8rem;
+        width: 6.5rem;
+        flex: 0 0 6.5rem;
 
         &::after {
             content: "▼";
@@ -94,11 +100,11 @@
         width: 100%;
         min-width: 0;
         height: var(--l-control-h-small);
-        padding:
-            0.25rem
-            calc(var(--l-control-h-small) + 0.5rem)
-            0.25rem
-            0.75rem;
+        padding-block: 0;
+        padding-right:
+            calc(
+                var(--l-control-h-small) + 0.5rem
+            );
 
         appearance: none;
         cursor: pointer;
@@ -268,30 +274,23 @@
             --form-width: 100%;
             --form-offset-x: 0;
 
-            .settings-form__label {
-                text-align: left;
-            }
+        &__closing-label {
+            justify-content: flex-start;
+            min-height: auto;
+        }
 
-            &__amount-input {
-                max-width: none;
-            }
+        &__closing-controls {
+            align-items: flex-start;
+            flex-direction: column;
+        }
 
-            &__closing-controls {
-                flex-direction: column;
-                align-items: flex-start;
+        &__select-wrapper,
+        &__closing-select {
+            width: 100%;
+        }
 
-                white-space: normal;
-            }
-
-            &__select-wrapper {
-                flex: 0 0 auto;
-
-                width: 100%;
-            }
-
-            &__closing-select {
-                width: 100%;
-            }
+        &__select-wrapper {
+            flex-basis: auto;
         }
     }
 

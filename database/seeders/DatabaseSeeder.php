@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::query()->updateOrCreate(
+        // 既存のユーザー作成処理
+        User::updateOrCreate(
             [
                 'email' => 'test@example.com',
             ],
@@ -32,7 +33,7 @@ class DatabaseSeeder extends Seeder
          * 今後、デモ用のカテゴリ・予算・支出データを
          * $demoUserに紐づけて登録する。
          */
-        User::query()->updateOrCreate(
+        $demoUser = User::updateOrCreate(
             [
                 'email' => config(
                     'demo.email',
@@ -45,13 +46,9 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        /*
-         * ユーザーの作成後に、ユーザーに紐づく
-         * 初期データを登録する。
-         */
+        // ユーザー作成後に追加
         $this->call([
             CategorySeeder::class,
-            AppearanceSettingSeeder::class,
             BudgetSettingSeeder::class,
         ]);
     }

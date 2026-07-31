@@ -1,23 +1,24 @@
 const MILLISECONDS_PER_DAY = 86_400_000;
 
 export function budgetSettingsForm(initialValues) {
+    const monthlyBudget = Number(initialValues.monthlyBudget) || 0;
+    const monthlyLimit = Number(initialValues.monthlyLimit) || 0;
+
     return {
-        monthlyBudget: Number(initialValues.monthlyBudget) || 0,
-        monthlyLimit: Number(initialValues.monthlyLimit) || 0,
-        monthlyBudgetInput: '',
-        monthlyLimitInput: '',
+        monthlyBudget,
+        monthlyLimit,
+
+        monthlyBudgetInput: new Intl.NumberFormat('en-US').format(
+            monthlyBudget,
+        ),
+
+        monthlyLimitInput: new Intl.NumberFormat('en-US').format(
+            monthlyLimit,
+        ),
+
         isEndOfMonth: Boolean(initialValues.isEndOfMonth),
+
         closingDay: Number(initialValues.closingDay) || 27,
-
-        init() {
-            this.monthlyBudgetInput = this.formatNumber(
-                this.monthlyBudget,
-            );
-
-            this.monthlyLimitInput = this.formatNumber(
-                this.monthlyLimit,
-            );
-        },
 
         toInteger(value) {
             const digits = String(value).replace(/[^0-9]/g, '');
@@ -37,6 +38,7 @@ export function budgetSettingsForm(initialValues) {
 
         updateMonthlyBudget(value) {
             this.monthlyBudget = this.toInteger(value);
+
             this.monthlyBudgetInput = this.formatNumber(
                 this.monthlyBudget,
             );
@@ -44,6 +46,7 @@ export function budgetSettingsForm(initialValues) {
 
         updateMonthlyLimit(value) {
             this.monthlyLimit = this.toInteger(value);
+
             this.monthlyLimitInput = this.formatNumber(
                 this.monthlyLimit,
             );
@@ -76,7 +79,11 @@ export function budgetSettingsForm(initialValues) {
             }
 
             const today = new Date(
-                Date.UTC(year, month, now.getDate()),
+                Date.UTC(
+                    year,
+                    month,
+                    now.getDate(),
+                ),
             );
 
             const currentClosingDate = this.closingDate(
@@ -88,7 +95,10 @@ export function budgetSettingsForm(initialValues) {
             let startDate;
             let endDate;
 
-            if (today.getTime() <= currentClosingDate.getTime()) {
+            if (
+                today.getTime()
+                <= currentClosingDate.getTime()
+            ) {
                 const previousMonth = new Date(
                     Date.UTC(year, month - 1, 1),
                 );
