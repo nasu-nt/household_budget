@@ -1,0 +1,725 @@
+@use './recurring-expenses-cta';
+
+@layer components {
+    .dashboard-layout {
+        --sidebar-width: 20rem;
+        --sidebar-handle-size: 1.75rem;
+        --sidebar-handle-half: 1.25rem;
+
+        display: flex;
+        min-height: calc(100dvh - var(--l-header-h));
+
+        overflow-x: clip;
+    }
+
+    /*
+     * Sidebar shell
+     *
+     * スクロール領域と取っ手を兄弟要素に分けている。
+     * 取っ手はスクロールせず、z-indexでスクロールバーより前面に重ねる。
+     */
+    .dashboard__sidebar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+
+        flex: 0 0 var(--sidebar-width);
+
+        width: var(--sidebar-width);
+        height: calc(100dvh - var(--l-header-h));
+        margin-left: 0;
+
+        background-color: var(--c-surface);
+        border-right:
+            var(--border-width)
+            solid
+            var(--c-border);
+
+        overflow: visible;
+
+        transition: margin-left 200ms ease;
+
+        &.is-closed {
+            margin-left:
+                calc(
+                    var(--sidebar-handle-half) - var(--sidebar-width)
+                );
+
+            background-color: var(--c-white);
+            border-right-color: transparent;
+
+            .dashboard__sidebar-scroll {
+                visibility: hidden;
+                pointer-events: none;
+            }
+
+            .sidebar-handle__icon--close {
+                display: none;
+            }
+
+            .sidebar-handle__icon--open {
+                display: block;
+            }
+        }
+    }
+
+    /*
+     * Sidebar scrollbar
+     */
+    .dashboard__sidebar-scroll {
+        position: relative;
+        z-index: 1;
+        min-height: 0;
+
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+
+        background-color: var(--c-surface);
+
+        /*
+         * Firefox
+         *
+         * Firefoxでは上下ボタンを個別に装飾できない。
+         */
+        scrollbar-color: var(--c-disabled) transparent;
+        scrollbar-width: thin;
+
+        /*
+         * Chrome / Edge / Safari
+         */
+        &::-webkit-scrollbar {
+            width: 0.25rem;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            min-height: 2.5rem;
+
+            background-color: var(--c-disabled);
+            border-radius: var(--r-swatch);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background-color: var(--c-text);
+        }
+
+    }
+
+    .dashboard__sidebar-inner {
+        min-height: 100%;
+        padding: 1.5rem 0.875rem 2rem;
+        box-sizing: border-box;
+    }
+
+    /*
+     * Sidebar toggle
+     *
+     * z-indexをスクロール領域より大きくして、
+     * スクロールバーの前面へ表示する。
+     */
+    .dashboard__sidebar-handle {
+        position: absolute;
+        z-index: 20;
+        top: 50%;
+        left: calc(100% - var(--sidebar-handle-half));
+
+        display: grid;
+        place-items: center;
+
+        width: var(--sidebar-handle-size);
+        height: var(--sidebar-handle-size);
+        padding: 0;
+
+        color: var(--c-button-primary-text);
+
+        background-color: var(--c-button-primary-bg);
+        border: 0.25rem solid var(--c-white);
+        border-radius: var(--r-pill);
+        box-shadow:
+            0 0 0 0.25rem
+            var(--c-surface);
+
+        cursor: pointer;
+
+        transform: translateY(-50%);
+
+        &:hover {
+            background-color: var(--c-button-primary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-textbox-focus);
+            outline-offset: 0.1875rem;
+        }
+    }
+
+    .sidebar-handle__icon {
+        display: block;
+
+        width: 0.625rem;
+        height: 0.625rem;
+
+        border-bottom: 0.1875rem solid currentColor;
+        border-left: 0.1875rem solid currentColor;
+
+        &--close {
+            transform:
+                translateX(0.125rem)
+                rotate(45deg);
+        }
+
+        &--open {
+            display: none;
+
+            transform:
+                translateX(-0.125rem)
+                rotate(225deg);
+        }
+    }
+
+    /*
+     * Dashboard main area
+     */
+    .dashboard-main {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /*
+     * Expense form
+     */
+    .dashboard__record-expense-area {
+        min-width: 0;
+    }
+
+    .expense-form {
+        display: grid;
+        gap: 0.875rem;
+
+        &__header {
+            margin-bottom: 1rem;
+        }
+
+        &__title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+
+            margin: 0;
+
+            color: var(--c-text);
+            font-size: var(--fs-section-title);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        &__title-icon {
+            display: block;
+            flex: 0 0 auto;
+
+            width: 1.25rem;
+            height: 1.25rem;
+
+            object-fit: contain;
+        }
+
+        &__entries {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        &__add {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.125rem;
+
+            width: fit-content;
+            margin: 0 auto;
+            padding: 0.125rem 0.25rem;
+
+            color: var(--c-subtle);
+            font: inherit;
+            font-size: var(--fs-sm);
+            line-height: 1.4;
+
+            background: none;
+            border: 0;
+            border-radius: var(--r-control);
+
+            cursor: pointer;
+
+            &:hover {
+                color: var(--c-primary);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-textbox-focus);
+                outline-offset: 2px;
+            }
+        }
+
+        &__limit {
+            margin: 0;
+
+            color: var(--c-subtle);
+            font-size: var(--fs-xs);
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        &__submit {
+            width: 100%;
+            min-height: var(--l-control-h);
+            margin-top: 0.125rem;
+            padding: 0.5rem 1rem;
+
+            color: var(--c-button-primary-text);
+            font: inherit;
+            font-size: var(--fs-md);
+            font-weight: 700;
+            line-height: 1.2;
+
+            background-color: var(--c-button-primary-bg);
+            border:
+                var(--border-width)
+                solid
+                var(--c-button-primary-border);
+            border-radius: var(--r-control);
+
+            cursor: pointer;
+
+            &:hover {
+                background-color:
+                    var(--c-button-primary-bg-hover);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-textbox-focus);
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    /*
+     * Expense card
+     */
+    .expense-entry {
+        display: grid;
+        gap: 0.625rem;
+
+        min-width: 0;
+        margin: 0;
+        padding: 0.75rem;
+        box-sizing: border-box;
+
+        background-color: var(--c-surface-disabled);
+        border: 0;
+        border-radius: var(--r-card);
+
+        &__row {
+            display: grid;
+            grid-template-columns: 4.5rem minmax(0, 1fr);
+            gap: 0.5rem;
+            align-items: start;
+        }
+
+        &__label {
+            padding-top: 0.4375rem;
+
+            color: var(--c-text);
+            font-size: var(--fs-sm);
+            line-height: 1.35;
+        }
+
+        &__control {
+            min-width: 0;
+        }
+
+        &__input,
+        &__select {
+            display: block;
+
+            width: 100%;
+            min-width: 0;
+            height: var(--l-control-h-small);
+            padding: 0.25rem 0.625rem;
+            box-sizing: border-box;
+
+            color: var(--c-input-text);
+            font: inherit;
+            font-size: var(--fs-sm);
+            line-height: 1.2;
+
+            background-color: var(--c-textbox);
+            border:
+                var(--border-width)
+                solid
+                var(--c-border);
+            border-radius: var(--r-control);
+
+            &:focus {
+                outline: none;
+                border-color: var(--c-textbox-focus);
+                box-shadow:
+                    0 0 0 0.125rem
+                    var(--c-focus-ring);
+            }
+
+            &.is-invalid {
+                border-color: var(--c-danger);
+            }
+        }
+
+        &__select-wrapper {
+            position: relative;
+
+            &::after {
+                content: "▼";
+
+                position: absolute;
+                top: 0;
+                right: 0;
+
+                display: grid;
+                place-items: center;
+
+                width: var(--l-control-h-small);
+                height: 100%;
+
+                color: var(--c-button-primary-text);
+                font-size: var(--fs-sm);
+
+                background-color: var(--c-primary-weak);
+                border-radius:
+                    0
+                    var(--r-control)
+                    var(--r-control)
+                    0;
+
+                pointer-events: none;
+            }
+        }
+
+        &__select {
+            padding-right:
+                calc(
+                    var(--l-control-h-small) + 0.5rem
+                );
+
+            appearance: none;
+            cursor: pointer;
+        }
+
+        &__error {
+            margin: 0.25rem 0 0;
+
+            color: var(--c-danger);
+            font-size: var(--fs-xs);
+            line-height: 1.35;
+        }
+
+        &__actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        &__remove {
+            margin: 0;
+            padding: 0.125rem 0.25rem;
+
+            color: var(--c-danger);
+            font: inherit;
+            font-size: var(--fs-xs);
+            line-height: 1.4;
+            text-decoration: underline;
+
+            background: none;
+            border: 0;
+            border-radius: var(--r-control);
+
+            cursor: pointer;
+
+            &:hover {
+                color: var(--c-danger-hover);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-textbox-focus);
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    .money-input {
+        position: relative;
+
+        width: 100%;
+
+        &__currency {
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            left: 0.625rem;
+
+            color: var(--c-subtle);
+            font-size: var(--fs-sm);
+            line-height: 1;
+
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        &__field {
+            padding-right: 0.625rem;
+            padding-left: 2rem;
+
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+
+/*
+ * Dashboard calendar
+ */
+.dashboard-calendar {
+    --calendar-all-good: #f8fafc;
+    --calendar-slightly-high: #f7e7a6;
+    --calendar-over-budget: #f3c38c;
+    --calendar-over-limit: #ee8b8b;
+
+    width: 100%;
+    padding: 1.5rem;
+    box-sizing: border-box;
+
+    background-color: var(--c-surface);
+}
+
+/*
+ * 選択中の日付
+ *
+ * FullCalendar内部の子要素ではなく、
+ * is-selectedが付いた日付セル自体へ枠を表示する。
+ */
+.dashboard-calendar__body .is-selected {
+    position: relative;
+    z-index: 2;
+
+    outline:
+        0.1875rem
+        solid
+        var(--c-active-indicator);
+    outline-offset: -0.1875rem;
+}
+
+.dashboard-calendar__body {
+    width: 100%;
+}
+
+/*
+ * 日別ステータス
+ *
+ * JavaScriptからFullCalendarの日付セルへ付与する。
+ */
+.dashboard-calendar__body .is-all-good {
+    background-color: var(--calendar-all-good);
+}
+
+.dashboard-calendar__body .is-slightly-high {
+    background-color: var(--calendar-slightly-high);
+}
+
+.dashboard-calendar__body .is-over-budget {
+    background-color: var(--calendar-over-budget);
+}
+
+.dashboard-calendar__body .is-over-limit {
+    background-color: var(--calendar-over-limit);
+}
+
+/*
+ * 日付セル内の支出額
+ */
+.dashboard-calendar__amount-event {
+    display: block;
+
+    width: 100%;
+    margin: 0.25rem 0 0;
+    padding: 0;
+
+    color: var(--c-text);
+
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+
+    cursor: default;
+    pointer-events: none;
+    }
+
+    .dashboard-calendar__amount {
+        display: block;
+
+        width: 100%;
+
+        color: var(--c-text);
+        font-size: var(--fs-sm);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+
+    .dashboard-calendar__date {
+        width: 100%;
+        min-height: 2.75rem;
+        padding: 0.5rem 0.75rem;
+        box-sizing: border-box;
+
+        border: 0;
+        border-radius: 0.25rem;
+        background-color: var(--c-white);
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: 1.125rem;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .dashboard-calendar__spending {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 4rem;
+
+        margin: 0;
+
+        font-size: 1.125rem;
+    }
+
+    .dashboard-calendar__spending strong {
+        min-width: 6rem;
+
+        font-size: 1.25rem;
+        text-align: right;
+    }
+
+    .dashboard-calendar__body {
+        width: 100%;
+    }
+
+    .dashboard-calendar__legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 1rem;
+
+        margin: 0;
+        padding: 0;
+
+        list-style: none;
+    }
+
+    .dashboard-calendar__legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .dashboard-calendar__legend-color {
+        display: inline-block;
+
+        width: 0.875rem;
+        height: 0.875rem;
+
+        border: 1px solid rgb(0 0 0 / 25%);
+        border-radius: 0.2rem;
+    }
+
+    .dashboard-calendar__legend-color--all-good {
+        background-color: var(--calendar-all-good);
+    }
+
+    .dashboard-calendar__legend-color--slightly-high {
+        background-color: var(--calendar-slightly-high);
+    }
+
+    .dashboard-calendar__legend-color--over-budget {
+        background-color: var(--calendar-over-budget);
+    }
+
+    .dashboard-calendar__legend-color--over-limit {
+        background-color: var(--calendar-over-limit);
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+}
+
+@media (max-width: 40rem) {
+    .dashboard-layout {
+        --sidebar-width:
+            calc(
+                100vw - var(--sidebar-handle-half)
+            );
+    }
+
+    .dashboard__sidebar-inner {
+        padding-inline: 0.75rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard__sidebar {
+        transition: none;
+    }
+}
+
+@media (max-width: 48rem) {
+    .dashboard-calendar {
+        padding: 1rem;
+    }
+
+    .dashboard-calendar__summary {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .dashboard-calendar__spending {
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .dashboard-calendar__legend {
+        justify-content: flex-start;
+        gap: 0.75rem;
+    }
+}
