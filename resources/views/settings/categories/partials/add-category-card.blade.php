@@ -117,7 +117,7 @@
                     {{ __('Category Name') }}
                 </label>
 
-                <div class="settings-form__control">
+                <div class="settings-form__control category-form__name-control">
                     <input
                         id="new_category_name"
                         name="name"
