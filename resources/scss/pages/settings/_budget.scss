@@ -1,56 +1,125 @@
 @use '../../components/form';
 
-.budget-settings-card {
-    padding-bottom: 1.75rem;
-}
-
 .budget-form {
-    --form-width: 39rem;
+    --form-width: 48rem;
     --form-offset-x: -1.25rem;
+
+    .settings-form__label {
+        text-align: right;
+    }
 
     &__amount-input {
         max-width: 22rem;
     }
 
     &__closing-row {
-        padding: 0;
-        border: 0;
+        align-items: center;
+    }
+
+    &__closing-label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        min-height: var(--l-control-h-small);
+        padding-top: 0;
     }
 
     &__closing-controls {
         display: flex;
         flex-wrap: wrap;
-        gap: 1rem 1.25rem;
+        gap: 0.75rem 1rem;
         align-items: center;
+
         min-height: var(--l-control-h-small);
+
+        white-space: nowrap;
     }
 
     &__radio {
         display: inline-flex;
         gap: 0.5rem;
         align-items: center;
+        min-height: var(--l-control-h-small);
+        line-height: 1.4;
+        white-space: nowrap;
         cursor: pointer;
 
         input {
+            flex: 0 0 auto;
             width: 1.125rem;
             height: 1.125rem;
             margin: 0;
+
             accent-color: var(--c-primary);
+        }
+    }
+
+    &__select-wrapper {
+        position: relative;
+
+        width: 6.5rem;
+        flex: 0 0 6.5rem;
+
+        &::after {
+            content: "▼";
+
+            position: absolute;
+            top: 0;
+            right: 0;
+
+            display: grid;
+            place-items: center;
+
+            width: var(--l-control-h-small);
+            height: 100%;
+
+            color: var(--c-button-primary-text);
+            font-size: var(--fs-sm);
+
+            background-color: var(--c-primary-weak);
+            border-radius:
+                0
+                var(--r-control)
+                var(--r-control)
+                0;
+
+            pointer-events: none;
+        }
+
+        &.is-disabled::after {
+            color: var(--c-muted);
+            background-color: var(--c-border-muted);
         }
     }
 
     &__closing-select {
         @include form.textbox;
 
-        width: 6.5rem;
+        display: block;
+
+        width: 100%;
+        min-width: 0;
         height: var(--l-control-h-small);
         padding-block: 0;
+        padding-right:
+            calc(
+                var(--l-control-h-small) + 0.5rem
+            );
+
+        appearance: none;
         cursor: pointer;
 
         &:disabled {
             color: var(--c-muted);
+
             background-color: var(--c-surface-disabled);
+
             cursor: not-allowed;
+            opacity: 1;
+        }
+
+        &.is-invalid {
+            border-color: var(--c-danger);
         }
     }
 
@@ -201,9 +270,9 @@
 
 @media (max-width: 48rem) {
     @media (max-width: 48rem) {
-            .budget-form {
-                --form-width: 100%;
-                --form-offset-x: 0;
+        .budget-form {
+            --form-width: 100%;
+            --form-offset-x: 0;
 
             &__closing-label {
                 justify-content: flex-start;
