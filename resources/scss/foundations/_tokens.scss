@@ -118,5 +118,11 @@
         --l-header-h: 4rem;
         --l-control-h: 3rem;       /* 48px */
         --l-control-h-small: 2.25rem; /* 36px */
+
+        /* 
+         * Calendar weekday
+         */
+        --c-calendar-saturday: #99c5ff;
+        --c-calendar-sunday: #fca5a5;
     }
 }

@@ -14,31 +14,28 @@
             </button>
 
             <div class="dashboard-calendar__date-group">
-                <button
-                    type="button"
-                    class="dashboard-calendar__date-display"
-                    data-dashboard-calendar-date-display
-                    aria-label="Selected date"
-                >
-                    2026/06/27
-                </button>
-
-                <button
-                    type="button"
-                    class="dashboard-calendar__picker-button"
-                    data-dashboard-calendar-picker-button
-                    aria-label="Open calendar"
-                >
-                    <span aria-hidden="true">🗓</span>
-                </button>
-
-                <input
-                    type="date"
-                    id="dashboard-calendar-date"
-                    class="dashboard-calendar__date-input"
-                    value="2026-06-27"
-                    data-dashboard-calendar-date
-                >
+                <div class="dashboard-calendar__date-wrapper">
+                    <input
+                        type="date"
+                        id="dashboard-calendar-date"
+                        class="dashboard-calendar__date"
+                        value="{{ now()->format('Y-m-d') }}"
+                        data-dashboard-calendar-date
+                    >
+                    <button
+                        type="button"
+                        class="dashboard-calendar__date-picker"
+                        data-dashboard-calendar-date-picker
+                        aria-label="Select date"
+                    >
+                        <img
+                            class="dashboard-calendar__date-icon"
+                            src="{{ asset('images/icons/calendar_1.svg') }}"
+                            alt=""
+                            aria-hidden="true"
+                        >
+                    </button>
+                </div>
             </div>
 
             <button

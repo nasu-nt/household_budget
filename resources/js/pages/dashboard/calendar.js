@@ -87,6 +87,10 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-date]',
     );
 
+    const datePickerButton = document.querySelector(
+    '[data-dashboard-calendar-date-picker]',
+    );
+
     const dateDisplay = document.querySelector(
         '[data-dashboard-calendar-date-display]',
     );
@@ -251,7 +255,37 @@ export const initDashboardCalendar = () => {
         initialView: 'dayGridMonth',
         initialDate,
         headerToolbar: false,
+
+        // 曜日ヘッダー用のクラス
+        dayHeaderClass: 'dashboard-calendar__weekday',
+        dayHeaderInnerClass: 'dashboard-calendar__weekday-inner',
+
         firstDay: 1,
+        /*
+        * 曜日ヘッダーへ曜日別のクラスを付ける。
+        *
+        * Date#getDay()
+        * 0: 日曜日
+        * 6: 土曜日
+        */
+        dayHeaderDidMount: (info) => {
+            const dayOfWeek = info.date.getDay();
+
+            info.el.classList.add(
+                'dashboard-calendar__weekday',
+            );
+
+            if (dayOfWeek === 6) {
+                info.el.classList.add('is-saturday');
+            }
+
+            if (dayOfWeek === 0) {
+                info.el.classList.add('is-sunday');
+            }
+        },
+
+        fixedWeekCount: false,
+
         fixedWeekCount: false,
         showNonCurrentDates: false,
         height: 'auto',
@@ -309,6 +343,24 @@ export const initDashboardCalendar = () => {
         selectDate(date);
         calendar.gotoDate(date);
     });
+
+datePickerButton?.addEventListener('click', () => {
+    if (!dateInput) {
+        return;
+    }
+
+    if (typeof dateInput.showPicker === 'function') {
+        dateInput.showPicker();
+
+        return;
+    }
+
+    /*
+     * showPickerに未対応のブラウザ向け。
+     */
+    dateInput.focus();
+    dateInput.click();
+});
 
     pickerButton?.addEventListener('click', () => {
         if (!dateInput) {
