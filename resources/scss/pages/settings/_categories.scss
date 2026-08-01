@@ -1,366 +1,209 @@
-@use '../../components/form';
-
-.category-settings-card {
-    padding-bottom: 2rem;
-}
-
-.category-archive-prompt {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    margin-top: 1.25rem;
-    padding: 1rem 1.25rem;
-    background-color: var(--c-surface-disabled);
-    border: var(--border-width) solid var(--c-border);
-    border-radius: var(--r-control);
-
-    &__content {
-        min-width: 0;
-    }
-
-    &__title,
-    &__description {
-        margin: 0;
-        line-height: 1.5;
-    }
-
-    &__title {
-        color: var(--c-text);
-        font-size: var(--fs-md);
-        font-weight: 600;
-    }
-
-    &__description {
-        margin-top: 0.25rem;
-        color: var(--c-subtle);
-        font-size: var(--fs-sm);
-    }
-
-    &__actions {
-        display: flex;
-        flex: 0 0 auto;
-        gap: 0.75rem;
-    }
-
-    &__actions form {
-        margin: 0;
-    }
-
-    &__button {
-        @include form.button(
-            $width: auto,
-            $margin: 0
-        );
-
-        min-width: 8.5rem;
-        height: 2.25rem;
-        padding-inline: 1rem;
-        font-size: var(--fs-sm);
-
-        &--new {
-            color: var(--c-button-secondary-text);
-            background-color: var(--c-button-secondary-bg);
-            border-color: var(--c-button-secondary-border);
-
-            &:hover:not(:disabled) {
-                background-color: var(--c-button-secondary-bg-hover);
-            }
-        }
-    }
-}
-
-.category-list {
-    --category-list-columns: minmax(12rem, 1fr) 6.5rem 7rem 6.25rem;
-
-    margin-top: 1.25rem;
-
-    &__header,
-    .category-item__summary {
-        display: grid;
-        grid-template-columns: var(--category-list-columns);
-        gap: 1rem;
-        align-items: center;
-    }
-
-    &__header {
-        padding: 0 1.25rem 0.375rem;
-        color: var(--c-subtle);
-        font-size: var(--fs-sm);
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    &__items {
-        display: grid;
-        gap: 0.75rem;
-    }
-
-    &__empty {
-        margin: 0;
-        padding: 1.5rem;
-        color: var(--c-subtle);
-        font-size: var(--fs-sm);
-        line-height: 1.5;
-        text-align: center;
-        background-color: var(--c-surface-disabled);
-        border-radius: var(--r-swatch);
-    }
-}
-
-.category-item {
-    min-width: 0;
-
-    &__summary {
-        min-height: 2.625rem;
-        padding: 0.3125rem 1.25rem;
-        box-sizing: border-box;
-        background-color: var(--c-surface-disabled);
-        border-radius: var(--r-swatch);
-    }
-
-    &__name,
-    &__status {
-        min-width: 0;
-        font-size: var(--fs-md);
-        line-height: 1.4;
-    }
-
-    &__name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    &__color {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    &__swatch {
-        display: block;
-        width: 1.5rem;
-        height: 1.5rem;
-        background-color: var(--category-color);
-        border: var(--border-width) solid var(--c-border);
-        border-radius: var(--r-swatch);
-    }
-
-    &__status {
-        text-align: center;
-    }
-
-    &__edit-button {
-        @include form.button(
-            $width: 6.25rem,
-            $margin: 0
-        );
-
-        height: 2rem;
-        padding-inline: 0.75rem;
-        font-size: var(--fs-sm);
-    }
-}
-
-.category-editor {
-    padding: 0.625rem 1.25rem 0.75rem;
-    box-sizing: border-box;
-    background-color: var(--c-surface-disabled);
-    border: var(--border-width) solid var(--c-subtle);
-    border-radius: var(--r-swatch);
-
-    &__fields {
-        display: grid;
-        grid-template-columns: minmax(12rem, 1fr) 11.625rem 6.25rem;
-        gap: 0.875rem;
-        align-items: end;
-    }
-
-    &__field {
-        display: grid;
-        gap: 0.25rem;
-        min-width: 0;
-    }
-
-    &__label {
-        color: var(--c-subtle);
-        font-size: var(--fs-xs);
-        line-height: 1.4;
-    }
-
-    &__input {
-        @include form.textbox;
-
-        display: block;
-        width: 100%;
-        height: 2rem;
-    }
-
-    &__error {
-        @include form.error(
-            $align: left,
-            $width: 100%
-        );
-
-        margin-top: 0.125rem;
-    }
-
-    &__save {
-        display: flex;
-        align-items: flex-end;
-    }
-
-    &__actions {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-top: 0.875rem;
-    }
-
-    &__status {
-        margin: 0;
-        font-size: var(--fs-md);
-        line-height: 1.4;
-    }
-
-    &__action-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 0.75rem;
-    }
-
-    &__button {
-        @include form.button(
-            $width: 6.25rem,
-            $margin: 0
-        );
-
-        height: 2rem;
-        padding-inline: 0.75rem;
-        font-size: var(--fs-sm);
-
-        &--status,
-        &--cancel {
-            color: var(--c-button-secondary-text);
-            background-color: var(--c-button-secondary-bg);
-            border-color: var(--c-button-secondary-border);
-
-            &:hover:not(:disabled) {
-                background-color: var(--c-button-secondary-bg-hover);
-            }
-        }
-
-        &--archive {
-            color: var(--c-danger);
-            background-color: transparent;
-            border-color: var(--c-danger);
-
-            &:hover:not(:disabled) {
-                background-color: var(--c-danger-bg);
-            }
-        }
-    }
-}
-
-@media (max-width: 64rem) {
-    .category-archive-prompt {
-        align-items: flex-start;
-        flex-direction: column;
-
-        &__actions {
-            flex-wrap: wrap;
-        }
-    }
-
-    .category-list {
-        --category-list-columns: minmax(10rem, 1fr) 5rem 6rem 5.5rem;
-
-        &__header,
-        .category-item__summary {
-            gap: 0.75rem;
-        }
-    }
-
-    .category-item__edit-button,
-    .category-editor__button {
-        width: 5.5rem;
-    }
-
-    .category-editor__fields {
-        grid-template-columns: minmax(10rem, 1fr) 11.625rem 5.5rem;
-        gap: 0.75rem;
-    }
-}
-
-@media (max-width: 48rem) {
-    .category-archive-prompt {
-        padding: 1rem;
-
-        &__actions {
-            display: grid;
-            width: 100%;
-        }
-
-        &__button {
-            width: 100%;
-        }
-    }
-
-    .category-list {
-        margin-top: 1rem;
-
-        &__header {
-            display: none;
-        }
-
-        &__items {
-            gap: 0.625rem;
-        }
-    }
-
-    .category-item {
-        &__summary {
-            grid-template-columns: minmax(0, 1fr) auto auto;
-            gap: 0.75rem;
-            padding-inline: 1rem;
-        }
-
-        &__color {
-            grid-column: 2;
-        }
-
-        &__status {
-            display: none;
-        }
-    }
-
-    .category-editor {
-        padding: 1rem;
-
-        &__fields {
-            grid-template-columns: minmax(0, 1fr) 5.5rem;
-            gap: 0.75rem;
-        }
-
-        &__field--name,
-        &__field--color {
-            grid-column: 1 / -1;
-        }
-
-        &__save {
-            grid-column: 2;
-            justify-content: flex-end;
-        }
-
-        &__actions {
-            align-items: flex-start;
-        }
-
-        &__action-buttons {
-            gap: 0.5rem;
-        }
-    }
-}
+@php
+    $archivedCategoryConflict = session(
+        'archived_category_conflict'
+    );
+    $newCategoryName = old('name', '');
+    $newCategoryColor = old('color_code', '#808080');
+@endphp
+
+<section class="settings-card category-settings-card">
+    <header class="settings-card__header">
+        <h2 class="settings-card__title">
+            {{ __('Add New Category') }}
+        </h2>
+
+        <p class="settings-card__description">
+            {{ __('Add a category for expense records and budgets.') }}
+        </p>
+    </header>
+
+    @if ($archivedCategoryConflict !== null)
+        <div
+            class="category-archive-prompt"
+            role="alert"
+            aria-labelledby="category-archive-prompt-title"
+        >
+            <div class="category-archive-prompt__content">
+                <p
+                    id="category-archive-prompt-title"
+                    class="category-archive-prompt__title"
+                >
+                    {{ __('“:name” is archived.', [
+                        'name' => $archivedCategoryConflict['name'],
+                    ]) }}
+                </p>
+
+                <p class="category-archive-prompt__description">
+                    {{ __('Restore the previous category or create a new category with the same name.') }}
+                </p>
+            </div>
+
+            <div class="category-archive-prompt__actions">
+                <form
+                    method="post"
+                    action="{{ route(
+                        'settings.categories.restore',
+                        $archivedCategoryConflict['id']
+                    ) }}"
+                >
+                    @csrf
+                    @method('patch')
+
+                    <input
+                        type="hidden"
+                        name="color_code"
+                        value="{{ $newCategoryColor }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="category-archive-prompt__button
+                            category-archive-prompt__button--restore"
+                    >
+                        {{ __('Restore & Use') }}
+                    </button>
+                </form>
+
+                <form
+                    method="post"
+                    action="{{ route('settings.categories.store') }}"
+                >
+                    @csrf
+
+                    <input
+                        type="hidden"
+                        name="intent"
+                        value="create_new"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="name"
+                        value="{{ $newCategoryName }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="color_code"
+                        value="{{ $newCategoryColor }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="category-archive-prompt__button
+                            category-archive-prompt__button--new"
+                    >
+                        {{ __('Use Another Category') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endif
+
+    <form
+        method="post"
+        action="{{ route('settings.categories.store') }}"
+        class="settings-form category-form"
+        x-data="{ color: @js($newCategoryColor) }"
+    >
+        @csrf
+
+        <div class="settings-form__fields">
+            <div class="settings-form__row">
+                <label
+                    for="new_category_name"
+                    class="settings-form__label"
+                >
+                    {{ __('Category Name') }}
+                </label>
+
+                <div class="settings-form__control category-form__name-control">
+                    <input
+                        id="new_category_name"
+                        name="name"
+                        type="text"
+                        class="settings-form__input
+                            @error('name', 'storeCategory') is-invalid @enderror"
+                        value="{{ $newCategoryName }}"
+                        required
+                        maxlength="50"
+                        autocomplete="off"
+                        @error('name', 'storeCategory')
+                            aria-invalid="true"
+                            aria-describedby="new-category-name-error"
+                        @enderror
+                    >
+
+                    @error('name', 'storeCategory')
+                        <p
+                            id="new-category-name-error"
+                            class="settings-form__error"
+                            role="alert"
+                        >
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="settings-form__row">
+                <label
+                    for="new_category_color"
+                    class="settings-form__label"
+                >
+                    {{ __('Category Color') }}
+                </label>
+
+                <div class="settings-form__control">
+                    <div class="color-picker color-picker--compact">
+                        <div class="color-picker__control">
+                            <input
+                                id="new_category_color"
+                                name="color_code"
+                                type="color"
+                                class="color-picker__input
+                                    @error('color_code', 'storeCategory') is-invalid @enderror"
+                                value="{{ $newCategoryColor }}"
+                                x-model="color"
+                                required
+                                @error('color_code', 'storeCategory')
+                                    aria-invalid="true"
+                                    aria-describedby="new-category-color-error"
+                                @enderror
+                            >
+
+                            <output
+                                class="color-picker__value"
+                                for="new_category_color"
+                                x-text="color.toUpperCase()"
+                            >
+                                {{ strtoupper($newCategoryColor) }}
+                            </output>
+                        </div>
+                    </div>
+
+                    @error('color_code', 'storeCategory')
+                        <p
+                            id="new-category-color-error"
+                            class="settings-form__error"
+                            role="alert"
+                        >
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-form__actions">
+            <div class="settings-form__action-content">
+                <button
+                    type="submit"
+                    class="settings-form__button"
+                >
+                    {{ __('Add Category') }}
+                </button>
+            </div>
+        </div>
+    </form>
+</section>
