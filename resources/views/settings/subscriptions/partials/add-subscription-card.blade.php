@@ -49,7 +49,7 @@
                     {{ __('Name') }}
                 </label>
 
-                <div class="settings-form__control">
+                <div class="settings-form__control subscription-form__main-control">
                     <input
                         id="new_subscription_name"
                         name="name"
@@ -86,13 +86,12 @@
                     {{ __('Price (¥)') }}
                 </label>
 
-                <div class="settings-form__control">
+                <div class="settings-form__control subscription-form__main-control">
                     <input
                         id="new_subscription_amount"
                         name="amount"
                         type="number"
                         class="settings-form__input
-                            subscription-form__amount-input
                             @error('amount', 'storeSubscription') is-invalid @enderror"
                         value="{{ $hasStoreErrors ? old('amount') : '' }}"
                         required
@@ -127,7 +126,7 @@
                     {{ __('Category') }}
                 </label>
 
-                <div class="settings-form__control">
+                <div class="settings-form__control subscription-form__main-control">
                     <div class="subscription-form__select-wrapper">
                         <select
                             id="new_subscription_category"

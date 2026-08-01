@@ -8,8 +8,17 @@
     --form-width: 42rem;
     --form-offset-x: -1rem;
 
-    &__amount-input {
-        max-width: 22rem;
+    &__main-control {
+        width: 19rem;
+        max-width: 100%;
+        min-width: 0;
+
+        > .settings-form__input,
+        > .subscription-form__select-wrapper {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+        }
     }
 
     &__select-wrapper {
@@ -68,7 +77,7 @@
     }
 
     &__submit {
-        width: 21.875rem;
+        width: 19rem;
         max-width: 100%;
     }
 
@@ -445,12 +454,6 @@
 }
 
 @media (max-width: 48rem) {
-    .subscription-form {
-        &__amount-input {
-            max-width: none;
-        }
-    }
-
     .subscription-billing {
         align-items: flex-start;
         flex-direction: column;
