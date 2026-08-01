@@ -3,21 +3,49 @@
     aria-label="Monthly spending calendar"
 >
     <header class="dashboard-calendar__summary">
-        <div class="dashboard-calendar__date-field">
-            <label
-                for="dashboard-calendar-date"
-                class="sr-only"
+        <div class="dashboard-calendar__controls">
+            <button
+                type="button"
+                class="dashboard-calendar__nav-button"
+                data-dashboard-calendar-prev
+                aria-label="Previous month"
             >
-                Select date
-            </label>
+                ◀
+            </button>
 
-            <input
-                type="date"
-                id="dashboard-calendar-date"
-                class="dashboard-calendar__date"
-                value="2026-06-27"
-                data-dashboard-calendar-date
+            <div class="dashboard-calendar__date-group">
+                <div class="dashboard-calendar__date-wrapper">
+                    <input
+                        type="date"
+                        id="dashboard-calendar-date"
+                        class="dashboard-calendar__date"
+                        value="{{ now()->format('Y-m-d') }}"
+                        data-dashboard-calendar-date
+                    >
+                    <button
+                        type="button"
+                        class="dashboard-calendar__date-picker"
+                        data-dashboard-calendar-date-picker
+                        aria-label="Select date"
+                    >
+                        <img
+                            class="dashboard-calendar__date-icon"
+                            src="{{ asset('images/icons/calendar_1.svg') }}"
+                            alt=""
+                            aria-hidden="true"
+                        >
+                    </button>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="dashboard-calendar__nav-button"
+                data-dashboard-calendar-next
+                aria-label="Next month"
             >
+                ▶
+            </button>
         </div>
 
         <p class="dashboard-calendar__spending">
@@ -42,10 +70,7 @@
     >
         <li class="dashboard-calendar__legend-item">
             <span
-                class="
-                    dashboard-calendar__legend-color
-                    dashboard-calendar__legend-color--all-good
-                "
+                class="dashboard-calendar__legend-color dashboard-calendar__legend-color--all-good"
                 aria-hidden="true"
             ></span>
             <span>All good</span>
@@ -53,10 +78,7 @@
 
         <li class="dashboard-calendar__legend-item">
             <span
-                class="
-                    dashboard-calendar__legend-color
-                    dashboard-calendar__legend-color--slightly-high
-                "
+                class="dashboard-calendar__legend-color dashboard-calendar__legend-color--slightly-high"
                 aria-hidden="true"
             ></span>
             <span>Slightly high</span>
@@ -64,10 +86,7 @@
 
         <li class="dashboard-calendar__legend-item">
             <span
-                class="
-                    dashboard-calendar__legend-color
-                    dashboard-calendar__legend-color--over-budget
-                "
+                class="dashboard-calendar__legend-color dashboard-calendar__legend-color--over-budget"
                 aria-hidden="true"
             ></span>
             <span>Over budget</span>
@@ -75,10 +94,7 @@
 
         <li class="dashboard-calendar__legend-item">
             <span
-                class="
-                    dashboard-calendar__legend-color
-                    dashboard-calendar__legend-color--over-limit
-                "
+                class="dashboard-calendar__legend-color dashboard-calendar__legend-color--over-limit"
                 aria-hidden="true"
             ></span>
             <span>Over limit</span>

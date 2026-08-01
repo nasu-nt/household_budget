@@ -79,27 +79,37 @@
                             {{ __('Date') }}
                         </label>
 
-                        <div class="expense-entry__control">
-                            <input
-                                id="expense_expense_date_{{ $index }}"
-                                name="expenses[{{ $index }}][expense_date]"
-                                type="date"
-                                class="expense-entry__input
+                       <div class="expense-entry__control">
+                            <div class="expense-entry__date-wrapper">
+                                <input
+                                    id="expense_expense_date_{{ $index }}"
+                                    name="expenses[{{ $index }}][expense_date]"
+                                    type="date"
+                                    class="expense-entry__input
+                                        expense-entry__date-input
+                                        @error("expenses.{$index}.expense_date")
+                                            is-invalid
+                                        @enderror"
+                                    value="{{ data_get(
+                                        $expense,
+                                        'expense_date',
+                                        now()->format('Y-m-d')
+                                    ) }}"
+                                    required
+                                    data-expense-field="expense_date"
                                     @error("expenses.{$index}.expense_date")
-                                        is-invalid
-                                    @enderror"
-                                value="{{ data_get(
-                                    $expense,
-                                    'expense_date',
-                                    now()->format('Y-m-d')
-                                ) }}"
-                                required
-                                data-expense-field="expense_date"
-                                @error("expenses.{$index}.expense_date")
-                                    aria-invalid="true"
-                                    aria-describedby="expense_expense_date_{{ $index }}_error"
-                                @enderror
-                            >
+                                        aria-invalid="true"
+                                        aria-describedby="expense_expense_date_{{ $index }}_error"
+                                    @enderror
+                                >
+
+                                <img
+                                    class="expense-entry__date-icon"
+                                    src="{{ asset('images/icons/calendar_1.svg') }}"
+                                    alt=""
+                                    aria-hidden="true"
+                                >
+                            </div>
 
                             @error("expenses.{$index}.expense_date")
                                 <p
@@ -113,7 +123,7 @@
                             @enderror
                         </div>
                     </div>
-
+                    
                     {{-- Category --}}
                     <div class="expense-entry__row">
                         <label

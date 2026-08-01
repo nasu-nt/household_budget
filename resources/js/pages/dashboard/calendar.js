@@ -7,10 +7,6 @@ import 'fullcalendar/skeleton.css';
 import 'fullcalendar/themes/classic/theme.css';
 import 'fullcalendar/themes/classic/palette.css';
 
-/**
- * Laravelから返されたstatusと、
- * 日付セルへ付与するSCSSクラスの対応表。
- */
 const STATUS_CLASS_MAP = Object.freeze({
     all_good: 'is-all-good',
     slightly_high: 'is-slightly-high',
@@ -20,36 +16,14 @@ const STATUS_CLASS_MAP = Object.freeze({
 
 const STATUS_CLASSES = Object.values(STATUS_CLASS_MAP);
 
-/**
- * 金額を日本円表示へ変換する。
- *
- * @param {number} amount
- * @returns {string}
- */
 const formatCurrency = (amount) => {
     return `¥${amount.toLocaleString('ja-JP')}`;
 };
 
-/**
- * FullCalendarから渡されたISO 8601形式の日時を、
- * Laravelへ送るYYYY-MM-DD形式へ変換する。
- *
- * @param {string} dateTime
- * @returns {string}
- */
 const toRequestDateString = (dateTime) => {
     return dateTime.slice(0, 10);
 };
 
-/**
- * JavaScriptのDateをYYYY-MM-DD形式へ変換する。
- *
- * toISOString()はUTCへ変換されて日付がずれる可能性があるため、
- * ローカル時間の年月日を個別に取得する。
- *
- * @param {Date} date
- * @returns {string}
- */
 const toLocalDateString = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -58,13 +32,38 @@ const toLocalDateString = (date) => {
     return `${year}-${month}-${day}`;
 };
 
-/**
- * 日付セルから既存のステータスクラスを削除する。
- *
- * @param {HTMLElement} element
- */
+const formatDisplayDate = (date) => {
+    const [year, month, day] = date.split('-');
+
+    return `${year}/${month}/${day}`;
+};
+
 const clearStatusClasses = (element) => {
     element.classList.remove(...STATUS_CLASSES);
+};
+
+const addMonthsClamped = (dateString, monthOffset) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+
+    const baseDate = new Date(year, month - 1, 1);
+    baseDate.setMonth(baseDate.getMonth() + monthOffset);
+
+    const targetYear = baseDate.getFullYear();
+    const targetMonth = baseDate.getMonth();
+    const lastDayOfMonth = new Date(
+        targetYear,
+        targetMonth + 1,
+        0,
+    ).getDate();
+
+    const safeDay = Math.min(day, lastDayOfMonth);
+    const nextDate = new Date(
+        targetYear,
+        targetMonth,
+        safeDay,
+    );
+
+    return toLocalDateString(nextDate);
 };
 
 export const initDashboardCalendar = () => {
@@ -88,44 +87,45 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-date]',
     );
 
+    const datePickerButton = document.querySelector(
+    '[data-dashboard-calendar-date-picker]',
+    );
+
+    const dateDisplay = document.querySelector(
+        '[data-dashboard-calendar-date-display]',
+    );
+
+    const pickerButton = document.querySelector(
+        '[data-dashboard-calendar-picker-button]',
+    );
+
+    const prevButton = document.querySelector(
+        '[data-dashboard-calendar-prev]',
+    );
+
+    const nextButton = document.querySelector(
+        '[data-dashboard-calendar-next]',
+    );
+
     const spendingElement = document.querySelector(
         '[data-dashboard-calendar-spending]',
     );
 
-    /**
-     * 表示中の日付セルを、日付をキーとして保持する。
-     *
-     * @type {Map<string, HTMLElement>}
-     */
     const dayCellElements = new Map();
-
-    /**
-     * APIから取得した日付ごとの支出合計。
-     *
-     * @type {Map<string, number>}
-     */
     const dailySpending = new Map();
-
-    /**
-     * APIから取得した日付ごとのステータス。
-     *
-     * @type {Map<string, string>}
-     */
     const dailyStatuses = new Map();
 
-    /**
-     * 現在選択されている日付。
-     *
-     * @type {string}
-     */
     let selectedDate = dateInput?.value
         || toLocalDateString(new Date());
 
-    /**
-     * 指定した日付セルへステータスクラスを反映する。
-     *
-     * @param {string} date
-     */
+    const updateDateDisplay = (date) => {
+        if (!dateDisplay) {
+            return;
+        }
+
+        dateDisplay.textContent = formatDisplayDate(date);
+    };
+
     const applyStatusToDayCell = (date) => {
         const dayCell = dayCellElements.get(date);
 
@@ -143,11 +143,6 @@ export const initDashboardCalendar = () => {
         }
     };
 
-    /**
-     * 選択日の支出額を上部へ反映する。
-     *
-     * @param {string} date
-     */
     const updateSpending = (date) => {
         if (!spendingElement) {
             return;
@@ -158,9 +153,6 @@ export const initDashboardCalendar = () => {
         spendingElement.textContent = formatCurrency(amount);
     };
 
-    /**
-     * 表示中の日付セルへ選択状態を反映する。
-     */
     const applySelectedDate = () => {
         dayCellElements.forEach((dayCell, date) => {
             dayCell.classList.toggle(
@@ -170,11 +162,6 @@ export const initDashboardCalendar = () => {
         });
     };
 
-    /**
-     * 選択日を変更する。
-     *
-     * @param {string} date
-     */
     const selectDate = (date) => {
         selectedDate = date;
 
@@ -182,19 +169,11 @@ export const initDashboardCalendar = () => {
             dateInput.value = date;
         }
 
+        updateDateDisplay(date);
         applySelectedDate();
         updateSpending(date);
     };
 
-    /**
-     * Laravelから表示期間の日別支出を取得する。
-     *
-     * @param {Object} fetchInfo
-     * @param {string} fetchInfo.startStr
-     * @param {string} fetchInfo.endStr
-     * @param {Function} successCallback
-     * @param {Function} failureCallback
-     */
     const fetchCalendarEvents = async (
         fetchInfo,
         successCallback,
@@ -258,10 +237,8 @@ export const initDashboardCalendar = () => {
 
             successCallback(events);
             updateSpending(selectedDate);
-
         } catch (error) {
             console.error(error);
-
             failureCallback(error);
         }
     };
@@ -277,21 +254,44 @@ export const initDashboardCalendar = () => {
 
         initialView: 'dayGridMonth',
         initialDate,
-
         headerToolbar: false,
 
+        // 曜日ヘッダー用のクラス
+        dayHeaderClass: 'dashboard-calendar__weekday',
+        dayHeaderInnerClass: 'dashboard-calendar__weekday-inner',
+
         firstDay: 1,
+        /*
+        * 曜日ヘッダーへ曜日別のクラスを付ける。
+        *
+        * Date#getDay()
+        * 0: 日曜日
+        * 6: 土曜日
+        */
+        dayHeaderDidMount: (info) => {
+            const dayOfWeek = info.date.getDay();
+
+            info.el.classList.add(
+                'dashboard-calendar__weekday',
+            );
+
+            if (dayOfWeek === 6) {
+                info.el.classList.add('is-saturday');
+            }
+
+            if (dayOfWeek === 0) {
+                info.el.classList.add('is-sunday');
+            }
+        },
+
+        fixedWeekCount: false,
+
         fixedWeekCount: false,
         showNonCurrentDates: false,
         height: 'auto',
         displayEventTime: false,
-
         events: fetchCalendarEvents,
 
-        /*
-         * 日付セルが表示されたときにHTMLElementを保存し、
-         * APIから取得済みのstatusがあればクラスを反映する。
-         */
         dayCellDidMount: (info) => {
             const date = toLocalDateString(info.date);
 
@@ -304,27 +304,16 @@ export const initDashboardCalendar = () => {
             );
         },
 
-        /*
-         * 月移動などで日付セルが破棄されたら、
-         * Mapからも削除する。
-         */
         dayCellWillUnmount: (info) => {
             const date = toLocalDateString(info.date);
 
             dayCellElements.delete(date);
         },
 
-        /*
-        * 日付セルをクリックしたときに選択日を更新する。
-        */
         dateClick: (info) => {
             selectDate(info.dateStr);
         },
 
-        /*
-         * FullCalendar標準のイベントタイトルではなく、
-         * 金額だけを表示する。
-         */
         eventContent: (info) => {
             const amountElement = document.createElement('span');
 
@@ -338,14 +327,11 @@ export const initDashboardCalendar = () => {
             };
         },
 
-        /*
-         * FullCalendar内部のクラスではなく、
-         * 自分たちのクラスで金額表示を装飾する。
-         */
         eventClass: 'dashboard-calendar__amount-event',
     });
 
     calendar.render();
+    updateDateDisplay(selectedDate);
 
     dateInput?.addEventListener('change', (event) => {
         const date = event.currentTarget.value;
@@ -356,5 +342,65 @@ export const initDashboardCalendar = () => {
 
         selectDate(date);
         calendar.gotoDate(date);
+    });
+
+datePickerButton?.addEventListener('click', () => {
+    if (!dateInput) {
+        return;
+    }
+
+    if (typeof dateInput.showPicker === 'function') {
+        dateInput.showPicker();
+
+        return;
+    }
+
+    /*
+     * showPickerに未対応のブラウザ向け。
+     */
+    dateInput.focus();
+    dateInput.click();
+});
+
+    pickerButton?.addEventListener('click', () => {
+        if (!dateInput) {
+            return;
+        }
+
+        if (typeof dateInput.showPicker === 'function') {
+            dateInput.showPicker();
+
+            return;
+        }
+
+        dateInput.click();
+    });
+
+    dateDisplay?.addEventListener('click', () => {
+        if (!dateInput) {
+            return;
+        }
+
+        if (typeof dateInput.showPicker === 'function') {
+            dateInput.showPicker();
+
+            return;
+        }
+
+        dateInput.click();
+    });
+
+    prevButton?.addEventListener('click', () => {
+        const previousDate = addMonthsClamped(selectedDate, -1);
+
+        selectDate(previousDate);
+        calendar.gotoDate(previousDate);
+    });
+
+    nextButton?.addEventListener('click', () => {
+        const nextDate = addMonthsClamped(selectedDate, 1);
+
+        selectDate(nextDate);
+        calendar.gotoDate(nextDate);
     });
 };
