@@ -200,11 +200,6 @@
 }
 
 @media (max-width: 48rem) {
-<<<<<<< Updated upstream
-    .budget-form {
-        &__amount-input {
-            max-width: none;
-=======
     @media (max-width: 48rem) {
             .budget-form {
                 --form-width: 100%;
@@ -228,19 +223,12 @@
             &__select-wrapper {
                 flex-basis: auto;
             }
->>>>>>> Stashed changes
         }
 
         .budget-guide {
             margin-top: 1.5rem;
             padding: 1.25rem 1rem;
 
-<<<<<<< Updated upstream
-        &__closing-select {
-            width: 100%;
-        }
-    }
-=======
             &__summary {
                 grid-template-columns: minmax(0, 1fr);
                 gap: 1.25rem;
@@ -248,7 +236,6 @@
 
             &__metric {
                 padding-inline: 0;
->>>>>>> Stashed changes
 
                 & + & {
                     padding-top: 1.25rem;
