@@ -200,85 +200,109 @@
 }
 
 @media (max-width: 48rem) {
+<<<<<<< Updated upstream
     .budget-form {
         &__amount-input {
             max-width: none;
+=======
+    @media (max-width: 48rem) {
+            .budget-form {
+                --form-width: 100%;
+                --form-offset-x: 0;
+
+            &__closing-label {
+                justify-content: flex-start;
+                min-height: auto;
+            }
+
+            &__closing-controls {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            &__select-wrapper,
+            &__closing-select {
+                width: 100%;
+            }
+
+            &__select-wrapper {
+                flex-basis: auto;
+            }
+>>>>>>> Stashed changes
         }
 
-        &__closing-controls {
-            align-items: flex-start;
-            flex-direction: column;
-        }
+        .budget-guide {
+            margin-top: 1.5rem;
+            padding: 1.25rem 1rem;
 
+<<<<<<< Updated upstream
         &__closing-select {
             width: 100%;
         }
     }
+=======
+            &__summary {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 1.25rem;
+            }
 
-    .budget-guide {
-        margin-top: 1.5rem;
-        padding: 1.25rem 1rem;
+            &__metric {
+                padding-inline: 0;
+>>>>>>> Stashed changes
 
-        &__summary {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 1.25rem;
-        }
+                & + & {
+                    padding-top: 1.25rem;
+                    border-top:
+                        var(--border-width)
+                        solid
+                        var(--c-border);
+                    border-left: 0;
+                }
+            }
 
-        &__metric {
-            padding-inline: 0;
+            &__metric-value {
+                margin-top: 0.75rem;
+            }
 
-            & + & {
-                padding-top: 1.25rem;
-                border-top:
+            &__table-header {
+                display: none;
+            }
+
+            &__table-row {
+                grid-template-columns: auto 1.75rem minmax(0, 1fr);
+                gap: 0.5rem 0.75rem;
+                align-items: start;
+                padding-bottom: 0.75rem;
+                border-bottom:
                     var(--border-width)
                     solid
                     var(--c-border);
-                border-left: 0;
-            }
-        }
 
-        &__metric-value {
-            margin-top: 0.75rem;
-        }
+                > :nth-child(3),
+                > :nth-child(4) {
+                    grid-column: 1 / -1;
+                    padding-left: 0;
+                }
 
-        &__table-header {
-            display: none;
-        }
+                > :nth-child(3)::before {
+                    content: 'Daily: ';
+                    font-weight: 700;
+                }
 
-        &__table-row {
-            grid-template-columns: auto 1.75rem minmax(0, 1fr);
-            gap: 0.5rem 0.75rem;
-            align-items: start;
-            padding-bottom: 0.75rem;
-            border-bottom:
-                var(--border-width)
-                solid
-                var(--c-border);
-
-            > :nth-child(3),
-            > :nth-child(4) {
-                grid-column: 1 / -1;
-                padding-left: 0;
+                > :nth-child(4)::before {
+                    content: 'Monthly: ';
+                    font-weight: 700;
+                }
             }
 
-            > :nth-child(3)::before {
-                content: 'Daily: ';
-                font-weight: 700;
+            &__status-label {
+                align-self: center;
+                text-align: left;
             }
 
-            > :nth-child(4)::before {
-                content: 'Monthly: ';
-                font-weight: 700;
+            &__swatch {
+                align-self: center;
             }
-        }
-
-        &__status-label {
-            align-self: center;
-            text-align: left;
-        }
-
-        &__swatch {
-            align-self: center;
         }
     }
 }
