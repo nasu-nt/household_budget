@@ -1,6 +1,6 @@
 .appearance-settings-card {
     &__content {
-        width: min(100%, 44.5rem);
+        //width: min(100%, 44.5rem);
         margin-inline: auto;
     }
 
@@ -14,12 +14,14 @@
         display: grid;
         gap: 1.5rem;
         width: fit-content;
+        margin-inline: auto;
+        transform: translateX(-5.5rem);
     }
 
     &__row {
         display: grid;
         grid-template-columns: 13.5rem 11.625rem;
-        gap: 5.625rem;
+        gap: 5rem;
         align-items: start;
     }
 
@@ -45,25 +47,30 @@
     }
 
     &__actions {
-        display: grid;
-        grid-template-columns: 13.5rem 21.875rem;
+        display: flex;
         gap: 2rem;
-        justify-content: end;
+        align-items: center;
+        justify-content: center;
         margin-top: 2.5rem;
     }
 
     &__button {
-        width: 100%;
+        width: 21.875rem;
+        max-width: 100%;
         min-height: 2.875rem;
         font-size: var(--fs-md);
 
         &--secondary {
+            width: 12rem;
+            min-height: 2.5rem;
+            padding-inline: 0.75rem;
             color: var(--c-text);
+            font-size: var(--fs-sm);
             font-weight: 400;
             background-color: var(--c-surface);
             border-color: var(--c-border);
 
-            &:hover {
+            &:hover:not(:disabled) {
                 background-color: var(--c-bg);
             }
         }
@@ -88,8 +95,13 @@
         }
 
         &__actions {
-            grid-template-columns: 1fr;
+            flex-direction: column;
             gap: 0.75rem;
+        }
+
+        &__button,
+        &__button--secondary {
+            width: 100%;
         }
     }
 }
