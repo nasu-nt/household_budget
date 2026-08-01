@@ -14,10 +14,15 @@
         min-width: 0;
 
         > .settings-form__input,
-        > .subscription-form__select-wrapper {
+        > .subscription-form__select-wrapper,
+        > .money-input {
             display: block;
             width: 100%;
             max-width: 100%;
+        }
+
+        .money-input__field {
+            width: 100%;
         }
     }
 
@@ -199,7 +204,19 @@
         white-space: nowrap;
     }
 
-    &__amount,
+    &__name {
+        text-align: left;
+    }
+
+    &__category {
+        text-align: center;
+    }
+
+    &__amount {
+        padding-right: 0.5rem;
+        text-align: right;
+    }
+
     &__billing-day,
     &__status {
         text-align: center;
@@ -260,6 +277,10 @@
 
         &--billing {
             grid-area: billing;
+
+            .subscription-billing {
+                flex-wrap: nowrap;
+            }
         }
     }
 
@@ -282,8 +303,12 @@
         cursor: pointer;
     }
 
-    &__input--amount {
-        text-align: right;
+    .money-input {
+        width: 100%;
+    }
+
+    .money-input__field {
+        width: 100%;
     }
 
     &__error {
