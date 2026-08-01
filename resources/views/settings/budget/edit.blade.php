@@ -101,30 +101,39 @@
                                             x-bind:value="monthlyBudget"
                                         >
 
-                                        <input
-                                            id="monthly_budget_display"
-                                            type="text"
-                                            class="settings-form__input
-                                                budget-form__amount-input
+                                        <div class="budget-form__money-input">
+                                            <span
+                                                class="budget-form__currency"
+                                                aria-hidden="true"
+                                            >
+                                                ¥
+                                            </span>
+
+                                            <input
+                                                id="monthly_budget_display"
+                                                type="text"
+                                                class="settings-form__input
+                                                    budget-form__amount-input
+                                                    @error('monthly_budget')
+                                                        is-invalid
+                                                    @enderror"
+                                                value="{{ number_format($monthlyBudget) }}"
+                                                x-model="monthlyBudgetInput"
+                                                x-on:input="
+                                                    updateMonthlyBudget(
+                                                        $event.target.value
+                                                    )
+                                                "
+                                                inputmode="numeric"
+                                                autocomplete="off"
+                                                maxlength="13"
+                                                required
                                                 @error('monthly_budget')
-                                                    is-invalid
-                                                @enderror"
-                                            value="{{ number_format($monthlyBudget) }}"
-                                            x-model="monthlyBudgetInput"
-                                            x-on:input="
-                                                updateMonthlyBudget(
-                                                    $event.target.value
-                                                )
-                                            "
-                                            inputmode="numeric"
-                                            autocomplete="off"
-                                            maxlength="13"
-                                            required
-                                            @error('monthly_budget')
-                                                aria-invalid="true"
-                                                aria-describedby="monthly-budget-error"
-                                            @enderror
-                                        >
+                                                    aria-invalid="true"
+                                                    aria-describedby="monthly-budget-error"
+                                                @enderror
+                                            >
+                                        </div>
 
                                         @error('monthly_budget')
                                             <p
@@ -153,30 +162,39 @@
                                             x-bind:value="monthlyLimit"
                                         >
 
-                                        <input
-                                            id="monthly_limit_display"
-                                            type="text"
-                                            class="settings-form__input
-                                                budget-form__amount-input
+                                        <div class="budget-form__money-input">
+                                            <span
+                                                class="budget-form__currency"
+                                                aria-hidden="true"
+                                            >
+                                                ¥
+                                            </span>
+
+                                            <input
+                                                id="monthly_limit_display"
+                                                type="text"
+                                                class="settings-form__input
+                                                    budget-form__amount-input
+                                                    @error('monthly_limit')
+                                                        is-invalid
+                                                    @enderror"
+                                                value="{{ number_format($monthlyLimit) }}"
+                                                x-model="monthlyLimitInput"
+                                                x-on:input="
+                                                    updateMonthlyLimit(
+                                                        $event.target.value
+                                                    )
+                                                "
+                                                inputmode="numeric"
+                                                autocomplete="off"
+                                                maxlength="13"
+                                                required
                                                 @error('monthly_limit')
-                                                    is-invalid
-                                                @enderror"
-                                            value="{{ number_format($monthlyLimit) }}"
-                                            x-model="monthlyLimitInput"
-                                            x-on:input="
-                                                updateMonthlyLimit(
-                                                    $event.target.value
-                                                )
-                                            "
-                                            inputmode="numeric"
-                                            autocomplete="off"
-                                            maxlength="13"
-                                            required
-                                            @error('monthly_limit')
-                                                aria-invalid="true"
-                                                aria-describedby="monthly-limit-error"
-                                            @enderror
-                                        >
+                                                    aria-invalid="true"
+                                                    aria-describedby="monthly-limit-error"
+                                                @enderror
+                                            >
+                                        </div>
 
                                         @error('monthly_limit')
                                             <p

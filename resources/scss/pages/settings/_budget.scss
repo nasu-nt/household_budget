@@ -8,8 +8,35 @@
         text-align: right;
     }
 
+    &__money-input {
+        position: relative;
+
+        width: 100%;
+        max-width: 19rem;
+    }
+
+    &__currency {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 1rem;
+
+        color: var(--c-subtle);
+        font-size: var(--fs-sm);
+        line-height: 1;
+
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
     &__amount-input {
-        max-width: 22rem;
+        width: 100%;
+        max-width: none;
+        padding-right: 1rem;
+        padding-left: 2.25rem;
+
+        text-align: right;
+        font-variant-numeric: tabular-nums;
     }
 
     &__closing-row {

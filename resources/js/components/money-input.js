@@ -2,20 +2,38 @@ const DIGITS_ONLY = /[^\d]/g;
 
 function formatAmount(value) {
     const digits = value.replace(DIGITS_ONLY, '');
-    return digits ? Number(digits).toLocaleString('ja-JP') : '';
+
+    return digits
+        ? Number(digits).toLocaleString('ja-JP')
+        : '';
 }
 
 export function initMoneyInputs() {
     document.querySelectorAll('[data-money-input]').forEach((input) => {
+        // バリデーションエラー後のold値も、初期表示時にカンマ区切りにする
+        input.value = formatAmount(input.value);
+
         input.addEventListener('input', () => {
-            // カンマの増減でカーソル位置がずれるのを防ぐため、末尾からの距離で保持
-            const posFromEnd = input.value.length - input.selectionStart;
+            // カンマを増減してもカーソルが大きくずれないよう、
+            // 入力欄の末尾からの距離を保存する
+            const selectionStart = input.selectionStart ?? input.value.length;
+            const positionFromEnd =
+                input.value.length - selectionStart;
+
             input.value = formatAmount(input.value);
-            const newPos = input.value.length - posFromEnd;
-            input.setSelectionRange(newPos, newPos);
+
+            const newPosition = Math.max(
+                input.value.length - positionFromEnd,
+                0
+            );
+
+            input.setSelectionRange(
+                newPosition,
+                newPosition
+            );
         });
 
-        // 送信直前にカンマを外して生の数値に戻す(サーバー側でバリデーションエラーにならないように)
+        // Laravelへ送信する直前にカンマを削除する
         input.closest('form')?.addEventListener('submit', () => {
             input.value = input.value.replace(/,/g, '');
         });
