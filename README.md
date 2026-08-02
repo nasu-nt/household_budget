@@ -6,7 +6,7 @@
 
 ## Demo
 
-[デモサイトを開く](デモサイトのURL)
+[デモサイトを開く](https://web--household-budget--b74twz2xwxtt.code.run/)
 
 無料ホスティングを使用しているため、初回表示に時間がかかる場合があります。
 
@@ -22,13 +22,18 @@
 - パスワードの変更
 - アカウントの削除
 
-登録されたデータは、定期的に初期状態へ戻す場合があります。
+また、登録されたデータは、定期的に初期状態へ戻す場合があります。
 
 ## Screenshots
 
 ### Dashboard
 
-![Dashboard](スクリーンショットのパス)
+![Dashboard](docs/screenshots/1_dashboard.png)
+
+![Dashboard](docs/screenshots/2_categories_settings.png)
+
+![Dashboard](docs/screenshots/3_subscriptions_settings.png)
+
 
 ## Features
 
@@ -118,7 +123,7 @@ Laravelのバリデーションを使用し、入力値の形式や範囲を確�
 ## Documents
 
 - [環境構築手順](docs/setup.md)
-- [UI設計・画面仕様書](資料のパスまたはURL)
+- [UI設計・画面仕様書](docs\ui-design.pdf)
 
 実際に作成・公開している資料のみ掲載しています。
 
