@@ -1,84 +1,92 @@
 import { Calendar } from 'fullcalendar';
-import dayGridPlugin from 'fullcalendar/daygrid';
-import interactionPlugin from 'fullcalendar/interaction';
-import themePlugin from 'fullcalendar/themes/classic';
 
 import 'fullcalendar/skeleton.css';
 import 'fullcalendar/themes/classic/theme.css';
 import 'fullcalendar/themes/classic/palette.css';
 
-const STATUS_CLASS_MAP = Object.freeze({
-    all_good: 'is-all-good',
-    slightly_high: 'is-slightly-high',
-    over_budget: 'is-over-budget',
-    over_limit: 'is-over-limit',
-});
+import {
+    fetchCalendarDays,
+} from './calendar-api';
 
-const STATUS_CLASSES = Object.values(STATUS_CLASS_MAP);
+import {
+    createCalendarOptions,
+} from './calendar-options';
 
-const formatCurrency = (amount) => {
-    return `¥${amount.toLocaleString('ja-JP')}`;
+import {
+    STATUS_CLASS_MAP,
+    addMonthsClamped,
+    clearStatusClasses,
+    formatCurrency,
+    toLocalDateString,
+} from './calendar-utils';
+
+/**
+ * 日付入力のカレンダーピッカーを開く。
+ *
+ * showPicker()に対応していないブラウザでは、
+ * focus()とclick()へ切り替える。
+ */
+const openDatePicker = (dateInput) => {
+    if (!dateInput) {
+        return;
+    }
+
+    if (
+        typeof dateInput.showPicker
+        === 'function'
+    ) {
+        dateInput.showPicker();
+
+        return;
+    }
+
+    dateInput.focus();
+    dateInput.click();
 };
 
-const toRequestDateString = (dateTime) => {
-    return dateTime.slice(0, 10);
-};
-
-const toLocalDateString = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-};
-
-const formatDisplayDate = (date) => {
-    const [year, month, day] = date.split('-');
-
-    return `${year}/${month}/${day}`;
-};
-
-const clearStatusClasses = (element) => {
-    element.classList.remove(...STATUS_CLASSES);
-};
-
-const addMonthsClamped = (dateString, monthOffset) => {
-    const [year, month, day] = dateString.split('-').map(Number);
-
-    const baseDate = new Date(year, month - 1, 1);
-    baseDate.setMonth(baseDate.getMonth() + monthOffset);
-
-    const targetYear = baseDate.getFullYear();
-    const targetMonth = baseDate.getMonth();
-    const lastDayOfMonth = new Date(
-        targetYear,
-        targetMonth + 1,
-        0,
-    ).getDate();
-
-    const safeDay = Math.min(day, lastDayOfMonth);
-    const nextDate = new Date(
-        targetYear,
-        targetMonth,
-        safeDay,
-    );
-
-    return toLocalDateString(nextDate);
-};
-
+/**
+ * ダッシュボードの月間カレンダーを初期化する。
+ */
 export const initDashboardCalendar = () => {
+    /*
+     * ========================================
+     * 1. 必要なDOM要素を取得する
+     * ========================================
+     */
+
     const calendarElement = document.querySelector(
         '[data-dashboard-calendar]',
     );
 
+    const monthLink = document.querySelector(
+        '[data-dashboard-calendar-month-link]',
+    );
+
+    const spendingDateElement = document.querySelector(
+        '[data-dashboard-calendar-spending-date]',
+    );
+
+    /*
+     * ダッシュボード以外の画面では、
+     * カレンダー要素が存在しないため処理しない。
+     */
     if (!calendarElement) {
         return;
     }
 
-    const calendarUrl = calendarElement.dataset.dashboardCalendarUrl;
+    /*
+     * Bladeのdata属性から値を取得する。
+     */
+    const calendarUrl =
+        calendarElement.dataset.dashboardCalendarUrl;
+
+    const demoDate =
+        calendarElement.dataset.demoDate;
 
     if (!calendarUrl) {
-        console.error('Calendar data URL is not defined.');
+        console.error(
+            'Calendar data URL is not defined.',
+        );
 
         return;
     }
@@ -87,17 +95,10 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-date]',
     );
 
-    const datePickerButton = document.querySelector(
-    '[data-dashboard-calendar-date-picker]',
-    );
-
-    const dateDisplay = document.querySelector(
-        '[data-dashboard-calendar-date-display]',
-    );
-
-    const pickerButton = document.querySelector(
-        '[data-dashboard-calendar-picker-button]',
-    );
+    const datePickerButton =
+        document.querySelector(
+            '[data-dashboard-calendar-date-picker]',
+        );
 
     const prevButton = document.querySelector(
         '[data-dashboard-calendar-prev]',
@@ -107,61 +108,189 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-next]',
     );
 
-    const spendingElement = document.querySelector(
-        '[data-dashboard-calendar-spending]',
-    );
+    const spendingElement =
+        document.querySelector(
+            '[data-dashboard-calendar-spending]',
+        );
 
+    /*
+     * ========================================
+     * 2. カレンダーの状態を保持する
+     * ========================================
+     */
+
+    /*
+     * 日付ごとのFullCalendarセル要素。
+     *
+     * キー:
+     * 2027-07-27
+     *
+     * 値:
+     * 対応する<td>要素
+     */
     const dayCellElements = new Map();
+
+    /*
+     * 日付ごとの支出合計。
+     *
+     * キー:
+     * 2027-07-27
+     *
+     * 値:
+     * 2680
+     */
     const dailySpending = new Map();
+
+    /*
+     * 日付ごとの予算ステータス。
+     *
+     * キー:
+     * 2027-07-27
+     *
+     * 値:
+     * all_goodなど
+     */
     const dailyStatuses = new Map();
 
-    let selectedDate = dateInput?.value
+    /*
+     * 現在選択されている日付。
+     *
+     * 優先順位:
+     * 1. デモアカウント用日付
+     * 2. 日付入力欄の値
+     * 3. 実際の今日
+     */
+    let selectedDate = demoDate
+        || dateInput?.value
         || toLocalDateString(new Date());
 
-    const updateDateDisplay = (date) => {
-        if (!dateDisplay) {
-            return;
-        }
+    /*
+     * ========================================
+     * 3. 日付セルと支出表示を更新する
+     * ========================================
+     */
 
-        dateDisplay.textContent = formatDisplayDate(date);
-    };
-
+    /**
+     * 指定した日付の日付セルへ、
+     * 予算ステータス用クラスを付ける。
+     */
     const applyStatusToDayCell = (date) => {
-        const dayCell = dayCellElements.get(date);
+        const dayCell =
+            dayCellElements.get(date);
 
+        /*
+         * 対象月がまだ表示されていない場合など、
+         * セルが存在しなければ何もしない。
+         */
         if (!dayCell) {
             return;
         }
 
+        /*
+         * 古いステータスクラスを削除する。
+         */
         clearStatusClasses(dayCell);
 
-        const status = dailyStatuses.get(date);
-        const statusClass = STATUS_CLASS_MAP[status];
+        const status =
+            dailyStatuses.get(date);
+
+        const statusClass =
+            STATUS_CLASS_MAP[status];
 
         if (statusClass) {
-            dayCell.classList.add(statusClass);
+            dayCell.classList.add(
+                statusClass,
+            );
         }
     };
 
+    /**
+     * 選択日の支出額を画面へ表示する。
+     */
     const updateSpending = (date) => {
         if (!spendingElement) {
             return;
         }
 
-        const amount = dailySpending.get(date) ?? 0;
+        /*
+         * 支出データがない日は0円にする。
+         */
+        const amount =
+            dailySpending.get(date) ?? 0;
 
-        spendingElement.textContent = formatCurrency(amount);
+        spendingElement.textContent =
+            formatCurrency(amount);
     };
 
+    /**
+     * 選択中の日付セルへ
+     * is-selectedクラスを付ける。
+     */
     const applySelectedDate = () => {
-        dayCellElements.forEach((dayCell, date) => {
-            dayCell.classList.toggle(
-                'is-selected',
-                date === selectedDate,
-            );
-        });
+        dayCellElements.forEach(
+            (dayCell, date) => {
+                dayCell.classList.toggle(
+                    'is-selected',
+                    date === selectedDate,
+                );
+            },
+        );
     };
 
+    /**
+     * YYYY-MM-DDをローカルのDateへ変換する。
+     */
+    const parseDateString = (dateString) => {
+        const [year, month, day] = dateString
+            .split('-')
+            .map(Number);
+
+        return new Date(
+            year,
+            month - 1,
+            day,
+        );
+    };
+
+    /*
+     * 月次Insightsリンクと選択日ラベルを更新する。
+     */
+    const updateDateLabels = (dateString) => {
+        const date = parseDateString(dateString);
+
+        const monthName = new Intl.DateTimeFormat(
+            'en-US',
+            {
+                month: 'long',
+                year: 'numeric',
+            },
+        ).format(date);
+
+        if (monthLink) {
+            monthLink.textContent = monthName;
+
+            monthLink.setAttribute(
+                'aria-label',
+                `View monthly insights for ${monthName}`,
+            );
+        }
+
+        if (spendingDateElement) {
+            const shortMonthName = new Intl.DateTimeFormat(
+                'en-US',
+                {
+                    month: 'short',
+                },
+            ).format(date);
+
+            spendingDateElement.textContent =
+                `${shortMonthName} ${date.getDate()}`;
+        }
+    };
+
+    /*
+     * 選択日を変更する。
+     */
     const selectDate = (date) => {
         selectedDate = date;
 
@@ -169,238 +298,245 @@ export const initDashboardCalendar = () => {
             dateInput.value = date;
         }
 
-        updateDateDisplay(date);
+        updateDateLabels(date);
         applySelectedDate();
         updateSpending(date);
     };
 
+    /*
+     * ========================================
+     * 4. APIデータをカレンダーへ反映する
+     * ========================================
+     */
+
+    /**
+     * FullCalendarから呼び出される
+     * イベント取得関数。
+     */
     const fetchCalendarEvents = async (
         fetchInfo,
         successCallback,
         failureCallback,
     ) => {
-        const url = new URL(calendarUrl, window.location.origin);
-
-        url.searchParams.set(
-            'start',
-            toRequestDateString(fetchInfo.startStr),
-        );
-
-        url.searchParams.set(
-            'end',
-            toRequestDateString(fetchInfo.endStr),
-        );
-
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Calendar data request failed: ${response.status}`,
+            /*
+             * 表示期間の日別支出をAPIから取得する。
+             */
+            const calendarDays =
+                await fetchCalendarDays(
+                    calendarUrl,
+                    fetchInfo,
                 );
-            }
 
-            const calendarDays = await response.json();
-
+            /*
+             * 前回表示していた月の情報を削除する。
+             */
             dailySpending.clear();
             dailyStatuses.clear();
 
-            dayCellElements.forEach((dayCell) => {
-                clearStatusClasses(dayCell);
-            });
+            dayCellElements.forEach(
+                (dayCell) => {
+                    clearStatusClasses(
+                        dayCell,
+                    );
+                },
+            );
 
-            const events = calendarDays.map((calendarDay) => {
-                const total = Number(calendarDay.total);
-                const status = String(calendarDay.status);
+            /*
+             * APIレスポンスを
+             * FullCalendarのイベント形式へ変換する。
+             */
+            const events = calendarDays.map(
+                (calendarDay) => {
+                    const total = Number(
+                        calendarDay.total,
+                    );
 
-                dailySpending.set(calendarDay.date, total);
-                dailyStatuses.set(calendarDay.date, status);
+                    const status = String(
+                        calendarDay.status,
+                    );
 
-                applyStatusToDayCell(calendarDay.date);
-
-                return {
-                    id: `daily-spending-${calendarDay.date}`,
-                    title: '',
-                    start: calendarDay.date,
-                    allDay: true,
-                    extendedProps: {
+                    /*
+                    * 選択日の支出表示や
+                    * セルの色分けに使用するため保存する。
+                    */
+                    dailySpending.set(
+                        calendarDay.date,
                         total,
-                        status,
-                    },
-                };
-            });
+                    );
 
+                    dailyStatuses.set(
+                        calendarDay.date,
+                        status,
+                    );
+
+                    applyStatusToDayCell(
+                        calendarDay.date,
+                    );
+
+                    return {
+                        id:
+                            `daily-spending-${calendarDay.date}`,
+
+                        /*
+                        * eventContentで独自表示するため、
+                        * titleは空にする。
+                        */
+                        title: '',
+
+                        start: calendarDay.date,
+                        allDay: true,
+
+                        extendedProps: {
+                            total,
+                            status,
+                        },
+                    };
+                },
+            );
+
+            /*
+             * 取得成功をFullCalendarへ通知する。
+             */
             successCallback(events);
+
+            /*
+             * API取得後に選択日の支出額を更新する。
+             */
             updateSpending(selectedDate);
         } catch (error) {
             console.error(error);
+
+            /*
+             * 取得失敗をFullCalendarへ通知する。
+             */
             failureCallback(error);
         }
     };
 
-    const initialDate = dateInput?.value || new Date();
+    /*
+     * ========================================
+     * 5. FullCalendarを初期化する
+     * ========================================
+     */
 
-    const calendar = new Calendar(calendarElement, {
-        plugins: [
-            themePlugin,
-            dayGridPlugin,
-            interactionPlugin,
-        ],
+    const initialDate = demoDate
+        || dateInput?.value
+        || new Date();
 
-        initialView: 'dayGridMonth',
-        initialDate,
-        headerToolbar: false,
+    const calendarOptions =
+        createCalendarOptions({
+            initialDate,
+            demoDate,
+            fetchCalendarEvents,
+            dayCellElements,
+            applyStatusToDayCell,
 
-        // 曜日ヘッダー用のクラス
-        dayHeaderClass: 'dashboard-calendar__weekday',
-        dayHeaderInnerClass: 'dashboard-calendar__weekday-inner',
+            /*
+             * calendar-options.jsから
+             * 現在の選択日を取得するための関数。
+             */
+            getSelectedDate: () => {
+                return selectedDate;
+            },
 
-        firstDay: 1,
-        /*
-        * 曜日ヘッダーへ曜日別のクラスを付ける。
-        *
-        * Date#getDay()
-        * 0: 日曜日
-        * 6: 土曜日
-        */
-        dayHeaderDidMount: (info) => {
-            const dayOfWeek = info.date.getDay();
+            selectDate,
+        });
 
-            info.el.classList.add(
-                'dashboard-calendar__weekday',
-            );
-
-            if (dayOfWeek === 6) {
-                info.el.classList.add('is-saturday');
-            }
-
-            if (dayOfWeek === 0) {
-                info.el.classList.add('is-sunday');
-            }
-        },
-
-        fixedWeekCount: false,
-
-        fixedWeekCount: false,
-        showNonCurrentDates: false,
-        height: 'auto',
-        displayEventTime: false,
-        events: fetchCalendarEvents,
-
-        dayCellDidMount: (info) => {
-            const date = toLocalDateString(info.date);
-
-            dayCellElements.set(date, info.el);
-            applyStatusToDayCell(date);
-
-            info.el.classList.toggle(
-                'is-selected',
-                date === selectedDate,
-            );
-        },
-
-        dayCellWillUnmount: (info) => {
-            const date = toLocalDateString(info.date);
-
-            dayCellElements.delete(date);
-        },
-
-        dateClick: (info) => {
-            selectDate(info.dateStr);
-        },
-
-        eventContent: (info) => {
-            const amountElement = document.createElement('span');
-
-            amountElement.className = 'dashboard-calendar__amount';
-            amountElement.textContent = formatCurrency(
-                Number(info.event.extendedProps.total),
-            );
-
-            return {
-                domNodes: [amountElement],
-            };
-        },
-
-        eventClass: 'dashboard-calendar__amount-event',
-    });
+    const calendar = new Calendar(
+        calendarElement,
+        calendarOptions,
+    );
 
     calendar.render();
-    updateDateDisplay(selectedDate);
-
-    dateInput?.addEventListener('change', (event) => {
-        const date = event.currentTarget.value;
-
-        if (!date) {
-            return;
-        }
-
-        selectDate(date);
-        calendar.gotoDate(date);
-    });
-
-datePickerButton?.addEventListener('click', () => {
-    if (!dateInput) {
-        return;
-    }
-
-    if (typeof dateInput.showPicker === 'function') {
-        dateInput.showPicker();
-
-        return;
-    }
 
     /*
-     * showPickerに未対応のブラウザ向け。
+     * 初期選択日を入力欄・セル・支出額へ反映する。
      */
-    dateInput.focus();
-    dateInput.click();
-});
+    selectDate(selectedDate);
 
-    pickerButton?.addEventListener('click', () => {
-        if (!dateInput) {
-            return;
-        }
+    /*
+     * ========================================
+     * 6. カレンダー外の操作を設定する
+     * ========================================
+     */
 
-        if (typeof dateInput.showPicker === 'function') {
-            dateInput.showPicker();
+    /**
+     * 日付入力欄から日付を変更した場合。
+     */
+    dateInput?.addEventListener(
+        'change',
+        (event) => {
+            const date =
+                event.currentTarget.value;
 
-            return;
-        }
+            if (!date) {
+                return;
+            }
 
-        dateInput.click();
-    });
+            selectDate(date);
 
-    dateDisplay?.addEventListener('click', () => {
-        if (!dateInput) {
-            return;
-        }
+            /*
+             * 選択した日付の月へ移動する。
+             */
+            calendar.gotoDate(date);
+        },
+    );
 
-        if (typeof dateInput.showPicker === 'function') {
-            dateInput.showPicker();
+    /**
+     * カレンダーアイコンを押した場合。
+     */
+    datePickerButton?.addEventListener(
+        'click',
+        () => {
+            openDatePicker(dateInput);
+        },
+    );
 
-            return;
-        }
+    /**
+     * 前月ボタンを押した場合。
+     */
+    prevButton?.addEventListener(
+        'click',
+        () => {
+            const previousDate =
+                addMonthsClamped(
+                    selectedDate,
+                    -1,
+                );
 
-        dateInput.click();
-    });
+            selectDate(previousDate);
+            calendar.gotoDate(
+                previousDate,
+            );
+        },
+    );
 
-    prevButton?.addEventListener('click', () => {
-        const previousDate = addMonthsClamped(selectedDate, -1);
+    /**
+     * 翌月ボタンを押した場合。
+     */
+    nextButton?.addEventListener(
+        'click',
+        () => {
+            const nextDate =
+                addMonthsClamped(
+                    selectedDate,
+                    1,
+                );
 
-        selectDate(previousDate);
-        calendar.gotoDate(previousDate);
-    });
+            selectDate(nextDate);
+            calendar.gotoDate(
+                nextDate,
+            );
+        },
+    );
 
-    nextButton?.addEventListener('click', () => {
-        const nextDate = addMonthsClamped(selectedDate, 1);
-
-        selectDate(nextDate);
-        calendar.gotoDate(nextDate);
+    monthLink?.addEventListener('click', (event) => {
+        /*
+        * TODO:
+        * Monthly Insights完成後に削除し、
+        * 実際のURLへ遷移させる。
+        */
+        event.preventDefault();
     });
 };

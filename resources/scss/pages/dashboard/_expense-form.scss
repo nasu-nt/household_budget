@@ -1,0 +1,220 @@
+@layer components {
+    /*
+     * Expense card
+     */
+    .expense-entry {
+        display: grid;
+        gap: 0.625rem;
+
+        min-width: 0;
+        margin: 0;
+        padding: 0.75rem;
+        box-sizing: border-box;
+
+        background-color: var(--c-surface-disabled);
+        border: 0;
+        border-radius: var(--r-card);
+
+        &__date-wrapper {
+            position: relative;
+        }
+
+        &__date-input {
+            position: relative;
+            padding-right: 2.75rem;
+        }
+
+        &__date-icon {
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            right: 0.75rem;
+
+            display: block;
+            width: 1.125rem;
+            height: 1.125rem;
+
+            pointer-events: none;
+            transform: translateY(-50%);
+        }
+
+        &__date-input::-webkit-calendar-picker-indicator {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            right: 0;
+
+            width: 2.75rem;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        &__row {
+            display: grid;
+            grid-template-columns: 4.5rem minmax(0, 1fr);
+            gap: 0.5rem;
+            align-items: start;
+        }
+
+        &__label {
+            padding-top: 0.4375rem;
+
+            color: var(--c-text);
+            font-size: var(--fs-sm);
+            line-height: 1.35;
+        }
+
+        &__control {
+            min-width: 0;
+        }
+
+        &__input,
+        &__select {
+            display: block;
+
+            width: 100%;
+            min-width: 0;
+            height: var(--l-control-h-small);
+            padding: 0.25rem 0.625rem;
+            box-sizing: border-box;
+
+            color: var(--c-input-text);
+            font: inherit;
+            font-size: var(--fs-sm);
+            line-height: 1.2;
+
+            background-color: var(--c-textbox);
+            border:
+                var(--border-width)
+                solid
+                var(--c-border);
+            border-radius: var(--r-control);
+
+            &:focus {
+                outline: none;
+                border-color: var(--c-textbox-focus);
+                box-shadow:
+                    0 0 0 0.125rem
+                    var(--c-focus-ring);
+            }
+
+            &.is-invalid {
+                border-color: var(--c-danger);
+            }
+        }
+
+        &__select-wrapper {
+            position: relative;
+
+            &::after {
+                content: "▼";
+
+                position: absolute;
+                top: 0;
+                right: 0;
+
+                display: grid;
+                place-items: center;
+
+                width: var(--l-control-h-small);
+                height: 100%;
+
+                color: var(--c-button-primary-text);
+                font-size: var(--fs-sm);
+
+                background-color: var(--c-primary-weak);
+                border-radius:
+                    0
+                    var(--r-control)
+                    var(--r-control)
+                    0;
+
+                pointer-events: none;
+            }
+        }
+
+        &__select {
+            padding-right:
+                calc(
+                    var(--l-control-h-small) + 0.5rem
+                );
+
+            appearance: none;
+            cursor: pointer;
+        }
+
+        &__error {
+            margin: 0.25rem 0 0;
+
+            color: var(--c-danger);
+            font-size: var(--fs-xs);
+            line-height: 1.35;
+        }
+
+        &__actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        &__remove {
+            margin: 0;
+            padding: 0.125rem 0.25rem;
+
+            color: var(--c-danger);
+            font: inherit;
+            font-size: var(--fs-xs);
+            line-height: 1.4;
+            text-decoration: underline;
+
+            background: none;
+            border: 0;
+            border-radius: var(--r-control);
+
+            cursor: pointer;
+
+            &:hover {
+                color: var(--c-danger-hover);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-textbox-focus);
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    .money-input {
+        position: relative;
+
+        width: 100%;
+
+        &__currency {
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            left: 0.625rem;
+
+            color: var(--c-subtle);
+            font-size: var(--fs-sm);
+            line-height: 1;
+
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        &__field {
+            padding-right: 0.625rem;
+            padding-left: 2rem;
+
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+}
