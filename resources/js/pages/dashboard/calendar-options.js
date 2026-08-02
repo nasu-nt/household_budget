@@ -8,25 +8,49 @@ import {
 } from './calendar-utils';
 
 /**
- * FullCalendar内へ表示する
- * 日別支出金額のHTML要素を作る。
+ * 日別支出を、Insightsへのリンクとして表示する。
+ *
+ * Insights完成後はhrefを実際のURLへ変更する。
  */
 const createAmountEventContent = (info) => {
-    const amountElement = document.createElement(
-        'span',
+    const amount = Number(
+        info.event.extendedProps.total,
     );
 
-    amountElement.className =
-        'dashboard-calendar__amount';
+    const amountLink = document.createElement('a');
 
-    amountElement.textContent = formatCurrency(
-        Number(
-            info.event.extendedProps.total,
-        ),
+    amountLink.className =
+        'dashboard-calendar__amount-link';
+
+    /*
+     * TODO: Insights完成後にURLを設定する。
+     *
+     * 例:
+     * `/insights?date=${info.event.startStr}`
+     */
+    amountLink.href = '#';
+
+    amountLink.textContent =
+        formatCurrency(amount);
+
+    amountLink.setAttribute(
+        'aria-label',
+        `${info.event.startStr} spending ${formatCurrency(amount)}`,
+    );
+
+    /*
+     * 現在はリンク先未実装のため、
+     * #への移動を止める。
+     */
+    amountLink.addEventListener(
+        'click',
+        (event) => {
+            event.preventDefault();
+        },
     );
 
     return {
-        domNodes: [amountElement],
+        domNodes: [amountLink],
     };
 };
 
@@ -205,16 +229,80 @@ export const createCalendarOptions = ({
             selectDate(info.dateStr);
         },
 
-        /*
-         * 支出イベントの表示内容を作る。
-         */
-        eventContent: createAmountEventContent,
+        eventDidMount: (info) => {
+            const eventElement = info.el;
 
-        /*
-         * 支出イベントへCSSクラスを付ける。
-         */
-        eventClass:
-            'dashboard-calendar__amount-event',
+            eventElement.style.setProperty(
+                '--fc-event-bg-color',
+                'transparent',
+            );
+
+            eventElement.style.setProperty(
+                '--fc-event-border-color',
+                'transparent',
+            );
+
+            eventElement.style.setProperty(
+                '--fc-event-text-color',
+                'var(--c-text)',
+            );
+
+            eventElement.style.setProperty(
+                '--fc-event-contrast-color',
+                'var(--c-text)',
+            );
+
+            eventElement.style.setProperty(
+                'background',
+                'transparent',
+                'important',
+            );
+
+            eventElement.style.setProperty(
+                'background-color',
+                'transparent',
+                'important',
+            );
+
+            eventElement.style.setProperty(
+                'border',
+                '0',
+                'important',
+            );
+
+            eventElement.style.setProperty(
+                'box-shadow',
+                'none',
+                'important',
+            );
+
+            const eventMain = eventElement.querySelector(
+                '.fc-event-main',
+            );
+
+            if (eventMain) {
+                eventMain.style.setProperty(
+                    'background',
+                    'transparent',
+                    'important',
+                );
+
+                eventMain.style.setProperty(
+                    'background-color',
+                    'transparent',
+                    'important',
+                );
+
+                eventMain.style.setProperty(
+                    'color',
+                    'var(--c-text)',
+                    'important',
+                );
+            }
+        },
+
+        eventContent: createAmountEventContent,
+        eventClass: 'dashboard-calendar__amount-event',
     };
 
     /*
