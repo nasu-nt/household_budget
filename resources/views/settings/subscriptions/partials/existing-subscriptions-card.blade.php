@@ -11,7 +11,7 @@
         </h2>
 
         <p class="settings-card__description">
-            {{ __('View and manage your saved subscriptions.') }}
+            {{ __('View and manage your saved monthly subscriptions.') }}
         </p>
     </header>
 

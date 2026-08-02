@@ -70,6 +70,13 @@
     }
 }
 
+.category-form {
+    &__name-control {
+        width: 16.5rem;
+        max-width: 22rem;
+    }
+}
+
 .category-list {
     --category-list-columns: minmax(12rem, 1fr) 6.5rem 7rem 6.25rem;
 

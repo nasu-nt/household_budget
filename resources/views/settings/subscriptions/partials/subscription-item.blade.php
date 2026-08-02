@@ -165,27 +165,36 @@
                     {{ __('Price (¥)') }}
                 </label>
 
-                <input
-                    id="subscription_amount_{{ $subscription->id }}"
-                    name="amount"
-                    type="number"
-                    class="subscription-editor__input
-                        subscription-editor__input--amount
+                <div class="money-input">
+                    <span
+                        class="money-input__currency"
+                        aria-hidden="true"
+                    >
+                        ¥
+                    </span>
+
+                    <input
+                        id="subscription_amount_{{ $subscription->id }}"
+                        name="amount"
+                        type="text"
+                        class="subscription-editor__input money-input__field
+                            @if ($hasUpdateErrors && $errors->updateSubscription->has('amount'))
+                                is-invalid
+                            @endif"
+                        value="{{ number_format($subscriptionAmount) }}"
+                        required
+                        inputmode="numeric"
+                        autocomplete="off"
+                        maxlength="13"
+                        pattern="[0-9,]*"
+                        data-max-digits="10"
+                        data-money-input
                         @if ($hasUpdateErrors && $errors->updateSubscription->has('amount'))
-                            is-invalid
-                        @endif"
-                    value="{{ $subscriptionAmount }}"
-                    required
-                    min="1"
-                    max="2147483647"
-                    step="1"
-                    inputmode="numeric"
-                    autocomplete="off"
-                    @if ($hasUpdateErrors && $errors->updateSubscription->has('amount'))
-                        aria-invalid="true"
-                        aria-describedby="subscription-amount-error-{{ $subscription->id }}"
-                    @endif
-                >
+                            aria-invalid="true"
+                            aria-describedby="subscription-amount-error-{{ $subscription->id }}"
+                        @endif
+                    >
+                </div>
 
                 @if ($hasUpdateErrors)
                     @error('amount', 'updateSubscription')
@@ -302,29 +311,38 @@
                         <span>{{ __('Specific day') }}</span>
                     </label>
 
-                    <select
-                        id="subscription_billing_day_{{ $subscription->id }}"
-                        name="billing_day"
-                        class="subscription-billing__select
-                            @if ($hasUpdateErrors && $errors->updateSubscription->has('billing_day'))
-                                is-invalid
-                            @endif"
-                        x-bind:disabled="isEndOfMonth"
-                        aria-label="{{ __('Specific billing day') }}"
-                        @if ($hasUpdateErrors && $errors->updateSubscription->has('billing_day'))
-                            aria-invalid="true"
-                            aria-describedby="subscription-billing-day-error-{{ $subscription->id }}"
-                        @endif
+                    <div
+                        class="subscription-form__select-wrapper
+                            subscription-billing__day-select-wrapper"
+                        x-bind:class="{
+                            'is-disabled': isEndOfMonth
+                        }"
                     >
-                        @for ($day = 1; $day <= 31; $day++)
-                            <option
-                                value="{{ $day }}"
-                                @selected($billingDay === $day)
-                            >
-                                {{ $day }}
-                            </option>
-                        @endfor
-                    </select>
+                        <select
+                            id="subscription_billing_day_{{ $subscription->id }}"
+                            name="billing_day"
+                            class="subscription-form__select
+                                subscription-billing__select
+                                @if ($hasUpdateErrors && $errors->updateSubscription->has('billing_day'))
+                                    is-invalid
+                                @endif"
+                            x-bind:disabled="isEndOfMonth"
+                            aria-label="{{ __('Specific billing day') }}"
+                            @if ($hasUpdateErrors && $errors->updateSubscription->has('billing_day'))
+                                aria-invalid="true"
+                                aria-describedby="subscription-billing-day-error-{{ $subscription->id }}"
+                            @endif
+                        >
+                            @for ($day = 1; $day <= 31; $day++)
+                                <option
+                                    value="{{ $day }}"
+                                    @selected($billingDay === $day)
+                                >
+                                    {{ $day }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
                 </div>
 
                 @if ($hasUpdateErrors)

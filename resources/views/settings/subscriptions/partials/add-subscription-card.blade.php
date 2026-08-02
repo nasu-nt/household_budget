@@ -49,7 +49,7 @@
                     {{ __('Name') }}
                 </label>
 
-                <div class="settings-form__control">
+                <div class="settings-form__control subscription-form__main-control">
                     <input
                         id="new_subscription_name"
                         name="name"
@@ -86,26 +86,35 @@
                     {{ __('Price (¥)') }}
                 </label>
 
-                <div class="settings-form__control">
-                    <input
-                        id="new_subscription_amount"
-                        name="amount"
-                        type="number"
-                        class="settings-form__input
-                            subscription-form__amount-input
-                            @error('amount', 'storeSubscription') is-invalid @enderror"
-                        value="{{ $hasStoreErrors ? old('amount') : '' }}"
-                        required
-                        min="1"
-                        max="2147483647"
-                        step="1"
-                        inputmode="numeric"
-                        autocomplete="off"
-                        @error('amount', 'storeSubscription')
-                            aria-invalid="true"
-                            aria-describedby="new-subscription-amount-error"
-                        @enderror
-                    >
+                <div class="settings-form__control subscription-form__main-control">
+                    <div class="money-input">
+                        <span
+                            class="money-input__currency"
+                            aria-hidden="true"
+                        >
+                            ¥
+                        </span>
+
+                        <input
+                            id="new_subscription_amount"
+                            name="amount"
+                            type="text"
+                            class="settings-form__input money-input__field
+                                @error('amount', 'storeSubscription') is-invalid @enderror"
+                            value="{{ $hasStoreErrors ? old('amount') : '' }}"
+                            required
+                            inputmode="numeric"
+                            autocomplete="off"
+                            maxlength="13"
+                            pattern="[0-9,]*"
+                            data-max-digits="10"
+                            data-money-input
+                            @error('amount', 'storeSubscription')
+                                aria-invalid="true"
+                                aria-describedby="new-subscription-amount-error"
+                            @enderror
+                        >
+                    </div>
 
                     @error('amount', 'storeSubscription')
                         <p
@@ -127,7 +136,7 @@
                     {{ __('Category') }}
                 </label>
 
-                <div class="settings-form__control">
+                <div class="settings-form__control subscription-form__main-control">
                     <div class="subscription-form__select-wrapper">
                         <select
                             id="new_subscription_category"
