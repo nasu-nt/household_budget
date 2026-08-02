@@ -1,3 +1,12 @@
+@php
+    $isDemoUser = auth()->user()?->email
+        === config('demo.email', 'demo@example.com');
+
+    $dashboardDate = $isDemoUser
+        ? '2026-06-27'
+        : now()->format('Y-m-d');
+@endphp
+
 <section
     class="dashboard-calendar"
     aria-label="Monthly spending calendar"
@@ -19,7 +28,7 @@
                         type="date"
                         id="dashboard-calendar-date"
                         class="dashboard-calendar__date"
-                        value="{{ now()->format('Y-m-d') }}"
+                        value="{{ $dashboardDate }}"
                         data-dashboard-calendar-date
                     >
                     <button
@@ -58,10 +67,13 @@
     </header>
 
     <div
-        id="dashboard-calendar"
+        id="calendar"
         class="dashboard-calendar__body"
         data-dashboard-calendar
         data-dashboard-calendar-url="{{ route('dashboard.calendar') }}"
+        @if ($isDemoUser)
+            data-demo-date="{{ $dashboardDate }}"
+        @endif
     ></div>
 
     <ul

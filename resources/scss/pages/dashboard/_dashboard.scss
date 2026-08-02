@@ -2,7 +2,6 @@
 
 @layer components {
 
-    
 .dashboard-layout {
     --sidebar-width: 20rem;
     --sidebar-handle-size: 1.55rem;
@@ -550,18 +549,18 @@
         --calendar-over-budget: #f3c38c;
         --calendar-over-limit: #ee8b8b;
 
-        width: 100%;
+        width: 95%;
         max-width: 58rem;
         margin: 0.75rem auto;
         box-sizing: border-box;
 
         background-color: var(--c-bg);
-        
+
         /*
          * 曜日ヘッダー
          */
         .dashboard-calendar__body
-            .dashboard-calendar__weekday {
+        .dashboard-calendar__weekday {
             color: var(--c-surface);
 
             background-color: var(--c-header-bg);
@@ -573,8 +572,8 @@
         * 出力しても、親要素の文字色を継承させる。
         */
         .dashboard-calendar__body
-            .dashboard-calendar__weekday
-            .fc-col-header-cell-cushion {
+        .dashboard-calendar__weekday
+        .fc-col-header-cell-cushion {
             color: inherit;
             text-decoration: none;
         }
@@ -583,7 +582,7 @@
         * 土曜日
         */
         .dashboard-calendar__body
-            .dashboard-calendar__weekday.is-saturday {
+        .dashboard-calendar__weekday.is-saturday {
             color: var(--c-calendar-saturday);
         }
 
@@ -591,8 +590,39 @@
         * 日曜日
         */
         .dashboard-calendar__body
-            .dashboard-calendar__weekday.is-sunday {
+        .dashboard-calendar__weekday.is-sunday {
             color: var(--c-calendar-sunday);
+        }
+
+        /*
+        * FullCalendarの日付番号エリア。
+        *
+        * FullCalendar v7のdayCellTopClassによって
+        * calendar-options.jsから付与される。
+        */
+        .dashboard-calendar__day-top {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+
+            width: 100%;
+        }
+
+        /*
+        * 各日付セルの数字。
+        *
+        * 左上へ配置し、標準より少し大きく太くする。
+        */
+        .dashboard-calendar__day-number {
+            margin-inline: 0 auto;
+            padding: 0rem 0.5rem;
+
+            color: var(--c-text);
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-decoration: none;
         }
     }
 
@@ -910,16 +940,6 @@
         font-size: 0.9375rem;
     }
 
-    .dashboard-calendar__body .fc-daygrid-day-frame {
-        min-height: 4.75rem;
-    }
-
-    .dashboard-calendar__body .fc-daygrid-day-number {
-        padding: 0.375rem 0.5rem;
-
-        font-size: 0.9375rem;
-    }
-
     .dashboard-calendar__amount {
         font-size: 0.8125rem;
     }
@@ -961,11 +981,6 @@
         min-height: 3.75rem;
     }
 
-    .dashboard-calendar__body .fc-daygrid-day-number {
-        padding: 0.25rem;
-        font-size: 0.8125rem;
-    }
-
     .dashboard-calendar__amount {
         font-size: 0.6875rem;
     }
@@ -986,5 +1001,12 @@
     .dashboard-calendar__legend {
         justify-content: flex-start;
         gap: 0.75rem;
+    }
+
+    .dashboard-calendar__day-number {
+        padding: 0.25rem;
+
+        font-size: 0.875rem;
+        font-weight: 700;
     }
 }
