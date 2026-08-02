@@ -18,8 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 既存のユーザー作成処理
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             [
                 'email' => 'test@example.com',
             ],
@@ -30,26 +29,25 @@ class DatabaseSeeder extends Seeder
         );
 
         /*
-         * 今後、デモ用のカテゴリ・予算・支出データを
-         * $demoUserに紐づけて登録する。
+         * 既存Seederがデモユーザーを参照していても動くように、
+         * 先にユーザーだけ作成しておく。
          */
-        $demoUser = User::updateOrCreate(
+        User::query()->updateOrCreate(
             [
-                'email' => config(
-                    'demo.email',
-                    'demo@example.com',
-                ),
+                'email' => config('demo.email', 'demo@example.com'),
             ],
             [
-                'name' => 'Demo User',
-                'password' => Hash::make('demo-password'),
+                'name' => config('demo.name', 'Demo User'),
+                'password' => Hash::make(
+                    config('demo.password', 'demo-password'),
+                ),
             ],
         );
 
-        // ユーザー作成後に追加
         $this->call([
             CategorySeeder::class,
             BudgetSettingSeeder::class,
+            DemoDataSeeder::class,
         ]);
     }
 }
