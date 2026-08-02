@@ -17,5 +17,9 @@
         "sass": "^1.97.3",
         "tailwindcss": "^3.4.19",
         "vite": "^7.0.7"
+    },
+    "dependencies": {
+        "fullcalendar": "^7.0.2",
+        "temporal-polyfill": "^1.0.2"
     }
 }

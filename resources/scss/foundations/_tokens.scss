@@ -13,7 +13,7 @@
         /* Header */
         --c-header-bg: #000000;
         --c-site-title: #ffffff;
-        --c-header-nav: #ffffff;
+        --c-header-nav: #b8c0cc;
         --c-header-link-hover: #99c5ff;
         --c-header-link-active: #ffffff;
         --c-active-indicator: #2563eb;
@@ -25,8 +25,8 @@
         --c-disabled: #94a3b8;
 
         /* Border */
-        --c-border: #cbd5e1;
-        --c-border-muted: #e2e8f0;
+        --c-border: #b8c0cc;
+        --c-border-muted: #94a3b8;
         --c-border-strong: #111827;
 
         /* Input */
@@ -83,7 +83,7 @@
 
         /* Semantic */
         --fs-site-title: 1.5rem;
-        --fs-page-title: 1.25rem;
+        --fs-page-title: 1.35rem;
         --fs-section-title: 1.2rem;
 
         /* Scale */
@@ -118,5 +118,11 @@
         --l-header-h: 4rem;
         --l-control-h: 3rem;       /* 48px */
         --l-control-h-small: 2.25rem; /* 36px */
+
+        /* 
+         * Calendar weekday
+         */
+        --c-calendar-saturday: #99c5ff;
+        --c-calendar-sunday: #fca5a5;
     }
 }

@@ -1,0 +1,661 @@
+:root {
+    --fc-classic-event: none;
+}
+
+@layer components {
+    .dashboard-calendar {
+        /*
+         * ステータス色はAppearance設定から上書きできるよう、
+         * カレンダー内で使用するCSS変数として管理する。
+         */
+        --calendar-all-good: var(--c-all-good);
+        --calendar-slightly-high: var(--c-slightly-high);
+        --calendar-over-budget: var(--c-over-budget);
+        --calendar-over-limit: var(--c-over-limit);
+
+        box-sizing: border-box;
+        width: 95%;
+        max-width: 58rem;
+        margin: 0.75rem auto;
+
+        background-color: var(--c-bg);
+
+        /*
+         * カレンダー上部
+         *
+         * 左側に月移動・月次Insights・日付選択、
+         * 右側に選択日の支出額を表示する。
+         */
+        &__summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 0.5rem;
+        }
+
+        &__controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        &__nav-button {
+            display: inline-grid;
+            flex: 0 0 auto;
+            place-items: center;
+
+            width: var(--l-control-h);
+            height: var(--l-control-h);
+            padding: 0;
+
+            color: var(--c-text);
+            font: inherit;
+            font-size: 1.125rem;
+
+            background-color: var(--c-button-secondary-bg);
+            border:
+                var(--border-width)
+                solid
+                var(--c-border);
+            border-radius: var(--r-swatch);
+
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--c-button-secondary-bg-hover);
+                border-color: var(--c-border-strong);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-active-indicator);
+                outline-offset: 0.125rem;
+            }
+        }
+
+        /*
+         * 月次Insightsへのリンク。
+         *
+         * ボタンのように見せつつ、
+         * HTML上は遷移用のa要素として扱う。
+         */
+        &__month-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+            width: 14rem;
+            height: var(--l-control-h);
+            padding-inline: 1rem;
+
+            color: var(--c-text);
+            font-size: var(--fs-lg);
+            font-weight: 700;
+            line-height: 1;
+            text-decoration: none;
+            white-space: nowrap;
+
+            background-color: var(--c-surface);
+            border: var(--border-width) solid var(--c-border);
+            border-radius: var(--r-control);
+
+            transition:
+                background-color 0.15s ease,
+                border-color 0.15s ease;
+
+            &:hover {
+                border:
+                var(--border-width) solid var(--c-primary);
+                background-color: var(--c-primary-weak);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-active-indicator);
+                outline-offset: 0.125rem;
+            }
+        }
+
+        /*
+        * 日付入力は画面上では隠し、
+        * 独自のカレンダーアイコンから開く。
+        */
+        &__date-picker-wrapper {
+            position: relative;
+
+            flex: 0 0 auto;
+        }
+
+        &__date-input {
+            position: absolute;
+
+            width: 1px;
+            height: 1px;
+            padding: 0;
+
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        &__date-picker {
+            display: inline-grid;
+            place-items: center;
+
+            width: var(--l-control-h);
+            height: var(--l-control-h);
+            padding: 0;
+
+            background-color: var(--c-button-secondary-bg);
+            border:
+                var(--border-width)
+                solid
+                var(--c-border);
+            border-radius: var(--r-swatch);
+
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--c-button-secondary-bg-hover);
+                border-color: var(--c-border-strong);
+            }
+
+            &:focus-visible {
+                outline:
+                    var(--border-width-strong)
+                    solid
+                    var(--c-active-indicator);
+                outline-offset: 0.125rem;
+            }
+        }
+
+        &__date-icon {
+            display: block;
+
+            width: 1.5rem;
+            height: 1.5rem;
+
+            pointer-events: none;
+        }
+
+        /*
+         * FullCalendar本体
+         */
+        &__body {
+            width: 100%;
+
+            background-color: var(--c-surface);
+
+            .fc {
+                font-size: 0.875rem;
+            }
+
+            .fc-col-header-cell-cushion {
+                padding-block: 0.625rem;
+
+                font-size: 0.9375rem;
+            }
+            
+            /*
+             * 選択中の日付
+             */
+            .is-selected {
+                position: block;
+                z-index: 2;
+
+                outline:
+                    0.1875rem
+                    solid
+                    var(--c-active-indicator);
+                outline-offset: -0.1875rem;
+            }
+
+            /*
+             * 日別の予算ステータス
+             */
+            .is-all-good {
+                background-color: var(--calendar-all-good);
+            }
+
+            .is-slightly-high {
+                background-color:
+                    var(--calendar-slightly-high);
+            }
+
+            .is-over-budget {
+                background-color:
+                    var(--calendar-over-budget);
+            }
+
+            .is-over-limit {
+                background-color: var(--calendar-over-limit);
+            }
+        }
+
+        /*
+         * 曜日ヘッダー
+         *
+         * calendar-options.jsのdayHeaderClassで付与した
+         * 自前のクラスを指定する。
+         */
+        & &__body &__weekday {
+            color: var(--c-surface);
+
+            background-color: var(--c-header-bg);
+            border-color: var(--c-header-bg);
+
+            .fc-col-header-cell-cushion {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            &.is-saturday {
+                color: var(--c-calendar-saturday);
+            }
+
+            &.is-sunday {
+                color: var(--c-calendar-sunday);
+            }
+        }
+
+        /*
+         * 日付番号
+         *
+         * calendar-options.jsのdayCellTopClassと
+         * dayCellTopInnerClassで付与したクラスを指定する。
+         */
+        & &__day-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+
+            width: 100%;
+        }
+
+        & &__day-number {
+            margin-inline: 0 auto;
+            padding: 0 0.5rem;
+
+            color: var(--c-text);
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-decoration: none;
+        }
+
+        /*
+         * 選択日の支出合計
+         */
+        &__spending {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 2rem;
+
+            margin-right: 1.5rem;
+
+            color: var(--c-text);
+            font-size: 1.125rem;
+
+            strong {
+                min-width: 6rem;
+
+                font-size: 1.5rem;
+                text-align: right;
+            }
+        }
+
+        &__spending-date {
+            font-size: 1.22rem;
+            font-weight: 500;
+            margin-right: 0.25rem;
+        }
+
+        /*
+         * ステータス凡例
+         */
+        &__legend {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+
+            margin: 0;
+            padding: 0;
+
+            list-style: none;
+        }
+
+        &__legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        &__legend-color {
+            display: inline-block;
+
+            width: 0.875rem;
+            height: 0.875rem;
+
+            border: 1px solid var(--c-border-muted);
+            border-radius: 0.2rem;
+
+            &--all-good {
+                background-color: var(--calendar-all-good);
+            }
+
+            &--slightly-high {
+                background-color:
+                    var(--calendar-slightly-high);
+            }
+
+            &--over-budget {
+                background-color:
+                    var(--calendar-over-budget);
+            }
+
+            &--over-limit {
+                background-color: var(--calendar-over-limit);
+            }
+        }
+
+        &__meta {
+            min-width: 0;
+        }
+
+        &__summary-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0rem;
+
+            min-width: 28rem;
+        }
+
+        &__demo {
+            position: relative;
+
+            display: inline-flex;
+            align-items: center;
+
+            align-self: flex-end;
+        }
+
+        &__demo-trigger {
+            display: inline-flex;
+            margin: -1rem 1rem 0.5rem 0;
+            align-items: center;
+            gap: 0.375rem;
+
+            color: var(--c-primary);
+            font-size: 0.875rem;
+            font-weight: 700;
+            line-height: 1.2;
+
+            background-color: transparent;
+            border-radius: var(--r-pill);
+
+            cursor: default;
+            transition: color 0.18s ease;
+
+            &:hover {
+                color: var(--c-primary-hover);
+            }
+        }
+
+        &__demo-icon {
+            display: block;
+
+            width: 1rem;
+            height: 1rem;
+            flex: 0 0 auto;
+        }
+
+        &__demo-label {
+            white-space: nowrap;
+        }
+
+        &__demo-tooltip {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            z-index: 20;
+
+            width: max-content;
+            min-width: 18rem;
+            max-width: 22rem;
+            padding: 0.75rem 0.875rem;
+
+            color: var(--c-text);
+            font-size: 0.8125rem;
+            line-height: 1.5;
+
+            background-color: color-mix(in srgb, var(--c-surface) 92%, transparent);
+            border: 1px solid var(--c-border);
+            border-radius: var(--r-control);
+            box-shadow: var(--shadow-card);
+
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-0.25rem);
+            transition:
+                opacity 0.18s ease,
+                visibility 0.18s ease,
+                transform 0.18s ease;
+
+            pointer-events: none;
+
+            p {
+                margin: 0;
+            }
+
+            p + p {
+                margin-top: 0.25rem;
+            }
+        }
+
+        &__demo:hover &__demo-tooltip,
+        &__demo:focus-within &__demo-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /*
+         * hidden属性の影響範囲をこのコンポーネント内に限定する。
+         */
+        [hidden] {
+            display: none !important;
+        }
+    }
+}
+
+@media (max-width: 48rem) {
+    .dashboard-calendar {
+        max-width: none;
+
+        &__amount-link {
+                margin: 0.125rem auto 0;
+            }
+
+        &__summary {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+        }
+
+        &__controls {
+            width: 100%;
+            gap: 0.5rem;
+        }
+
+        &__month-link {
+            flex: 1 1 auto;
+
+            width: auto;
+            min-width: 0;
+        }
+
+        &__spending {
+            justify-content: space-between;
+            gap: 1rem;
+
+            min-width: 0;
+        }
+    }
+}
+
+/*
+ * FullCalendarの日別支出リンク
+ *
+ * FullCalendar標準のイベント装飾を消し、
+ * 独自の黒枠リンクをセル中央へ固定する。
+ */
+.dashboard-calendar__body {
+    /*
+     * FullCalendar側のイベント配置領域。
+     *
+     * どの曜日でも同じ基準で中央揃えにする。
+     */
+    .fc-daygrid-day-events {
+        margin-inline: 0 !important;
+    }
+
+    .fc-daygrid-event-harness {
+        display: grid !important;
+        place-items: center !important;
+
+        box-sizing: border-box;
+        width: 100% !important;
+        min-width: 0;
+        margin-inline: 0 !important;
+    }
+
+    /*
+     * FullCalendarが生成する外側のイベント。
+     *
+     * CSS変数と通常プロパティの両方を透明にして、
+     * Classicテーマの青背景を確実に消す。
+     */
+    .fc-event.dashboard-calendar__amount-event,
+    .fc-h-event.dashboard-calendar__amount-event,
+    .fc-daygrid-event.dashboard-calendar__amount-event {
+        --fc-event-bg-color: !important;
+        --fc-event-border-color: !important;
+        --fc-event-text-color: !important;
+
+        display: block !important;
+
+        box-sizing: border-box;
+        width: 100% !important;
+        min-width: 0;
+        margin: 0.25rem 0 0 !important;
+        padding: 0 !important;
+
+        color: var(--c-text) !important;
+
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
+    /*
+     * FullCalendar内部のラッパー。
+     */
+    .dashboard-calendar__amount-event
+    .fc-event-main,
+    .dashboard-calendar__amount-event
+    .fc-event-main-frame {
+        display: grid !important;
+        place-items: center !important;
+
+        box-sizing: border-box;
+        width: 100% !important;
+        min-width: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        color: var(--c-text) !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
+    /*
+     * 実際に見える金額リンク。
+     *
+     * 最大幅を固定しているため、
+     * 左右どの曜日でも同じ位置・同じ大きさになる。
+     */
+    .dashboard-calendar__amount-link {
+        position: relative;
+
+        display: grid;
+        place-items: center;
+
+        width: 8rem;
+        height: 1.75rem;
+        padding: 0 0.375rem;
+
+        color: var(--c-text);
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        text-align: center;
+
+        &::after {
+            position: absolute;
+            bottom: 0.1rem;
+            right: 0;
+            left: 0;
+            margin-inline: auto;
+
+            width: 4.5rem;
+            height: 1.5px;
+            background-color: var(--c-border-strong);
+
+            content: '';
+            opacity: 0;
+
+            transition: opacity 0.25s ease;
+        }
+
+        &:hover::after,
+        &:focus-visible::after {
+            opacity: 1;
+        }
+
+        /*
+         * outlineは要素サイズに影響しないので、
+         * キーボード操作時にも位置がずれない。
+         */
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+}
+
+@media (min-width: 48.001rem) {
+    .dashboard-calendar__amount-link {
+        margin-top: 0.5rem;
+    }
+}

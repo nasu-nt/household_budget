@@ -1,0 +1,107 @@
+.appearance-settings-card {
+    &__content {
+        //width: min(100%, 44.5rem);
+        margin-inline: auto;
+    }
+
+    &__header {
+        margin-bottom: 1.75rem;
+    }
+}
+
+.appearance-settings-form {
+    &__colors {
+        display: grid;
+        gap: 1.5rem;
+        width: fit-content;
+        margin-inline: auto;
+        transform: translateX(-5.5rem);
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 13.5rem 11.625rem;
+        gap: 5rem;
+        align-items: start;
+    }
+
+    &__label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        min-height: 2.25rem;
+        color: var(--c-text);
+        font-size: var(--fs-lg);
+        line-height: 1.4;
+        text-align: right;
+    }
+
+    &__color-picker {
+        gap: 0;
+    }
+
+    &__error {
+        max-width: 11.625rem;
+        margin: 0.35rem 0 0;
+        line-height: 1.4;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2.5rem;
+    }
+
+    &__button {
+        width: 21.875rem;
+        max-width: 100%;
+        min-height: 2.875rem;
+        font-size: var(--fs-md);
+
+        &--secondary {
+            width: 12rem;
+            min-height: 2.5rem;
+            padding-inline: 0.75rem;
+            color: var(--c-text);
+            font-size: var(--fs-sm);
+            font-weight: 400;
+            background-color: var(--c-surface);
+            border-color: var(--c-border);
+
+            &:hover:not(:disabled) {
+                background-color: var(--c-bg);
+            }
+        }
+    }
+}
+
+@media (max-width: 48rem) {
+    .appearance-settings-form {
+        &__colors {
+            width: 100%;
+        }
+
+        &__row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        &__label {
+            justify-content: flex-start;
+            min-height: auto;
+            text-align: left;
+        }
+
+        &__actions {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        &__button,
+        &__button--secondary {
+            width: 100%;
+        }
+    }
+}

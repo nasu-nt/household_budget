@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -16,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             [
                 'email' => 'test@example.com',
             ],
@@ -26,22 +28,26 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        $demoUser = User::updateOrCreate(
+        /*
+         * 既存Seederがデモユーザーを参照していても動くように、
+         * 先にユーザーだけ作成しておく。
+         */
+        User::query()->updateOrCreate(
             [
-                'email' => config(
-                    'demo.email',
-                    'demo@example.com',
-                ),
+                'email' => config('demo.email', 'demo@example.com'),
             ],
             [
-                'name' => 'Demo User',
-                'password' => Hash::make('demo-password'),
+                'name' => config('demo.name', 'Demo User'),
+                'password' => Hash::make(
+                    config('demo.password', 'demo-password'),
+                ),
             ],
         );
 
-        /*
-         * 今後、デモ用のカテゴリ・予算・支出データを
-         * $demoUserに紐づけて登録する。
-         */
+        $this->call([
+            CategorySeeder::class,
+            BudgetSettingSeeder::class,
+            DemoDataSeeder::class,
+        ]);
     }
 }

@@ -1,60 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HOUSEHOLD BUDGET
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+締め日を基準に、日別・月別の支出状況と予算超過をひと目で確認できる家計簿Webアプリケーションです。
 
-## About Laravel
+支出を記録するだけでなく、「今日は使いすぎていないか」「今月の予算に対してどの位置にいるか」を視覚的に把握できることを目的として開発しています。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Demo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+[デモサイトを開く](https://web--household-budget--b74twz2xwxtt.code.run/)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+無料ホスティングを使用しているため、初回表示に時間がかかる場合があります。
 
-## Learning Laravel
+### Demo Account
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+ログイン画面の「Sign in」ボタン下にある「Try the demo account」から、デモアカウントへログインできます。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+デモアカウントには、「UI設計・画面仕様書」をもとに作成したサンプルデータが登録されています。支出や設定を追加・変更して、実際の操作を確認できます。
 
-## Laravel Sponsors
+デモ環境を維持するため、以下の操作はできないようにしています。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- メールアドレスの変更
+- パスワードの変更
+- アカウントの削除
 
-### Premium Partners
+また、登録されたデータは、定期的に初期状態へ戻す場合があります。
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Screenshots
 
-## Contributing
+### Dashboard
+![Dashboard](docs/screenshots/1_dashboard.png)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Categories Settings
+![Categories_Settings](docs/screenshots/2_categories_settings.png)
 
-## Code of Conduct
+### Subscriptions Settings
+![Subscriptions_Settings](docs/screenshots/3_subscriptions_settings.png)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+## Features
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- ユーザー登録・ログイン
+- 支出の一括登録（最大5件）
+- 月間カレンダーによる日別支出の表示
+- 日別支出額と予算状態の色分け
+- 月間予算・支出上限・締め日の設定
+- カテゴリの追加・編集・アーカイブ・復元
+- カテゴリごとの表示色の設定
+- カレンダーのステータス色のカスタマイズ
+- 定期支出（サブスクリプション）の登録・編集
+- デモアカウントによる操作確認
 
-## License
+## Technologies
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# household_budget
+| Category | Technology | Purpose |
+|---|---|---|
+| Backend | PHP / Laravel | 認証、バリデーション、データ処理 |
+| Frontend | JavaScript / Blade | 画面操作、カレンダー、UI制御 |
+| Styling | SCSS | スタイルの分割と共通化 |
+| Database | PostgreSQL | 支出・予算・設定データの管理 |
+| Development | Docker / Laravel Sail | 開発環境の統一 |
+| Build | Vite | JavaScript・SCSSのビルド |
+| Deployment | Northflank | Webアプリケーションの公開 |
+| Calendar | FullCalendar | 月間カレンダーの表示と操作 |
+
+## Design and Implementation
+
+### ユーザーごとのデータ分離
+
+ログイン中のユーザーが、自分に紐づく支出、カテゴリ、予算設定、サブスクリプションのみを操作できるように実装しています。
+
+### データベースの整合性
+
+外部キー、一意制約、CHECK制約を使用し、不正な値や矛盾したデータが保存されにくい構造にしています。
+
+主な例は以下です。
+
+- 支出・カテゴリ・設定データをユーザーに紐づける外部キー
+- アーカイブされていないカテゴリ名の重複防止
+- 支出上限が月間予算以上になることを保証するCHECK制約
+- 月末締めと締め日の値が矛盾しないためのCHECK制約
+
+### UI・UX
+
+日別の支出状況を色で確認できるようにし、数字を細かく確認しなくても、予算に対する状態を把握できる設計にしています。
+
+カレンダーでは、選択した日付の支出額を表示し、前月・翌月への移動や日付選択ができるようにしています。
+
+SCSSは役割ごとにファイルを分割し、フォーム、カード、ボタンなどの共通スタイルを再利用しています。
+
+### バリデーションとセキュリティ
+
+Laravelのバリデーションを使用し、入力値の形式や範囲を確認しています。
+
+また、認証（誰がログインしているか）と認可（そのデータを操作してよいか）を区別し、他のユーザーのデータを操作できないようにしています。
+
+## Testing
+
+現時点では、主にブラウザ上での手動テストを行っています。
+
+主な確認項目は以下です。
+
+- ユーザー登録・ログイン・ログアウト
+- 支出の登録とバリデーション表示
+- 最大5件の支出一括登録
+- カレンダーの月移動と日付選択
+- 日別支出額と予算状態の表示
+- カテゴリの追加・編集・アーカイブ・復元
+- 予算設定の更新
+- 表示色の変更と初期値へのリセット
+- サブスクリプションの登録・編集
+- 他のユーザーのデータを操作できないこと
+
+自動テストは未導入です。今後は、支出登録、ユーザーごとのデータ分離、カレンダーAPIを優先してLaravelのFeature Testを追加する予定です。
+
+## Planned Features
+
+- 日別・月別の支出分析画面
+- グラフによる支出推移とカテゴリ別内訳の表示
+- 支出の編集・削除
+- 自動テストの追加
+- スマートフォン向けUIの改善
+- 将来的なAPI化とスマートフォンアプリ対応
+
+## Documents
+
+- [環境構築手順](docs/setup.md)
+- [UI設計・画面仕様書](docs\ui-design.pdf)
+
+実際に作成・公開している資料のみ掲載しています。
+
+## Setup
+
+詳しい環境構築手順は、[docs/setup.md](docs/setup.md)を参照してください。
+
+## Author
+
+Naho Taniguchi

@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -62,6 +63,11 @@ class User extends Authenticatable
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function appearanceSetting(): HasOne
+    {
+        return $this->hasOne(AppearanceSetting::class);
     }
 
     /**

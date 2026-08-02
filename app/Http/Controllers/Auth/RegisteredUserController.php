@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRegisteredUserRequest;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
@@ -26,15 +28,26 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(StoreRegisteredUserRequest $request): RedirectResponse
-    {
+    public function store(
+        StoreRegisteredUserRequest $request
+    ): RedirectResponse {
         $validated = $request->validated();
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = DB::transaction(
+            function () use ($validated): User {
+                $user = User::query()->create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make(
+                        $validated['password']
+                    ),
+                ]);
+
+                Category::createDefaultsFor($user);
+
+                return $user;
+            }
+        );
 
         event(new Registered($user)); // VerifyEmailとかの処理を入れると思うけど今は実装予定なし
 
