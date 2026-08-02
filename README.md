@@ -27,12 +27,13 @@
 ## Screenshots
 
 ### Dashboard
-
 ![Dashboard](docs/screenshots/1_dashboard.png)
 
-![Dashboard](docs/screenshots/2_categories_settings.png)
+### Categories Settings
+![Categories_Settings](docs/screenshots/2_categories_settings.png)
 
-![Dashboard](docs/screenshots/3_subscriptions_settings.png)
+### Subscriptions Settings
+![Subscriptions_Settings](docs/screenshots/3_subscriptions_settings.png)
 
 
 ## Features
