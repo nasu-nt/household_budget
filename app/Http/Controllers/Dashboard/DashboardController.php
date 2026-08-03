@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppearanceSetting;
 use App\Models\BudgetSetting;
 use App\Models\Expense;
 use Carbon\CarbonImmutable;
@@ -18,14 +19,22 @@ class DashboardController extends Controller
      */
     public function index(Request $request): View
     {
-        $categories = $request->user()
+        $user = $request->user();
+
+        $categories = $user
             ->categories()
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
 
+        $appearanceSetting = AppearanceSetting::query()->firstOrCreate(
+            ['user_id' => $user->id],
+            AppearanceSetting::DEFAULT_COLORS,
+        );
+
         return view('dashboard.index', [
             'categories' => $categories,
+            'appearanceSetting' => $appearanceSetting,
         ]);
     }
 
