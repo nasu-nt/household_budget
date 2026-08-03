@@ -309,7 +309,7 @@ class DemoDataSeeder extends Seeder
                 'expenses' => ['Food' => 1500, 'Transport' => 620],
             ],
             '2026-06-19' => [
-                'expenses' => ['Food' => 2900, 'Entertainment' => 1300],
+                'expenses' => ['Food' => 2900, 'Entertainment' => 1100, 'Transport' => 200],
             ],
             '2026-06-20' => [
                 'expenses' => ['Utilities' => 4400, 'Food' => 1200],
