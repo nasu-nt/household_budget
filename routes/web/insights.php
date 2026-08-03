@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('insights')
     ->name('insights.')
     ->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('insights.daily', [
+                'date' => now()->format('Y-m-d'),
+            ]);
+        })->name('index');
+
         Route::get('/months/{month}', [MonthlyInsightController::class, 'show'])
             ->where('month', '\d{4}-\d{2}')
             ->name('monthly');

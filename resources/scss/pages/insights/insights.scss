@@ -1,0 +1,73 @@
+@use './daily-insights';
+@use './monthly-insights';
+
+.insights {
+    width: min(100% - 2rem, 70rem);
+    margin-inline: auto;
+    margin-top: 1.5rem;
+
+    &__panel {
+        margin-top: -1px;
+        padding: 2rem;
+        border: 1px solid var(--c-border);
+        border-radius: 0 0.625rem 0.625rem 0.625rem;
+        background: var(--c-surface);
+    }
+}
+
+.insights-tabs {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+
+    &__item {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 13rem;
+        min-height: 3.2rem;
+        border: 1px solid var(--c-border);
+
+        border-radius: 1.25rem 1.25rem 0 0;
+
+        background: var(--c-surface-disabled);
+        color: var(--c-muted);
+        font-size: var(--fs-lg);
+        font-weight: 700;
+        text-decoration: none;
+
+        & + & {
+            margin-left: -1px;
+        }
+
+        &:hover {
+            color: var(--c-text);
+        }
+
+        &:focus-visible {
+            position: relative;
+            z-index: 3;
+            outline: 2px solid var(--c-focus);
+            outline-offset: 2px;
+        }
+
+        // 非選択側には下線を残す
+        &:not(.is-active) {
+            background: var(--c-surface-disabled);
+            border-bottom-color: var(--c-border);
+        }
+
+        // 選択中のタブ
+        &.is-active {
+            position: relative;
+            z-index: 2;
+            margin-bottom: -1px;
+            border-color: var(--c-button-primary-border);
+            border-bottom-color: var(--c-button-primary-bg);
+            background: var(--c-button-primary-bg);
+            color: var(--c-button-primary-text);
+        }
+    }
+}
