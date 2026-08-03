@@ -2,7 +2,7 @@
 @use './monthly-insights';
 
 .insights {
-    width: min(100% - 2rem, 70rem);
+    width: 80%;
     margin-inline: auto;
     margin-top: 1.5rem;
 
@@ -26,8 +26,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 13rem;
-        min-height: 3.2rem;
+        width: 10rem;
+        min-height: 2.8rem;
         border: 1px solid var(--c-border);
 
         border-radius: 1.25rem 1.25rem 0 0;

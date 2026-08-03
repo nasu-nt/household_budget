@@ -182,6 +182,11 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'note' => [
+        'present' => 'Please enter a spending note.',
+        'string' => 'The spending note must be text.',
+        'max' => 'The spending note must not exceed :max characters.',
+        ],
     ],
 
     /*
