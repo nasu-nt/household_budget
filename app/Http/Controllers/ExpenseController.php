@@ -24,12 +24,17 @@ class ExpenseController extends Controller
 
             'expenses.*' => [
                 'required',
-                'array:expense_date,category_id,amount,memo',
+                'array:expense_date,recorded_time,category_id,amount,memo',
             ],
 
             'expenses.*.expense_date' => [
                 'required',
                 'date_format:Y-m-d',
+            ],
+
+            'expenses.*.recorded_time' => [
+                'nullable',
+                'date_format:H:i',
             ],
 
             'expenses.*.category_id' => [
@@ -60,11 +65,11 @@ class ExpenseController extends Controller
         DB::transaction(function () use ($validated, $userId): void {
             foreach ($validated['expenses'] as $expenseData) {
                 $expense = new Expense();
-
                 $expense->user_id = $userId;
                 $expense->category_id = $expenseData['category_id'];
                 $expense->amount = $expenseData['amount'];
                 $expense->expense_date = $expenseData['expense_date'];
+                $expense->recorded_time = $expenseData['recorded_time'] ?? null;
                 $expense->memo = $expenseData['memo'] ?? null;
 
                 $expense->save();

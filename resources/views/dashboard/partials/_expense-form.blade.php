@@ -7,6 +7,7 @@
         $expenseRows = [
             [
                 'expense_date' => now()->format('Y-m-d'),
+                'recorded_time' => '',
                 'category_id' => '',
                 'amount' => '',
                 'memo' => '',
@@ -93,7 +94,7 @@
                                     value="{{ data_get(
                                         $expense,
                                         'expense_date',
-                                        now()->format('Y-m-d')
+                                        ''
                                     ) }}"
                                     required
                                     data-expense-field="expense_date"
@@ -124,59 +125,55 @@
                         </div>
                     </div>
                     
-                    {{-- Category --}}
+
+                    {{-- Time --}}
                     <div class="expense-entry__row">
                         <label
-                            for="expense_category_id_{{ $index }}"
+                            for="expense_recorded_time_{{ $index }}"
                             class="expense-entry__label"
-                            data-expense-label="category_id"
+                            data-expense-label="recorded_time"
                         >
-                            {{ __('Category') }}
+                            {{ __('Time') }}
                         </label>
 
                         <div class="expense-entry__control">
-                            <div class="expense-entry__select-wrapper">
-                                <select
-                                    id="expense_category_id_{{ $index }}"
-                                    name="expenses[{{ $index }}][category_id]"
-                                    class="expense-entry__select
-                                        @error("expenses.{$index}.category_id")
+                            <div class="expense-entry__time-wrapper">
+                                <input
+                                    id="expense_recorded_time_{{ $index }}"
+                                    name="expenses[{{ $index }}][recorded_time]"
+                                    type="time"
+                                    class="expense-entry__input
+                                        expense-entry__time-input
+                                        @error("expenses.{$index}.recorded_time")
                                             is-invalid
                                         @enderror"
-                                    required
-                                    data-expense-field="category_id"
-                                    @error("expenses.{$index}.category_id")
+                                    value="{{ data_get(
+                                        $expense,
+                                        'recorded_time',
+                                        ''
+                                    ) }}"
+                                    step="60"
+                                    data-expense-field="recorded_time"
+                                    @error("expenses.{$index}.recorded_time")
                                         aria-invalid="true"
-                                        aria-describedby="expense_category_id_{{ $index }}_error"
+                                        aria-describedby="expense_recorded_time_{{ $index }}_error"
                                     @enderror
                                 >
-                                    <option value="">
-                                        {{ __('Select category') }}
-                                    </option>
 
-                                    @foreach ($categories as $category)
-                                        <option
-                                            value="{{ $category->id }}"
-                                            @selected(
-                                                (string) data_get(
-                                                    $expense,
-                                                    'category_id'
-                                                )
-                                                === (string) $category->id
-                                            )
-                                        >
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <img
+                                    class="expense-entry__time-icon"
+                                    src="{{ asset('images/icons/clock_1.svg') }}"
+                                    alt=""
+                                    aria-hidden="true"
+                                >
                             </div>
 
-                            @error("expenses.{$index}.category_id")
+                            @error("expenses.{$index}.recorded_time")
                                 <p
-                                    id="expense_category_id_{{ $index }}_error"
+                                    id="expense_recorded_time_{{ $index }}_error"
                                     class="expense-entry__error"
                                     role="alert"
-                                    data-expense-error="category_id"
+                                    data-expense-error="recorded_time"
                                 >
                                     {{ $message }}
                                 </p>

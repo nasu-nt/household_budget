@@ -29,19 +29,6 @@
                 ◀
             </button>
 
-            {{--
-                月次Insightsへの仮リンク。
-                実装後にhrefを実際のURLへ変更する。
-            --}}
-            <a
-                href="#"
-                class="dashboard-calendar__month-link"
-                data-dashboard-calendar-month-link
-                aria-label="View monthly insights for {{ $dashboardMonthLabel }}"
-            >
-                {{ $dashboardMonthLabel }}
-            </a>
-
             <div class="dashboard-calendar__date-picker-wrapper">
                 <input
                     type="date"
@@ -128,6 +115,9 @@
         class="dashboard-calendar__body"
         data-dashboard-calendar
         data-dashboard-calendar-url="{{ route('dashboard.calendar') }}"
+        data-daily-insights-url-template="{{ route('insights.daily', [
+            'date' => '__DATE__',
+        ]) }}"
         @if ($isDemoUser)
             data-demo-date="{{ $dashboardDate }}"
         @endif
