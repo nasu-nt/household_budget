@@ -12,6 +12,8 @@ import { initDashboardSidebar } from './pages/dashboard/sidebar';
 import { initDashboardCalendar } from './pages/dashboard/calendar';
 import { budgetSettingsForm } from './pages/settings/budget';
 
+import './pages/insights/chart';
+
 /*
  * Alpine.jsの初期設定
  */
