@@ -140,32 +140,40 @@
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--all-good"
+                style="background-color: {{ $appearanceSetting->all_good_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>All good</span>
         </li>
 
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--slightly-high"
+                style="background-color: {{ $appearanceSetting->slightly_high_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>Slightly high</span>
         </li>
 
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--over-budget"
+                style="background-color: {{ $appearanceSetting->over_budget_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>Over budget</span>
         </li>
 
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--over-limit"
+                style="background-color: {{ $appearanceSetting->over_limit_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>Over limit</span>
         </li>
     </ul>
