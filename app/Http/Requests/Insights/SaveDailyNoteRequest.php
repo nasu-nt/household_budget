@@ -1,70 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Insights;
+namespace App\Http\Requests\Insights;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Insights\SaveDailyNoteRequest;
-use Carbon\CarbonImmutable;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Foundation\Http\FormRequest;
 
-class DailyNoteController extends Controller
+class SaveDailyNoteRequest extends FormRequest
 {
-    public function update(
-        SaveDailyNoteRequest $request,
-        string $date
-    ): RedirectResponse {
-        try {
-            $noteDate = CarbonImmutable::createFromFormat(
-                '!Y-m-d',
-                $date,
-            );
-        } catch (\Throwable) {
-            abort(404);
-        }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
-        if ($noteDate->format('Y-m-d') !== $date) {
-            abort(404);
-        }
-
-        $validated = $request->validated();
-
-        $note = trim(
-            (string) ($validated['note'] ?? ''),
-        );
-
-        /*
-         * 空欄で保存した場合は、
-         * その日のノートを削除する。
-         */
-        if ($note === '') {
-            $request->user()
-                ->dailyNotes()
-                ->whereDate('note_date', $date)
-                ->delete();
-        } else {
-            /*
-             * 同日のノートがあれば更新、
-             * なければ新規作成する。
-             */
-            $request->user()
-                ->dailyNotes()
-                ->updateOrCreate(
-                    [
-                        'note_date' => $date,
-                    ],
-                    [
-                        'note' => $note,
-                    ],
-                );
-        }
-
-        return redirect()
-            ->route('insights.daily', [
-                'date' => $date,
-            ])
-            ->with(
-                'success',
-                'Spending note saved.',
-            );
+    public function rules(): array
+    {
+        return [
+            'note' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+        ];
     }
 }
