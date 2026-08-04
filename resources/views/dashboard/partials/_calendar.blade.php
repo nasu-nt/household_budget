@@ -29,6 +29,21 @@
                 ◀
             </button>
 
+            {{-- 月次Insightsへのリンク --}}
+            <a
+                href="{{ route('insights.monthly', [
+                    'month' => $dashboardDateObject->format('Y-m'),
+                ]) }}"
+                class="dashboard-calendar__month-link"
+                data-dashboard-calendar-month-link
+                data-monthly-insights-url-template="{{ route('insights.monthly', [
+                    'month' => '__MONTH__',
+                ]) }}"
+                aria-label="View monthly insights for {{ $dashboardMonthLabel }}"
+            >
+                {{ $dashboardMonthLabel }}
+            </a>
+
             <div class="dashboard-calendar__date-picker-wrapper">
                 <input
                     type="date"

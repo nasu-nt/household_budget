@@ -62,6 +62,9 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-month-link]',
     );
 
+    const monthlyInsightsUrlTemplate =
+        monthLink?.dataset.monthlyInsightsUrlTemplate;
+
     const spendingDateElement =
         document.querySelector(
             '[data-dashboard-calendar-spending-date]',
@@ -277,12 +280,25 @@ export const initDashboardCalendar = () => {
             ).format(date);
 
         if (monthLink) {
+            const monthValue = [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, '0'),
+            ].join('-');
+
             monthLink.textContent = monthName;
 
             monthLink.setAttribute(
                 'aria-label',
                 `View monthly insights for ${monthName}`,
             );
+
+            if (monthlyInsightsUrlTemplate) {
+                monthLink.href =
+                    monthlyInsightsUrlTemplate.replace(
+                        '__MONTH__',
+                        monthValue,
+                    );
+            }
         }
 
         if (spendingDateElement) {
@@ -546,18 +562,6 @@ export const initDashboardCalendar = () => {
             calendar.gotoDate(
                 nextDate,
             );
-        },
-    );
-
-    monthLink?.addEventListener(
-        'click',
-        (event) => {
-            /*
-             * TODO:
-             * Monthly Insights完成後に削除し、
-             * 実際のURLへ遷移させる。
-             */
-            event.preventDefault();
         },
     );
 };
