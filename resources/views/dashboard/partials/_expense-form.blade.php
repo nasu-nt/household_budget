@@ -180,6 +180,61 @@
                             @enderror
                         </div>
                     </div>
+                                    
+                    {{-- Category --}}
+                    <div class="expense-entry__row">
+                        <label
+                            for="expense_category_id_{{ $index }}"
+                            class="expense-entry__label"
+                            data-expense-label="category_id"
+                        >
+                            {{ __('Category') }}
+                        </label>
+
+                        <div class="expense-entry__control">
+                            <select
+                                id="expense_category_id_{{ $index }}"
+                                name="expenses[{{ $index }}][category_id]"
+                                class="expense-entry__input
+                                    @error("expenses.{$index}.category_id")
+                                        is-invalid
+                                    @enderror"
+                                required
+                                data-expense-field="category_id"
+                                @error("expenses.{$index}.category_id")
+                                    aria-invalid="true"
+                                    aria-describedby="expense_category_id_{{ $index }}_error"
+                                @enderror
+                            >
+                                <option value="">
+                                    {{ __('Select a category') }}
+                                </option>
+
+                                @foreach ($categories as $category)
+                                    <option
+                                        value="{{ $category->id }}"
+                                        @selected(
+                                            (string) data_get($expense, 'category_id') ===
+                                            (string) $category->id
+                                        )
+                                    >
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error("expenses.{$index}.category_id")
+                                <p
+                                    id="expense_category_id_{{ $index }}_error"
+                                    class="expense-entry__error"
+                                    role="alert"
+                                    data-expense-error="category_id"
+                                >
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
 
                     {{-- Amount --}}
                     <div class="expense-entry__row">
@@ -204,7 +259,6 @@
                                     name="expenses[{{ $index }}][amount]"
                                     type="text"
                                     class="expense-entry__input money-input__field
-                                        oney-input__field
                                         @error("expenses.{$index}.amount")
                                             is-invalid
                                         @enderror"
