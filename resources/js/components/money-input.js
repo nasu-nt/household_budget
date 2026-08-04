@@ -111,14 +111,16 @@ export function initMoneyInputs() {
             return;
         }
 
-        form.querySelectorAll(
-            '[data-money-input]',
-        ).forEach((input) => {
-            if (!(input instanceof HTMLInputElement)) {
+        Array.from(form.elements).forEach((element) => {
+            if (!(element instanceof HTMLInputElement)) {
                 return;
             }
 
-            input.value = input.value.replace(
+            if (!element.matches('[data-money-input]')) {
+                return;
+            }
+
+            element.value = element.value.replace(
                 /,/g,
                 '',
             );
