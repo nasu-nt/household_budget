@@ -206,9 +206,7 @@
                                     aria-describedby="expense_category_id_{{ $index }}_error"
                                 @enderror
                             >
-                                <option value="">
-                                    {{ __('Select a category') }}
-                                </option>
+                                <option value=""></option>
 
                                 @foreach ($categories as $category)
                                     <option
