@@ -1,0 +1,1460 @@
+.daily-insights {
+
+    /* 
+     * 日付 
+     */
+    &__header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 1.5rem;
+
+        width: 100%;
+        padding: 0 2rem 1.5rem 2rem;
+    }
+
+    &__controls {
+        grid-column: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    &__nav-button {
+        display: inline-grid;
+        flex: 0 0 auto;
+        place-items: center;
+
+        width: var(--l-control-h);
+        height: var(--l-control-h);
+        padding: 0;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: 1.125rem;
+        line-height: 1;
+        text-decoration: none;
+
+        background-color: var(--c-button-secondary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-swatch);
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color: var(--c-button-secondary-bg-hover);
+            border-color: var(--c-border-strong);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    &__date {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 12rem;
+        height: var(--l-control-h);
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    &__date-picker-wrapper {
+        position: relative;
+
+        flex: 0 0 auto;
+    }
+
+    &__date-input {
+        position: absolute;
+
+        width: 1px;
+        height: 1px;
+        padding: 0;
+
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    &__date-picker-button {
+        display: inline-grid;
+        place-items: center;
+
+        width: var(--l-control-h);
+        height: var(--l-control-h);
+        padding: 0;
+
+        background-color: var(--c-button-secondary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-swatch);
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color: var(--c-button-secondary-bg-hover);
+            border-color: var(--c-border-strong);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    &__date-icon {
+        display: block;
+
+        width: 1.5rem;
+        height: 1.5rem;
+
+        pointer-events: none;
+    }
+
+    &__today-button {
+        grid-column: 3;
+        justify-self: end;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        min-width: 8.5rem;
+        height: var(--l-control-h);
+        padding-inline: 1.5rem;
+
+        color: var(--c-button-primary-text);
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+
+        background-color: var(--c-button-primary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-button-primary-border);
+        border-radius: var(--r-control);
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color: var(--c-button-primary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+
+        &.is-current {
+            cursor: default;
+        }
+    }
+
+    /*
+     * レスポンシブ(日付)
+     */
+    @media (max-width: 48rem) {
+        &__header {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: 1.25rem 1rem;
+        }
+
+        &__controls {
+            grid-column: 1;
+            gap: 0.75rem;
+        }
+
+        &__date {
+            min-width: 8.5rem;
+            font-size: var(--fs-lg);
+        }
+
+        &__today-button {
+            grid-column: 1;
+            justify-self: center;
+        }
+    }
+
+    /*
+     * サマリー
+     */
+    &__summary {
+        display: grid;
+        grid-template-columns:
+            minmax(20rem, 1.35fr)
+            minmax(13rem, 1fr)
+            minmax(15rem, 1fr);
+        align-items: stretch;
+
+        width: 100%;
+        padding: 1.5rem 1rem 1.65rem 2.5rem;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-card);
+    }
+
+    &__summary-main {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+
+        min-width: 0;
+        padding-right: 2rem;
+    }
+
+    &__summary-icon-wrapper {
+        display: inline-grid;
+        flex: 0 0 auto;
+        place-items: center;
+
+        width: 4.5rem;
+        height: 4.5rem;
+
+        background-color: var(--c-icon-tile-bg);
+        border-radius: 0.75rem;
+    }
+
+    &__summary-icon {
+        display: block;
+
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    &__summary-spending {
+        display: grid;
+        gap: 1rem;
+
+        min-width: 0;
+    }
+
+    &__summary-title {
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: nowrap;
+    }
+
+    &__summary-amount {
+        margin-top: 0rem;
+
+        color: var(--c-text);
+        font-size: 2.25rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+    }
+
+    &__comparison {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+
+        min-width: 0;
+        padding-inline: 2rem;
+
+        border-left:
+            var(--border-width)
+            solid
+            var(--c-border);
+    }
+
+    &__comparison-label {
+        display: grid;
+        place-items: center;
+
+        min-height: 3rem;
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-lg);
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    &__comparison-amount {
+        margin-top: -0.3rem;
+
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+
+        &.is-increase {
+            color: var(--c-danger);
+        }
+
+        &.is-decrease {
+            color: var(--c-success);
+        }
+
+        &.is-neutral {
+            color: var(--c-muted);
+        }
+    }
+
+    @media (max-width: 64rem) {
+        &__summary {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        &__summary-main {
+            grid-column: 1 / -1;
+
+            justify-content: center;
+            padding: 0 0 1.5rem;
+
+            border-bottom:
+                var(--border-width)
+                solid
+                var(--c-border);
+        }
+
+        &__comparison {
+            margin-top: 1.5rem;
+
+            &:nth-of-type(2) {
+                border-left: 0;
+            }
+        }
+    }
+
+    /*
+     * レスポンシブ(サマリー)
+     */
+    @media (max-width: 40rem) {
+        &__summary {
+            grid-template-columns: 1fr;
+            padding: 1.25rem;
+        }
+
+        &__summary-main {
+            justify-content: flex-start;
+            gap: 1rem;
+        }
+
+        &__summary-title {
+            font-size: var(--fs-lg);
+            white-space: normal;
+        }
+
+        &__summary-amount {
+            font-size: 1.75rem;
+            text-align: left;
+        }
+
+        &__comparison {
+            margin-top: 0;
+            padding: 1.25rem 0;
+
+            border-left: 0;
+            border-top:
+                var(--border-width)
+                solid
+                var(--c-border);
+
+            &:nth-of-type(2) {
+                border-top: 0;
+            }
+        }
+
+        &__comparison-label {
+            min-height: auto;
+            font-size: var(--fs-md);
+        }
+
+        &__comparison-amount {
+            font-size: 1.5rem;
+        }
+    }
+
+    /*
+     * 支出メモ
+     */
+    &__notes {
+        width: calc(100% - 2.4rem);
+        margin-top: 2.25rem;
+        margin-left: 1.2rem;
+    }
+
+    &__notes-title {
+        margin: 0 0 0.875rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    &__notes-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 8.5rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    &__notes-field {
+        display: grid;
+        gap: 0.375rem;
+
+        min-width: 0;
+    }
+
+    &__notes-input {
+        ///box-sizing: border-box;
+        display: block;
+
+        width: 100%;
+        padding: 0.5rem 1.25rem;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        line-height: 1.5;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+
+        resize: none;
+
+        &::placeholder {
+            color: var(--c-muted);
+            opacity: 1;
+        }
+
+        &:hover {
+            color: var(--c-primary-hover);
+        }
+
+        &:focus {
+            border-color: var(--c-active-indicator);
+            outline: none;
+            box-shadow: 0 0 0 0.25rem rgb(37 99 235 / 15%);
+        }
+
+        &.is-invalid {
+            border-color: var(--c-danger);
+
+            &:focus {
+                outline-color: var(--c-danger);
+            }
+        }
+    }
+
+    &__notes-limit {
+        margin: 0;
+
+        color: var(--c-muted);
+        font-size: var(--fs-sm);
+        line-height: 1.4;
+        text-align: right;
+    }
+
+    &__notes-error {
+        margin: 0;
+
+        color: var(--c-danger);
+        font-size: var(--fs-sm);
+        line-height: 1.4;
+    }
+
+    &__notes-save {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.5rem;
+
+        color: var(--c-button-primary-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+
+        background-color: var(--c-button-primary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-button-primary-border);
+        border-radius: var(--r-control);
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color: var(--c-button-primary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    /*
+     * レスポンシブ(支出メモ)
+     */
+    @media (max-width: 48rem) {
+        &__notes {
+            margin-top: 2rem;
+        }
+
+        &__notes-form {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        &__notes-save {
+            justify-self: end;
+            width: auto;
+            min-width: 8.5rem;
+        }
+    }
+
+    /*
+     * カテゴリ別支出
+     */
+    &__categories {
+        width: calc(100% - 2.4rem);
+        margin-top: 2.25rem;
+        margin-left: 1.2rem;
+    }
+
+    &__section-title {
+        margin: 0 0 0.875rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    &__categories-card {
+        padding: 1.3rem 2.5rem 1.4rem 2.5rem;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-card);
+    }
+
+    &__categories-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    /*
+    * 各列の幅をcolgroupで固定する。
+    */
+    &__category-col--name {
+        width: 22%;
+    }
+
+    &__category-col--amount {
+        width: 18%;
+    }
+
+    &__category-col--percentage {
+        width: 12%;
+    }
+
+    &__category-col--chart {
+        width: 48%;
+    }
+
+    &__category-row > *,
+    &__category-total-row > * {
+        box-sizing: border-box;
+        vertical-align: middle;
+    }
+
+    /*
+    * Food・Entertainment・Transportの行。
+    * 行間にボーダーは入れない。
+    */
+    &__category-name,
+    &__category-amount,
+    &__category-percentage,
+    &__category-chart {
+        padding: 0.5rem 0.75rem;
+    }
+
+    &__category-name {
+        color: var(--c-text);
+        font-size: var(--fs-lg);
+        font-weight: 700;
+        text-align: left;
+    }
+
+    &__category-amount {
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &__category-percentage {
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    &__category-chart {
+        padding-left: 2rem;
+    }
+
+    /*
+    * 最後のカテゴリ行とTotalの境界線の間を広げる。
+    */
+    &__category-row:last-child > * {
+        padding-bottom: 1.25rem;
+    }
+
+    &__category-track {
+        width: 100%;
+        height: 1.2rem;
+
+        overflow: hidden;
+
+        background-color: var(--c-surface-disabled);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: 999rem;
+    }
+
+    &__category-fill {
+        display: block;
+
+        width: var(--category-width);
+        height: 100%;
+
+        background-color: var(--category-color);
+        border-right:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: 999rem;
+    }
+
+    /*
+    * Total行。
+    *
+    * 上側1.25rem、下側0.625rem程度にして、
+    * 境界線の上:下をおおよそ1:0.5にする。
+    */
+    &__category-total-row > * {
+        padding-top: 0.625rem;
+
+        border-top:
+            var(--border-width)
+            solid
+            var(--c-border);
+    }
+
+    &__category-total-label,
+    &__category-total-amount,
+    &__category-total-percentage,
+    &__category-total-chart {
+        padding-right: 0.75rem;
+        padding-bottom: 0;
+        padding-left: 0.75rem;
+    }
+
+    &__category-total-label {
+        color: var(--c-text);
+        font-size: var(--fs-lg);
+        font-weight: 700;
+        text-align: left;
+    }
+
+    &__category-total-amount {
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        font-weight: 700;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &__category-total-percentage {
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    &__category-total-chart {
+        padding-left: 2rem;
+    }
+
+    &__category-total-bar {
+        display: flex;
+
+        width: 100%;
+        height: 1.2rem;
+
+        overflow: hidden;
+
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: 999rem;
+    }
+
+    &__category-total-segment {
+        display: block;
+        flex: 0 0 var(--category-width);
+
+        height: 100%;
+
+        background-color: var(--category-color);
+
+        & + & {
+            border-left:
+                var(--border-width)
+                solid
+                var(--c-border-strong);
+        }
+    }
+
+    &__categories-empty {
+        margin: 0;
+        padding-block: 2rem;
+
+        color: var(--c-muted);
+        text-align: center;
+    }
+
+    &__categories-empty-total {
+        display: flex;
+        justify-content: space-between;
+
+        padding-top: 1rem;
+
+        border-top:
+            var(--border-width)
+            solid
+            var(--c-border);
+    }
+
+    @media (max-width: 48rem) {
+        &__categories-card {
+            padding: 1.25rem;
+            overflow-x: auto;
+        }
+
+        &__categories-table {
+            min-width: 42rem;
+        }
+    }
+
+    /*
+     * 支出レコード一覧
+     */
+    &__records {
+        width: calc(100% - 2.4rem);
+        margin-top: 2.5rem;
+        margin-left: 1.2rem;
+    }
+
+    &__records-card {
+        overflow: hidden;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+    }
+
+    /*
+     * Recordsテーブル
+     */
+    &__records-table {
+        width: 100%;
+
+        border-collapse: collapse;
+        table-layout: fixed;
+
+        thead {
+            background-color: var(--c-surface-disabled);
+        }
+
+        th {
+            box-sizing: border-box;
+            height: 4rem;
+            padding: 0.75rem 1.5rem;
+
+            color: var(--c-text);
+            font-size: var(--fs-md);
+            font-weight: 700;
+            line-height: 1.3;
+            text-align: left;
+            white-space: nowrap;
+
+            border-bottom:
+                var(--border-width)
+                solid
+                var(--c-border);
+        }
+
+        td {
+            box-sizing: border-box;
+            height: 4.25rem;
+            padding: 0.75rem 1.5rem;
+
+            color: var(--c-text);
+            font-size: var(--fs-md);
+            line-height: 1.4;
+            vertical-align: middle;
+        }
+
+        tbody tr:not(:last-child) {
+            border-bottom:
+                var(--border-width)
+                solid
+                var(--c-border);
+        }
+
+        /*
+         * 1列目：Recorded time
+         */
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 16%;
+            text-align: center;
+        }
+
+        /*
+         * 2列目：Category
+         */
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 22%;
+        }
+
+        /*
+         * 3列目：Amount
+         */
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 16%;
+            text-align: right;
+        }
+        /*
+         * 4列目：Memo
+         */
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 26%;
+        }
+
+        /*
+         * 5列目：Actions
+         */
+        th:nth-child(5),
+        td:nth-child(5) {
+            width: 20%;
+            padding-inline: 0.75rem;
+            text-align: center;
+        }
+    }
+
+    /*
+     * 通常表示行
+     */
+    &__record-time {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    &__record-category {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        min-width: 0;
+    }
+
+    &__record-category-color {
+        display: block;
+        flex: 0 0 auto;
+
+        width: 1.125rem;
+        height: 1.125rem;
+
+        background-color: var(--record-category-color);
+        border:
+            var(--border-width)
+            solid
+            color-mix(
+                in srgb,
+                var(--record-category-color) 80%,
+                var(--c-border)
+            );
+        border-radius: 0.3rem;
+    }
+
+    &__record-amount {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    &__record-memo {
+        overflow-wrap: anywhere;
+    }
+
+    &__record-actions {
+        white-space: nowrap;
+    }
+
+    /*
+     * 通常時のEditボタン
+     */
+    &__record-edit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        width: 7.5rem;
+        height: 2.5rem;
+        padding-inline: 1rem;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color: var(--c-button-secondary-bg-hover);
+            border-color: var(--c-text);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    /*
+     * Edit(Action列
+     */
+    &__record-edit-row {
+        background-color: var(--c-surface-disabled);
+    }
+
+    /*
+    * 編集行の操作欄
+    */
+    &__record-edit-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.625rem;
+
+        width: 100%;
+    }
+
+    &__record-edit-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+
+        width: 100%;
+    }
+
+    &__record-save,
+    &__record-cancel {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        height: 2.75rem;
+        padding-inline: 1rem;
+
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+
+        border-radius: var(--r-control);
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+    }
+
+    &__record-save {
+        min-width: 7rem;
+
+        color: var(--c-button-primary-text);
+
+        background-color: var(--c-button-primary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-button-primary-border);
+
+        &:hover {
+            background-color: var(--c-button-primary-bg-hover);
+        }
+    }
+
+    &__record-cancel {
+        min-width: 5.5rem;
+
+        color: var(--c-text);
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+
+        &:hover {
+            background-color: var(--c-button-secondary-bg-hover);
+            border-color: var(--c-text);
+        }
+    }
+
+    &__record-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        padding: 0.25rem 0.5rem;
+
+        color: var(--c-danger);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+
+        background: transparent;
+        border: 0;
+        border-radius: 0.25rem;
+
+        cursor: pointer;
+
+        &:hover {
+            color: var(--c-danger-hover);
+        }
+    }
+
+    &__record-delete-icon {
+        display: block;
+        flex: 0 0 auto;
+
+        width: 1.25rem;
+        height: 1.25rem;
+
+        object-fit: contain;
+    }
+
+    &__record-save:focus-visible,
+    &__record-cancel:focus-visible,
+    &__record-delete:focus-visible {
+        outline:
+            var(--border-width-strong)
+            solid
+            var(--c-active-indicator);
+        outline-offset: 0.125rem;
+    }
+
+    /*
+     * 編集用入力欄
+     */
+    &__record-input,
+    &__record-select {
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.75rem;
+        padding: 0 0.875rem;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        line-height: 1.2;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+
+        &:focus {
+            border-color: var(--c-active-indicator);
+            outline: 0;
+            box-shadow:
+                0 0 0 0.125rem
+                color-mix(
+                    in srgb,
+                    var(--c-active-indicator) 20%,
+                    transparent
+                );
+        }
+
+        &.is-invalid {
+            border-color: var(--c-danger);
+        }
+    }
+
+    &__record-select {
+        padding-right: 2.5rem;
+
+        cursor: pointer;
+    }
+
+    /*
+     * 時刻入力
+     */
+    &__record-time-wrapper {
+    position: relative;
+
+    width: 7.5rem;
+    margin-inline: auto;
+    }
+
+    &__record-time-input {
+        width: 100%;
+        padding-right: 2.75rem;
+
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+
+        /*
+        * Chrome・Edgeの標準時計アイコンを透明にする。
+        * クリック領域は残す。
+        */
+        &::-webkit-calendar-picker-indicator {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            right: 0;
+
+            width: 2.75rem;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+
+            opacity: 0;
+            cursor: pointer;
+        }
+    }
+
+    &__record-time-icon {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        right: 0.875rem;
+
+        display: block;
+        width: 1.125rem;
+        height: 1.125rem;
+
+        pointer-events: none;
+        transform: translateY(-50%);
+    }
+
+    /*
+     * 金額入力
+     */
+    &__record-money {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 0.5rem;
+
+        width: 100%;
+
+        span {
+            font-size: var(--fs-md);
+        }
+
+        .daily-insights__record-input {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    /*
+     * バリデーションエラー
+     */
+    &__record-error {
+        margin: 0.375rem 0 0;
+
+        color: var(--c-danger);
+        font-size: var(--fs-sm);
+        line-height: 1.3;
+        white-space: normal;
+    }
+
+    /*
+     * 並べ替え
+     */
+    &__records-sort {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+
+        color: inherit;
+        text-decoration: none;
+        white-space: nowrap;
+
+        &:hover {
+            color: var(--c-primary);
+        }
+
+        &:focus-visible {
+            border-radius: 0.25rem;
+            outline: 2px solid var(--c-primary);
+            outline-offset: 0.2rem;
+        }
+
+        &.is-active {
+            color: var(--c-primary);
+        }
+    }
+
+    &__records-sort-icon {
+        display: inline-block;
+
+        font-size: 0.75rem;
+        line-height: 1;
+    }
+
+    /*
+     * Recordsが0件の場合
+     */
+    &__records-empty {
+        margin: 0;
+        padding: 2.5rem 1.5rem;
+
+        color: var(--c-muted);
+        text-align: center;
+    }
+
+    /*
+    * 新規追加行
+    */
+    &__record-create-row {
+        background-color: color-mix(
+            in srgb,
+            var(--c-primary) 4%,
+            var(--c-surface)
+        );
+
+        border-top:
+            var(--border-width)
+            solid
+            var(--c-border);
+
+        td {
+            height: 8rem;
+            padding: 1.25rem 1.5rem;
+        }
+    }
+
+        &__record-add-area {
+        display: flex;
+        justify-content: center;
+
+        margin-top: 0.875rem;
+    }
+
+    &__record-add {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+
+        min-height: 2.75rem;
+        padding: 0.5rem 1rem;
+
+        color: var(--c-muted);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 500;
+        line-height: 1;
+        text-decoration: none;
+
+        background: transparent;
+        border: 0;
+        border-radius: var(--r-control);
+
+        cursor: pointer;
+
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease;
+
+        &:hover {
+            color: var(--c-primary);
+
+            background-color: color-mix(
+                in srgb,
+                var(--c-primary) 5%,
+                transparent
+            );
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    &__record-add {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+
+        width: 100%;
+        height: 4.5rem;
+        padding: 0 1rem;
+
+        color: var(--c-muted);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 500;
+        line-height: 1;
+
+        background: transparent;
+        border: 0;
+
+        cursor: pointer;
+
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease;
+
+        &:hover {
+            color: var(--c-primary);
+
+            background-color: color-mix(
+                in srgb,
+                var(--c-primary) 4%,
+                transparent
+            );
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: -0.25rem;
+        }
+    }
+
+    /*
+     * レスポンシブ
+     */
+    @media (max-width: 64rem) {
+        &__records-card {
+            overflow-x: auto;
+        }
+
+        &__records-table {
+            min-width: 68rem;
+        }
+    }
+}

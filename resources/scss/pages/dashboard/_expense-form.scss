@@ -53,6 +53,44 @@
             cursor: pointer;
         }
 
+        &__time-wrapper {
+            position: relative;
+        }
+
+        &__time-input {
+            position: relative;
+            padding-right: 2.75rem;
+        }
+
+        &__time-icon {
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            right: 0.75rem;
+
+            display: block;
+            width: 1.125rem;
+            height: 1.125rem;
+
+            pointer-events: none;
+            transform: translateY(-50%);
+        }
+
+        &__time-input::-webkit-calendar-picker-indicator {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            right: 0;
+
+            width: 2.75rem;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+
+            opacity: 0;
+            cursor: pointer;
+        }
+
         &__row {
             display: grid;
             grid-template-columns: 4.5rem minmax(0, 1fr);

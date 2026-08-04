@@ -22,6 +22,8 @@
 @use './pages/dashboard/dashboard';
 @use './pages/dashboard/recurring-expenses-cta';
 
+@use './pages/insights/insights.scss';
+
 @use './pages/settings/settings';
 @use './pages/settings/categories';
 @use './pages/settings/budget';

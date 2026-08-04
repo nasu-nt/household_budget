@@ -62,9 +62,13 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-month-link]',
     );
 
-    const spendingDateElement = document.querySelector(
-        '[data-dashboard-calendar-spending-date]',
-    );
+    const monthlyInsightsUrlTemplate =
+        monthLink?.dataset.monthlyInsightsUrlTemplate;
+
+    const spendingDateElement =
+        document.querySelector(
+            '[data-dashboard-calendar-spending-date]',
+        );
 
     /*
      * ダッシュボード以外の画面では、
@@ -80,12 +84,19 @@ export const initDashboardCalendar = () => {
     const calendarUrl =
         calendarElement.dataset.dashboardCalendarUrl;
 
+    const dailyInsightsUrlTemplate =
+        calendarElement.dataset
+            .dailyInsightsUrlTemplate;
+
     const demoDate =
         calendarElement.dataset.demoDate;
 
-    if (!calendarUrl) {
+    if (
+        !calendarUrl
+        || !dailyInsightsUrlTemplate
+    ) {
         console.error(
-            'Calendar data URL is not defined.',
+            'Calendar URL is not defined.',
         );
 
         return;
@@ -123,7 +134,7 @@ export const initDashboardCalendar = () => {
      * 日付ごとのFullCalendarセル要素。
      *
      * キー:
-     * 2027-07-27
+     * 2026-06-19
      *
      * 値:
      * 対応する<td>要素
@@ -134,7 +145,7 @@ export const initDashboardCalendar = () => {
      * 日付ごとの支出合計。
      *
      * キー:
-     * 2027-07-27
+     * 2026-06-19
      *
      * 値:
      * 2680
@@ -145,7 +156,7 @@ export const initDashboardCalendar = () => {
      * 日付ごとの予算ステータス。
      *
      * キー:
-     * 2027-07-27
+     * 2026-06-19
      *
      * 値:
      * all_goodなど
@@ -256,32 +267,48 @@ export const initDashboardCalendar = () => {
      * 月次Insightsリンクと選択日ラベルを更新する。
      */
     const updateDateLabels = (dateString) => {
-        const date = parseDateString(dateString);
+        const date =
+            parseDateString(dateString);
 
-        const monthName = new Intl.DateTimeFormat(
-            'en-US',
-            {
-                month: 'long',
-                year: 'numeric',
-            },
-        ).format(date);
+        const monthName =
+            new Intl.DateTimeFormat(
+                'en-US',
+                {
+                    month: 'long',
+                    year: 'numeric',
+                },
+            ).format(date);
 
         if (monthLink) {
+            const monthValue = [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, '0'),
+            ].join('-');
+
             monthLink.textContent = monthName;
 
             monthLink.setAttribute(
                 'aria-label',
                 `View monthly insights for ${monthName}`,
             );
+
+            if (monthlyInsightsUrlTemplate) {
+                monthLink.href =
+                    monthlyInsightsUrlTemplate.replace(
+                        '__MONTH__',
+                        monthValue,
+                    );
+            }
         }
 
         if (spendingDateElement) {
-            const shortMonthName = new Intl.DateTimeFormat(
-                'en-US',
-                {
-                    month: 'short',
-                },
-            ).format(date);
+            const shortMonthName =
+                new Intl.DateTimeFormat(
+                    'en-US',
+                    {
+                        month: 'short',
+                    },
+                ).format(date);
 
             spendingDateElement.textContent =
                 `${shortMonthName} ${date.getDate()}`;
@@ -356,10 +383,16 @@ export const initDashboardCalendar = () => {
                         calendarDay.status,
                     );
 
+                    const dailyInsightsUrl =
+                        dailyInsightsUrlTemplate.replace(
+                            '__DATE__',
+                            calendarDay.date,
+                        );
+
                     /*
-                    * 選択日の支出表示や
-                    * セルの色分けに使用するため保存する。
-                    */
+                     * 選択日の支出表示や
+                     * セルの色分けに使用するため保存する。
+                     */
                     dailySpending.set(
                         calendarDay.date,
                         total,
@@ -378,18 +411,17 @@ export const initDashboardCalendar = () => {
                         id:
                             `daily-spending-${calendarDay.date}`,
 
-                        /*
-                        * eventContentで独自表示するため、
-                        * titleは空にする。
-                        */
                         title: '',
 
-                        start: calendarDay.date,
+                        start:
+                            calendarDay.date,
+
                         allDay: true,
 
                         extendedProps: {
                             total,
                             status,
+                            dailyInsightsUrl,
                         },
                     };
                 },
@@ -506,6 +538,7 @@ export const initDashboardCalendar = () => {
                 );
 
             selectDate(previousDate);
+
             calendar.gotoDate(
                 previousDate,
             );
@@ -525,18 +558,10 @@ export const initDashboardCalendar = () => {
                 );
 
             selectDate(nextDate);
+
             calendar.gotoDate(
                 nextDate,
             );
         },
     );
-
-    monthLink?.addEventListener('click', (event) => {
-        /*
-        * TODO:
-        * Monthly Insights完成後に削除し、
-        * 実際のURLへ遷移させる。
-        */
-        event.preventDefault();
-    });
 };
