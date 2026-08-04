@@ -314,4 +314,737 @@
             @endif
         </div>
     </section>
+
+    {{-- 支出レコード一覧 --}}
+    <section
+        class="daily-insights__records"
+        aria-labelledby="daily-insights-records-title"
+        data-daily-records-section
+    >
+        <h2
+            id="daily-insights-records-title"
+            class="daily-insights__section-title"
+        >
+            Records
+        </h2>
+
+        <div class="daily-insights__records-card">
+            @if ($dailyRecords === [])
+                <p class="daily-insights__records-empty">
+                    No spending records for this day.
+                </p>
+            @else
+            @php
+                $createFormId = 'daily-record-create-form';
+
+                $hasCreateRecordErrors =
+                    old('creating_record') === '1'
+                    && $errors->any();
+            @endphp
+                <table
+                    class="daily-insights__records-table"
+                    data-daily-records
+                >
+                    <thead>
+                        <tr>
+                            <th
+                                scope="col"
+                                @if ($recordSort === 'recorded_time')
+                                    aria-sort="{{ $recordDirection === 'asc'
+                                        ? 'ascending'
+                                        : 'descending' }}"
+                                @endif
+                            >
+                                <a
+                                    href="{{ route('insights.daily', [
+                                        'date' => $date,
+                                        'sort' => 'recorded_time',
+                                        'direction' =>
+                                            $recordSort === 'recorded_time'
+                                            && $recordDirection === 'asc'
+                                                ? 'desc'
+                                                : 'asc',
+                                    ]) }}"
+                                    class="daily-insights__records-sort
+                                        {{ $recordSort === 'recorded_time'
+                                            ? 'is-active'
+                                            : '' }}"
+                                >
+                                    <span>Recorded time</span>
+
+                                    <span
+                                        class="daily-insights__records-sort-icon"
+                                        aria-hidden="true"
+                                    >
+                                        @if (
+                                            $recordSort === 'recorded_time'
+                                            && $recordDirection === 'asc'
+                                        )
+                                            ▲
+                                        @else
+                                            ▼
+                                        @endif
+                                    </span>
+                                </a>
+                            </th>
+
+                            <th
+                                scope="col"
+                                @if ($recordSort === 'category')
+                                    aria-sort="{{ $recordDirection === 'asc'
+                                        ? 'ascending'
+                                        : 'descending' }}"
+                                @endif
+                            >
+                                <a
+                                    href="{{ route('insights.daily', [
+                                        'date' => $date,
+                                        'sort' => 'category',
+                                        'direction' =>
+                                            $recordSort === 'category'
+                                            && $recordDirection === 'asc'
+                                                ? 'desc'
+                                                : 'asc',
+                                    ]) }}"
+                                    class="daily-insights__records-sort
+                                        {{ $recordSort === 'category'
+                                            ? 'is-active'
+                                            : '' }}"
+                                >
+                                    <span>Category</span>
+
+                                    <span
+                                        class="daily-insights__records-sort-icon"
+                                        aria-hidden="true"
+                                    >
+                                        @if (
+                                            $recordSort === 'category'
+                                            && $recordDirection === 'asc'
+                                        )
+                                            ▲
+                                        @else
+                                            ▼
+                                        @endif
+                                    </span>
+                                </a>
+                            </th>
+
+                            <th
+                                scope="col"
+                                @if ($recordSort === 'amount')
+                                    aria-sort="{{ $recordDirection === 'asc'
+                                        ? 'ascending'
+                                        : 'descending' }}"
+                                @endif
+                            >
+                                <a
+                                    href="{{ route('insights.daily', [
+                                        'date' => $date,
+                                        'sort' => 'amount',
+                                        'direction' =>
+                                            $recordSort === 'amount'
+                                            && $recordDirection === 'asc'
+                                                ? 'desc'
+                                                : 'asc',
+                                    ]) }}"
+                                    class="daily-insights__records-sort
+                                        {{ $recordSort === 'amount'
+                                            ? 'is-active'
+                                            : '' }}"
+                                >
+                                    <span>Amount</span>
+
+                                    <span
+                                        class="daily-insights__records-sort-icon"
+                                        aria-hidden="true"
+                                    >
+                                        @if (
+                                            $recordSort === 'amount'
+                                            && $recordDirection === 'asc'
+                                        )
+                                            ▲
+                                        @else
+                                            ▼
+                                        @endif
+                                    </span>
+                                </a>
+                            </th>
+
+                            <th scope="col">
+                                Memo
+                            </th>
+
+                            <th scope="col">
+                                <span class="sr-only">
+                                    Actions
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($dailyRecords as $record)
+                            @php
+                                $editFormId =
+                                    "daily-record-edit-{$record['id']}";
+
+                                $hasRecordErrors =
+                                    (int) old('editing_expense_id')
+                                    === $record['id'];
+                            @endphp
+
+                            {{-- 通常表示行 --}}
+                            <tr
+                                id="daily-insights-record-{{ $record['id'] }}"
+                                data-record-display-row
+                                @if ($hasRecordErrors)
+                                    hidden
+                                @endif
+                            >
+                                <td class="daily-insights__record-time">
+                                    @if ($record['recordedTime'] === null)
+                                        <span aria-label="Time not recorded">
+                                            —
+                                        </span>
+                                    @else
+                                        <time
+                                            datetime="{{ $record['recordedTime'] }}"
+                                        >
+                                            {{ $record['recordedTime'] }}
+                                        </time>
+                                    @endif
+                                </td>
+
+                                <td class="daily-insights__record-category">
+                                    <span
+                                        class="daily-insights__record-category-color"
+                                        style="
+                                            --record-category-color:
+                                                {{ $record['categoryColor'] }};
+                                        "
+                                        aria-hidden="true"
+                                    ></span>
+
+                                    <span>
+                                        {{ $record['categoryName'] }}
+                                    </span>
+                                </td>
+
+                                <td class="daily-insights__record-amount">
+                                    ¥{{ number_format($record['amount']) }}
+                                </td>
+
+                                <td class="daily-insights__record-memo">
+                                    {{ $record['memo'] !== ''
+                                        ? $record['memo']
+                                        : '—' }}
+                                </td>
+
+                                <td class="daily-insights__record-actions">
+                                    <button
+                                        type="button"
+                                        class="daily-insights__record-edit"
+                                        data-record-edit
+                                        aria-controls="
+                                            daily-insights-record-edit-{{ $record['id'] }}
+                                        "
+                                    >
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            {{-- 編集フォーム行 --}}
+                            <tr
+                                id="daily-insights-record-edit-{{ $record['id'] }}"
+                                class="daily-insights__record-edit-row"
+                                data-record-edit-row
+                                @if (! $hasRecordErrors)
+                                    hidden
+                                @endif
+                            >
+                                {{-- Recorded time --}}
+                                <td class="daily-insights__record-time-edit">
+                                    <form
+                                        id="{{ $editFormId }}"
+                                        method="POST"
+                                        action="{{ route(
+                                            'insights.daily-record.update',
+                                            [
+                                                'date' => $date,
+                                                'expense' => $record['id'],
+                                            ]
+                                        ) }}"
+                                    >
+                                        @csrf
+                                        @method('PUT')
+
+                                        <input
+                                            type="hidden"
+                                            name="editing_expense_id"
+                                            value="{{ $record['id'] }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="sort"
+                                            value="{{ $recordSort }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="direction"
+                                            value="{{ $recordDirection }}"
+                                        >
+                                    </form>
+
+                                    <div class="daily-insights__record-time-wrapper">
+                                        <input
+                                            form="{{ $editFormId }}"
+                                            type="time"
+                                            name="recorded_time"
+                                            class="
+                                                daily-insights__record-input
+                                                daily-insights__record-time-input
+                                                @if ($hasRecordErrors)
+                                                    @error('recorded_time')
+                                                        is-invalid
+                                                    @enderror
+                                                @endif
+                                            "
+                                            value="{{ $hasRecordErrors
+                                                ? old('recorded_time')
+                                                : ($record['recordedTime'] ?? '') }}"
+                                            step="60"
+                                            aria-label="Recorded time"
+                                        >
+
+                                        <img
+                                            class="daily-insights__record-time-icon"
+                                            src="{{ asset('images/icons/clock_1.svg') }}"
+                                            alt=""
+                                            aria-hidden="true"
+                                        >
+                                    </div>
+
+                                    @if ($hasRecordErrors)
+                                        @error('recorded_time')
+                                            <p
+                                                class="daily-insights__record-error"
+                                                role="alert"
+                                            >
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                    @endif
+                                </td>
+
+                                {{-- Category --}}
+                                <td class="daily-insights__record-category-edit">
+                                    <select
+                                        form="{{ $editFormId }}"
+                                        name="category_id"
+                                        class="daily-insights__record-select
+                                            @if ($hasRecordErrors)
+                                                @error('category_id')
+                                                    is-invalid
+                                                @enderror
+                                            @endif"
+                                        aria-label="Category"
+                                        required
+                                    >
+                                        @foreach ($recordCategories as $category)
+                                            <option
+                                                value="{{ $category->id }}"
+                                                @selected(
+                                                    (string) (
+                                                        $hasRecordErrors
+                                                            ? old('category_id')
+                                                            : $record['categoryId']
+                                                    )
+                                                    === (string) $category->id
+                                                )
+                                            >
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @if ($hasRecordErrors)
+                                        @error('category_id')
+                                            <p
+                                                class="daily-insights__record-error"
+                                                role="alert"
+                                            >
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                    @endif
+                                </td>
+
+                                {{-- Amount --}}
+                                <td class="daily-insights__record-amount-edit">
+                                    <div class="daily-insights__record-money">
+                                        <span aria-hidden="true">
+                                            ¥
+                                        </span>
+
+                                        <input
+                                            form="{{ $editFormId }}"
+                                            type="number"
+                                            name="amount"
+                                            class="daily-insights__record-input
+                                                @if ($hasRecordErrors)
+                                                    @error('amount')
+                                                        is-invalid
+                                                    @enderror
+                                                @endif"
+                                            value="{{ $hasRecordErrors
+                                                ? old('amount')
+                                                : $record['amount'] }}"
+                                            min="1"
+                                            max="2147483647"
+                                            inputmode="numeric"
+                                            aria-label="Amount"
+                                            required
+                                        >
+                                    </div>
+
+                                    @if ($hasRecordErrors)
+                                        @error('amount')
+                                            <p
+                                                class="daily-insights__record-error"
+                                                role="alert"
+                                            >
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                    @endif
+                                </td>
+
+                                {{-- Memo --}}
+                                <td class="daily-insights__record-memo-edit">
+                                    <input
+                                        form="{{ $editFormId }}"
+                                        type="text"
+                                        name="memo"
+                                        class="daily-insights__record-input
+                                            @if ($hasRecordErrors)
+                                                @error('memo')
+                                                    is-invalid
+                                                @enderror
+                                            @endif"
+                                        value="{{ $hasRecordErrors
+                                            ? old('memo')
+                                            : $record['memo'] }}"
+                                        maxlength="255"
+                                        aria-label="Memo"
+                                    >
+
+                                    @if ($hasRecordErrors)
+                                        @error('memo')
+                                            <p
+                                                class="daily-insights__record-error"
+                                                role="alert"
+                                            >
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                    @endif
+                                </td>
+
+                                {{-- Save / Cancel / Delete --}}
+                                <td class="daily-insights__record-actions">
+                                    <div class="daily-insights__record-edit-actions">
+                                        <div class="daily-insights__record-edit-buttons">
+                                            <button
+                                                form="{{ $editFormId }}"
+                                                type="submit"
+                                                class="daily-insights__record-save"
+                                            >
+                                                Save
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="daily-insights__record-cancel"
+                                                data-record-cancel
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            class="daily-insights__record-delete"
+                                            data-record-delete
+                                            data-record-id="{{ $record['id'] }}"
+                                            aria-label="Delete {{ $record['categoryName'] }} expense"
+                                        >
+
+                                            <img
+                                                class="daily-insights__record-delete-icon"
+                                                src="{{ asset('images/icons/trash_1.svg') }}"
+                                                alt=""
+                                                aria-hidden="true"
+                                            >
+
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        {{-- 新規レコード入力行 --}}
+                        <tr
+                            class="daily-insights__record-create-row"
+                            data-record-create-row
+                            @if (! $hasCreateRecordErrors)
+                                hidden
+                            @endif
+                        >
+                            {{-- Recorded time --}}
+                            <td class="daily-insights__record-time-edit">
+                                <form
+                                    id="{{ $createFormId }}"
+                                    method="POST"
+                                    action="{{ route(
+                                        'insights.daily-record.store',
+                                        [
+                                            'date' => $date,
+                                        ]
+                                    ) }}"
+                                >
+                                    @csrf
+
+                                    <input
+                                        type="hidden"
+                                        name="creating_record"
+                                        value="1"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="sort"
+                                        value="{{ $recordSort }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="direction"
+                                        value="{{ $recordDirection }}"
+                                    >
+                                </form>
+
+                                <div class="daily-insights__record-time-wrapper">
+                                    <input
+                                        form="{{ $createFormId }}"
+                                        type="time"
+                                        name="recorded_time"
+                                        class="
+                                            daily-insights__record-input
+                                            daily-insights__record-time-input
+                                            @if ($hasCreateRecordErrors)
+                                                @error('recorded_time')
+                                                    is-invalid
+                                                @enderror
+                                            @endif
+                                        "
+                                        value="{{ $hasCreateRecordErrors
+                                            ? old('recorded_time')
+                                            : '' }}"
+                                        step="60"
+                                        aria-label="Recorded time"
+                                        data-record-create-time
+                                    >
+
+                                    <img
+                                        class="daily-insights__record-time-icon"
+                                        src="{{ asset('images/icons/clock_1.svg') }}"
+                                        alt=""
+                                        aria-hidden="true"
+                                    >
+                                </div>
+
+                                @if ($hasCreateRecordErrors)
+                                    @error('recorded_time')
+                                        <p
+                                            class="daily-insights__record-error"
+                                            role="alert"
+                                        >
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                @endif
+                            </td>
+
+                            {{-- Category --}}
+                            <td class="daily-insights__record-category-edit">
+                                <select
+                                    form="{{ $createFormId }}"
+                                    name="category_id"
+                                    class="
+                                        daily-insights__record-select
+                                        @if ($hasCreateRecordErrors)
+                                            @error('category_id')
+                                                is-invalid
+                                            @enderror
+                                        @endif
+                                    "
+                                    aria-label="Category"
+                                    required
+                                >
+                                    <option value="">
+                                        Select category
+                                    </option>
+
+                                    @foreach ($recordCategories as $category)
+                                        <option
+                                            value="{{ $category->id }}"
+                                            @selected(
+                                                (string) old('category_id')
+                                                === (string) $category->id
+                                            )
+                                        >
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @if ($hasCreateRecordErrors)
+                                    @error('category_id')
+                                        <p
+                                            class="daily-insights__record-error"
+                                            role="alert"
+                                        >
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                @endif
+                            </td>
+
+                            {{-- Amount --}}
+                            <td class="daily-insights__record-amount-edit">
+                                <div class="daily-insights__record-money">
+                                    <span aria-hidden="true">
+                                        ¥
+                                    </span>
+
+                                    <input
+                                        form="{{ $createFormId }}"
+                                        type="number"
+                                        name="amount"
+                                        class="
+                                            daily-insights__record-input
+                                            @if ($hasCreateRecordErrors)
+                                                @error('amount')
+                                                    is-invalid
+                                                @enderror
+                                            @endif
+                                        "
+                                        value="{{ $hasCreateRecordErrors
+                                            ? old('amount')
+                                            : '' }}"
+                                        min="1"
+                                        max="2147483647"
+                                        inputmode="numeric"
+                                        aria-label="Amount"
+                                        required
+                                    >
+                                </div>
+
+                                @if ($hasCreateRecordErrors)
+                                    @error('amount')
+                                        <p
+                                            class="daily-insights__record-error"
+                                            role="alert"
+                                        >
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                @endif
+                            </td>
+
+                            {{-- Memo --}}
+                            <td class="daily-insights__record-memo-edit">
+                                <input
+                                    form="{{ $createFormId }}"
+                                    type="text"
+                                    name="memo"
+                                    class="
+                                        daily-insights__record-input
+                                        @if ($hasCreateRecordErrors)
+                                            @error('memo')
+                                                is-invalid
+                                            @enderror
+                                        @endif
+                                    "
+                                    value="{{ $hasCreateRecordErrors
+                                        ? old('memo')
+                                        : '' }}"
+                                    maxlength="255"
+                                    aria-label="Memo"
+                                >
+
+                                @if ($hasCreateRecordErrors)
+                                    @error('memo')
+                                        <p
+                                            class="daily-insights__record-error"
+                                            role="alert"
+                                        >
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                @endif
+                            </td>
+
+                            {{-- Save / Cancel --}}
+                            <td class="daily-insights__record-actions">
+                                <div class="daily-insights__record-edit-buttons">
+                                    <button
+                                        form="{{ $createFormId }}"
+                                        type="submit"
+                                        class="daily-insights__record-save"
+                                    >
+                                        Save
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="daily-insights__record-cancel"
+                                        data-record-create-cancel
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            @endif
+        </div>
+        <div
+        class="daily-insights__record-add-area"
+        data-record-add-row
+        @if ($hasCreateRecordErrors)
+            hidden
+        @endif
+    >
+        <button
+            type="button"
+            class="daily-insights__record-add"
+            data-record-add
+        >
+            <span aria-hidden="true">
+                ＋
+            </span>
+
+            <span>
+                Add another record
+            </span>
+        </button>
+    </div>
+    </section>
 </section>

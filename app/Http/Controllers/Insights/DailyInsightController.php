@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Insights;
 
 use App\Http\Controllers\Controller;
 use App\Models\BudgetSetting;
+use App\Models\Category;
 use App\Models\Expense;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
@@ -63,67 +64,241 @@ class DailyInsightController extends Controller
             ->sum('amount');
 
         /*
- * 選択日の支出をカテゴリ別に集計する。
- *
- * アーカイブ済みカテゴリも過去の支出には表示するため、
- * is_activeやarchived_atでは絞り込まない。
- */
-$categorySpending = Expense::query()
-    ->join(
-        'categories',
-        'categories.id',
-        '=',
-        'expenses.category_id',
-    )
-    ->where('expenses.user_id', $userId)
-    ->where(
-        'expenses.expense_date',
-        $selectedDate->toDateString(),
-    )
-    ->select([
-        'categories.id',
-        'categories.name',
-        'categories.color_code',
-    ])
-    ->selectRaw(
-        'SUM(expenses.amount) AS total',
-    )
-    ->groupBy([
-        'categories.id',
-        'categories.name',
-        'categories.color_code',
-    ])
-    ->orderByRaw(
-        'SUM(expenses.amount) DESC',
-    )
-    ->get()
-    ->map(function ($category) use ($currentDayTotal): array {
-        $amount = (int) $category->total;
+         * 選択日の支出をカテゴリ別に集計する。
+         *
+         * アーカイブ済みカテゴリも過去の支出には表示するため、
+         * is_activeやarchived_atでは絞り込まない。
+         */
+        $categorySpending = Expense::query()
+            ->join(
+                'categories',
+                'categories.id',
+                '=',
+                'expenses.category_id',
+            )
+            ->where('expenses.user_id', $userId)
+            ->where(
+                'expenses.expense_date',
+                $selectedDate->toDateString(),
+            )
+            ->select([
+                'categories.id',
+                'categories.name',
+                'categories.color_code',
+            ])
+            ->selectRaw(
+                'SUM(expenses.amount) AS total',
+            )
+            ->groupBy([
+                'categories.id',
+                'categories.name',
+                'categories.color_code',
+            ])
+            ->orderByRaw(
+                'SUM(expenses.amount) DESC',
+            )
+            ->get()
+            ->map(function ($category) use ($currentDayTotal): array {
+                $amount = (int) $category->total;
 
-        $percentage = $currentDayTotal > 0
-            ? ($amount / $currentDayTotal) * 100
-            : 0;
+                $percentage = $currentDayTotal > 0
+                    ? ($amount / $currentDayTotal) * 100
+                    : 0;
 
-        return [
-            'id' => (int) $category->id,
-            'name' => (string) $category->name,
-            'color' => (string) $category->color_code,
-            'amount' => $amount,
+                return [
+                    'id' => (int) $category->id,
+                    'name' => (string) $category->name,
+                    'color' => (string) $category->color_code,
+                    'amount' => $amount,
 
-            /*
-             * 画面に表示する整数の割合。
-             */
-            'percentage' => (int) round($percentage),
+                    /*
+                    * 画面に表示する整数の割合。
+                    */
+                    'percentage' => (int) round($percentage),
 
-            /*
-             * 棒グラフの幅には、丸める前に近い値を使う。
-             */
-            'barPercentage' => round(
-                min(max($percentage, 0), 100),
-                4,
-            ),
+                    /*
+                    * 棒グラフの幅には、丸める前に近い値を使う。
+                    */
+                    'barPercentage' => round(
+                        min(max($percentage, 0), 100),
+                        4,
+                    ),
+                ];
+            })->all();
+
+        /*
+         * Records一覧の並び順。
+         *
+         * URL例:
+         * ?sort=amount&direction=asc
+         */
+        $recordSortColumns = [
+            'recorded_time' => 'expenses.recorded_time',
+            'category' => 'categories.name',
+            'amount' => 'expenses.amount',
         ];
-    })->all();
+
+        $recordSort = (string) $request->query(
+            'sort',
+            'recorded_time',
+        );
+
+        $recordDirection = strtolower(
+            (string) $request->query(
+                'direction',
+                'desc',
+            ),
+        );
+
+        /*
+        * 許可していない並び替え項目は、
+        * Recorded timeへ戻す。
+        */
+        if (! array_key_exists(
+            $recordSort,
+            $recordSortColumns,
+        )) {
+            $recordSort = 'recorded_time';
+        }
+
+        /*
+        * asc・desc以外は使用しない。
+        */
+        if (! in_array(
+            $recordDirection,
+            ['asc', 'desc'],
+            true,
+        )) {
+            $recordDirection = 'desc';
+        }
+
+        /*
+        * 選択日の支出レコード一覧。
+        */
+        $dailyRecordsQuery = Expense::query()
+            ->join(
+                'categories',
+                'categories.id',
+                '=',
+                'expenses.category_id',
+            )
+            ->where(
+                'expenses.user_id',
+                $userId,
+            )
+            ->where(
+                'expenses.expense_date',
+                $selectedDate->toDateString(),
+            )
+            ->select([
+                'expenses.id',
+                'expenses.recorded_time',
+                'expenses.category_id',
+                'expenses.amount',
+                'expenses.memo',
+                'categories.name AS category_name',
+                'categories.color_code AS category_color',
+            ]);
+
+        /*
+        * Recorded timeの場合だけ、
+        * 時刻未登録のデータを最後へ置く。
+        */
+        if ($recordSort === 'recorded_time') {
+            $dailyRecordsQuery->orderByRaw(
+                $recordDirection === 'asc'
+                    ? 'expenses.recorded_time ASC NULLS LAST'
+                    : 'expenses.recorded_time DESC NULLS LAST',
+            );
+        } else {
+            $dailyRecordsQuery->orderBy(
+                $recordSortColumns[$recordSort],
+                $recordDirection,
+            );
+        }
+
+        /*
+        * 同じ値だった場合でも順番が安定するよう、
+        * 最後にIDの新しい順を指定する。
+        */
+        $dailyRecords = $dailyRecordsQuery
+            ->orderByDesc('expenses.id')
+            ->get()
+            ->map(function ($expense): array {
+                $recordedTime = $expense->recorded_time;
+
+                return [
+                    'id' => (int) $expense->id,
+
+                    'recordedTime' => $recordedTime === null
+                        ? null
+                        : substr(
+                            (string) $recordedTime,
+                            0,
+                            5,
+                        ),
+
+                    'categoryId' =>
+                        (int) $expense->category_id,
+
+                    'categoryName' =>
+                        (string) $expense->category_name,
+
+                    'categoryColor' =>
+                        (string) $expense->category_color,
+
+                    'amount' =>
+                        (int) $expense->amount,
+
+                    'memo' => $expense->memo === null
+                        ? ''
+                        : (string) $expense->memo,
+                ];
+            })
+            ->all();
+        
+        $recordCategories = Category::query()
+            ->where('user_id', $userId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get([
+                'id',
+                'name',
+                'color_code',
+            ]);
+
+        /*
+         * 編集対象のレコードID。
+         *
+         * この日・このユーザーのRecordsに存在するIDだけ許可する。
+         */
+        $requestedEditRecordId = $request->integer('edit');
+
+        $dailyRecordIds = array_column(
+            $dailyRecords,
+            'id',
+        );
+
+        $editRecordId = in_array(
+            $requestedEditRecordId,
+            $dailyRecordIds,
+            true,
+        )
+            ? $requestedEditRecordId
+            : null;
+
+        /*
+        * 編集フォームで選択できる有効なカテゴリ。
+        */
+        $recordCategories = Category::query()
+            ->where('user_id', $userId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get([
+                'id',
+                'name',
+                'color_code',
+            ]);
 
         /*
          * 前日の支出合計。
@@ -215,6 +390,11 @@ $categorySpending = Expense::query()
 
             'currentDayTotal' => $currentDayTotal,
             'categorySpending' => $categorySpending,
+            'dailyRecords' => $dailyRecords,
+            'recordSort' => $recordSort,
+            'recordDirection' => $recordDirection,
+            'editRecordId' => $editRecordId,
+            'recordCategories' => $recordCategories,
             'previousDayTotal' => $previousDayTotal,
             'previousDayDifference' => $previousDayDifference,
             'previousDayDifferenceClass' =>

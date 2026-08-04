@@ -10,6 +10,7 @@ import { initColorPickers } from './components/color-picker';
 import { initAppearanceSettings } from './components/appearance-settings';
 import { initDashboardSidebar } from './pages/dashboard/sidebar';
 import { initDashboardCalendar } from './pages/dashboard/calendar';
+import { initDailyInsightsRecords } from './pages/insights/records';
 import { budgetSettingsForm } from './pages/settings/budget';
 
 import './pages/insights/chart';
@@ -42,4 +43,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initAppearanceSettings();
     initDashboardSidebar();
     initDashboardCalendar();
+    initDailyInsightsRecords();
 });
