@@ -140,21 +140,6 @@ function updateCardIndex(card, index) {
     });
 }
 
-function normalizeAmountInput(input) {
-    const maxDigits = Number.parseInt(
-        input.dataset.maxDigits ?? '10',
-        10,
-    );
-
-    const digits = input.value
-        .replace(/\D/g, '')
-        .slice(0, maxDigits);
-
-    input.value = digits === ''
-        ? ''
-        : Number(digits).toLocaleString('en-US');
-}
-
 function updateExpenseControls(form) {
     const list = form.querySelector(
         '[data-expense-list]',
@@ -230,12 +215,6 @@ function initExpenseForm() {
     }
 
     form.querySelectorAll(
-        '[data-expense-amount]',
-    ).forEach((input) => {
-        normalizeAmountInput(input);
-    });
-
-    form.querySelectorAll(
         '[data-expense-field="recorded_time"]',
     ).forEach((input) => {
         if (input.value === '') {
@@ -296,24 +275,6 @@ function initExpenseForm() {
             ?.remove();
 
         updateExpenseControls(form);
-    });
-
-    form.addEventListener('input', (event) => {
-        const amountInput = event.target.closest(
-            '[data-expense-amount]',
-        );
-
-        if (amountInput) {
-            normalizeAmountInput(amountInput);
-        }
-    });
-
-    form.addEventListener('submit', () => {
-        form.querySelectorAll(
-            '[data-expense-amount]',
-        ).forEach((input) => {
-            input.value = input.value.replace(/,/g, '');
-        });
     });
 }
 

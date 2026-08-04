@@ -5,6 +5,7 @@ export function budgetSettingsForm(initialValues) {
     const monthlyLimit = Number(initialValues.monthlyLimit) || 0;
 
     return {
+        isComposing: false,
         monthlyBudget,
         monthlyLimit,
 
@@ -20,10 +21,11 @@ export function budgetSettingsForm(initialValues) {
 
         closingDay: Number(initialValues.closingDay) || 27,
 
-        toInteger(value) {
-            const digits = String(value).replace(/[^0-9]/g, '');
-
-            return digits === '' ? 0 : Number(digits);
+        normalizeDigits(value) {
+            return String(value)
+                .normalize('NFKC')
+                .replace(/[^0-9]/g, '')
+                .slice(0, 10);
         },
 
         formatNumber(value) {
@@ -37,19 +39,27 @@ export function budgetSettingsForm(initialValues) {
         },
 
         updateMonthlyBudget(value) {
-            this.monthlyBudget = this.toInteger(value);
+            const digits = this.normalizeDigits(value);
 
-            this.monthlyBudgetInput = this.formatNumber(
-                this.monthlyBudget,
-            );
+            this.monthlyBudget =
+                digits === '' ? 0 : Number(digits);
+
+            this.monthlyBudgetInput =
+                digits === ''
+                    ? ''
+                    : this.formatNumber(digits);
         },
 
         updateMonthlyLimit(value) {
-            this.monthlyLimit = this.toInteger(value);
+            const digits = this.normalizeDigits(value);
 
-            this.monthlyLimitInput = this.formatNumber(
-                this.monthlyLimit,
-            );
+            this.monthlyLimit =
+                digits === '' ? 0 : Number(digits);
+
+            this.monthlyLimitInput =
+                digits === ''
+                    ? ''
+                    : this.formatNumber(digits);
         },
 
         daysInMonth(year, month) {

@@ -118,20 +118,27 @@
                                                         is-invalid
                                                     @enderror"
                                                 value="{{ number_format($monthlyBudget) }}"
-                                                x-model="monthlyBudgetInput"
-                                                x-on:input="
+                                                x-bind:value="monthlyBudgetInput"
+                                                x-on:compositionstart="
+                                                    isComposing = true
+                                                "
+                                                x-on:compositionend="
+                                                    isComposing = false;
                                                     updateMonthlyBudget(
                                                         $event.target.value
                                                     )
                                                 "
+                                                x-on:input="
+                                                    if (! isComposing) {
+                                                        updateMonthlyBudget(
+                                                            $event.target.value
+                                                        )
+                                                    }"
                                                 inputmode="numeric"
                                                 autocomplete="off"
                                                 maxlength="13"
+                                                data-max-digits="10"
                                                 required
-                                                @error('monthly_budget')
-                                                    aria-invalid="true"
-                                                    aria-describedby="monthly-budget-error"
-                                                @enderror
                                             >
                                         </div>
 
@@ -179,22 +186,27 @@
                                                         is-invalid
                                                     @enderror"
                                                 value="{{ number_format($monthlyLimit) }}"
-                                                x-model="monthlyLimitInput"
-                                                x-on:input="
+                                                x-bind:value="monthlyLimitInput"
+                                                x-on:compositionstart="
+                                                    isComposing = true
+                                                "
+                                                x-on:compositionend="
+                                                    isComposing = false;
                                                     updateMonthlyLimit(
                                                         $event.target.value
-                                                    )
-                                                "
+                                                    )"
+                                                x-on:input="
+                                                    if (! isComposing) {
+                                                        updateMonthlyLimit(
+                                                            $event.target.value
+                                                        )
+                                                    }"
                                                 inputmode="numeric"
                                                 autocomplete="off"
                                                 maxlength="13"
+                                                data-max-digits="10"
                                                 required
-                                                @error('monthly_limit')
-                                                    aria-invalid="true"
-                                                    aria-describedby="monthly-limit-error"
-                                                @enderror
                                             >
-                                        </div>
 
                                         @error('monthly_limit')
                                             <p
