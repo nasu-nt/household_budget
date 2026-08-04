@@ -345,6 +345,14 @@
                     class="daily-insights__records-table"
                     data-daily-records
                 >
+                    <colgroup>
+                        <col class="daily-insights__record-col--time">
+                        <col class="daily-insights__record-col--category">
+                        <col class="daily-insights__record-col--amount">
+                        <col class="daily-insights__record-col--memo">
+                        <col class="daily-insights__record-col--actions">
+                    </colgroup>
+
                     <thead>
                         <tr>
                             <th
@@ -641,34 +649,38 @@
 
                                 {{-- Category --}}
                                 <td class="daily-insights__record-category-edit">
-                                    <select
-                                        form="{{ $editFormId }}"
-                                        name="category_id"
-                                        class="daily-insights__record-select
-                                            @if ($hasRecordErrors)
-                                                @error('category_id')
-                                                    is-invalid
-                                                @enderror
-                                            @endif"
-                                        aria-label="Category"
-                                        required
-                                    >
-                                        @foreach ($recordCategories as $category)
-                                            <option
-                                                value="{{ $category->id }}"
-                                                @selected(
-                                                    (string) (
-                                                        $hasRecordErrors
-                                                            ? old('category_id')
-                                                            : $record['categoryId']
+                                    <div class="daily-insights__record-select-wrapper">
+                                        <select
+                                            form="{{ $editFormId }}"
+                                            name="category_id"
+                                            class="
+                                                daily-insights__record-select
+                                                @if ($hasRecordErrors)
+                                                    @error('category_id')
+                                                        is-invalid
+                                                    @enderror
+                                                @endif
+                                            "
+                                            aria-label="Category"
+                                            required
+                                        >
+                                            @foreach ($recordCategories as $category)
+                                                <option
+                                                    value="{{ $category->id }}"
+                                                    @selected(
+                                                        (string) (
+                                                            $hasRecordErrors
+                                                                ? old('category_id')
+                                                                : $record['categoryId']
+                                                        )
+                                                        === (string) $category->id
                                                     )
-                                                    === (string) $category->id
-                                                )
-                                            >
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                                >
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @if ($hasRecordErrors)
                                         @error('category_id')
@@ -691,7 +703,7 @@
 
                                         <input
                                             form="{{ $editFormId }}"
-                                            type="number"
+                                            type="text"
                                             name="amount"
                                             class="daily-insights__record-input
                                                 @if ($hasRecordErrors)
@@ -702,9 +714,10 @@
                                             value="{{ $hasRecordErrors
                                                 ? old('amount')
                                                 : $record['amount'] }}"
-                                            min="1"
-                                            max="2147483647"
                                             inputmode="numeric"
+                                            maxlength="13"
+                                            data-money-input
+                                            data-max-digits="10"
                                             aria-label="Amount"
                                             required
                                         >
@@ -882,36 +895,36 @@
 
                             {{-- Category --}}
                             <td class="daily-insights__record-category-edit">
-                                <select
-                                    form="{{ $createFormId }}"
-                                    name="category_id"
-                                    class="
-                                        daily-insights__record-select
-                                        @if ($hasCreateRecordErrors)
-                                            @error('category_id')
-                                                is-invalid
-                                            @enderror
-                                        @endif
-                                    "
-                                    aria-label="Category"
-                                    required
-                                >
-                                    <option value="">
-                                        Select category
-                                    </option>
+                                <div class="daily-insights__record-select-wrapper">
+                                    <select
+                                        form="{{ $createFormId }}"
+                                        name="category_id"
+                                        class="
+                                            daily-insights__record-select
+                                            @if ($hasCreateRecordErrors)
+                                                @error('category_id')
+                                                    is-invalid
+                                                @enderror
+                                            @endif
+                                        "
+                                        aria-label="Category"
+                                        required
+                                    >
+                                        <option value=""></option>
 
-                                    @foreach ($recordCategories as $category)
-                                        <option
-                                            value="{{ $category->id }}"
-                                            @selected(
-                                                (string) old('category_id')
-                                                === (string) $category->id
-                                            )
-                                        >
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                        @foreach ($recordCategories as $category)
+                                            <option
+                                                value="{{ $category->id }}"
+                                                @selected(
+                                                    (string) old('category_id')
+                                                    === (string) $category->id
+                                                )
+                                            >
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 @if ($hasCreateRecordErrors)
                                     @error('category_id')
@@ -934,7 +947,7 @@
 
                                     <input
                                         form="{{ $createFormId }}"
-                                        type="number"
+                                        type="text"
                                         name="amount"
                                         class="
                                             daily-insights__record-input
@@ -947,9 +960,10 @@
                                         value="{{ $hasCreateRecordErrors
                                             ? old('amount')
                                             : '' }}"
-                                        min="1"
-                                        max="2147483647"
                                         inputmode="numeric"
+                                        maxlength="13"
+                                        data-money-input
+                                        data-max-digits="10"
                                         aria-label="Amount"
                                         required
                                     >
