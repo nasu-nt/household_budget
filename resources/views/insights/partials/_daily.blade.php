@@ -910,9 +910,7 @@
                                         aria-label="Category"
                                         required
                                     >
-                                        <option value="">
-                                            Select category
-                                        </option>
+                                        <option value=""></option>
 
                                         @foreach ($recordCategories as $category)
                                             <option

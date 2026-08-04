@@ -817,7 +817,7 @@
      */
     &__records {
         width: calc(100% - 2.4rem);
-        margin-top: 2.5rem;
+        margin-top: 2.25rem;
         margin-left: 1.2rem;
     }
 
@@ -841,36 +841,13 @@
         border-collapse: collapse;
         table-layout: fixed;
 
-        /*
-         * Recordsテーブルの列幅
-         */
-        &__record-col--time {
-            width: 15%;
-        }
-
-        &__record-col--category {
-            width: 22%;
-        }
-
-        &__record-col--amount {
-            width: 16%;
-        }
-
-        &__record-col--memo {
-            width: 29%;
-        }
-
-        &__record-col--actions {
-            width: 18%;
-        }
-
         thead {
             background-color: var(--c-surface-disabled);
         }
 
         th {
             box-sizing: border-box;
-            height: 2.5rem;
+            height: 5rem;
             padding: 0.75rem 1rem;
 
             color: var(--c-text);
@@ -986,6 +963,26 @@
             text-align: center;
         }
     }
+    
+    &__record-col--time {
+        width: 15%;
+    }
+
+    &__record-col--category {
+        width: 22%;
+    }
+
+    &__record-col--amount {
+        width: 16%;
+    }
+
+    &__record-col--memo {
+        width: 29%;
+    }
+
+    &__record-col--actions {
+        width: 18%;
+    }
 
     /*
      * 通常表示行
@@ -1086,9 +1083,31 @@
 
     /*
      * Edit(Action列)
+     * 編集行・新規行で、セルの縦横サイズを統一
      */
+    &__record-edit-row,
+    &__record-create-row {
+        td {
+            height: 8rem;
+            padding: 1.25rem;
+        }
+    }
+
     &__record-edit-row {
         background-color: var(--c-surface-disabled);
+    }
+
+    &__record-create-row {
+        background-color: color-mix(
+            in srgb,
+            var(--c-primary) 4%,
+            var(--c-surface)
+        );
+
+        border-top:
+            var(--border-width)
+            solid
+            var(--c-border);
     }
 
     /*
@@ -1122,7 +1141,6 @@
         min-width: 0;
         height: 2rem;
         padding-inline: 0.5rem;
-        margin: 1rem 0.25rem 0 0;
 
         font: inherit;
         font-size: var(--fs-sm);
@@ -1135,6 +1153,8 @@
         transition:
             background-color 0.15s ease,
             border-color 0.15s ease;
+        
+        margin: 0;
     }
 
     &__record-save {
@@ -1175,8 +1195,6 @@
         justify-content: center;
         gap: 0.65rem;
 
-        margin: 0 0.5rem 1rem 0;
-
         color: var(--c-danger);
         font: inherit;
         font-size: var(--fs-ms);
@@ -1192,6 +1210,8 @@
         &:hover {
             color: var(--c-danger-hover);
         }
+
+        margin: 0;
     }
 
     &__record-delete-icon {
@@ -1427,32 +1447,11 @@
         text-align: center;
     }
 
-    /*
-    * 新規追加行
-    */
-    &__record-create-row {
-        background-color: color-mix(
-            in srgb,
-            var(--c-primary) 4%,
-            var(--c-surface)
-        );
-
-        border-top:
-            var(--border-width)
-            solid
-            var(--c-border);
-
-        td {
-            height: 8rem;
-            padding: 1.25rem 1.5rem;
-        }
-    }
-
-        &__record-add-area {
+    &__record-add-area {
         display: flex;
         justify-content: center;
 
-        margin-top: 0.875rem;
+        margin-top: 0;
     }
 
     &__record-add {
