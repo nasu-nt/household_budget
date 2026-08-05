@@ -94,10 +94,34 @@
             <p
                 class="
                     monthly-insights__comparison-amount
-                    is-neutral
+                    {{ $previousPeriodDifferenceClass }}
                 "
             >
-                —
+                <span>
+                    @if ($previousPeriodDifference > 0)
+                        +¥{{ number_format($previousPeriodDifference) }}
+                    @elseif ($previousPeriodDifference < 0)
+                        -¥{{ number_format(abs($previousPeriodDifference)) }}
+                    @else
+                        ¥0
+                    @endif
+                </span>
+
+                <span class="monthly-insights__comparison-percentage">
+                    @if ($previousPeriodDifferencePercentage === null)
+                        (—)
+                    @else
+                        (
+                        @if ($previousPeriodDifferencePercentage > 0)
+                            +
+                        @endif
+                        {{ number_format(
+                            $previousPeriodDifferencePercentage,
+                            1
+                        ) }}%
+                        )
+                    @endif
+                </span>
             </p>
         </div>
 
@@ -109,10 +133,34 @@
             <p
                 class="
                     monthly-insights__comparison-amount
-                    is-neutral
+                    {{ $sixPeriodAverageDifferenceClass }}
                 "
             >
-                —
+                <span>
+                    @if ($sixPeriodAverageDifference > 0)
+                        +¥{{ number_format($sixPeriodAverageDifference) }}
+                    @elseif ($sixPeriodAverageDifference < 0)
+                        -¥{{ number_format(abs($sixPeriodAverageDifference)) }}
+                    @else
+                        ¥0
+                    @endif
+                </span>
+
+                <span class="monthly-insights__comparison-percentage">
+                    @if ($sixPeriodAverageDifferencePercentage === null)
+                        (—)
+                    @else
+                        (
+                        @if ($sixPeriodAverageDifferencePercentage > 0)
+                            +
+                        @endif
+                        {{ number_format(
+                            $sixPeriodAverageDifferencePercentage,
+                            1
+                        ) }}%
+                        )
+                    @endif
+                </span>
             </p>
         </div>
     </section>
@@ -220,9 +268,27 @@
                                         ></span>
                                     </div>
                                 </td>
+                                <td
+                                    class="
+                                        monthly-insights__category-comparison
+                                        {{ $category['differenceClass'] }}
+                                    "
+                                >
+                                    @if ($category['difference'] > 0)
+                                        +¥{{ number_format($category['difference']) }}
 
-                                <td class="monthly-insights__category-comparison">
-                                    —
+                                        <span aria-hidden="true">
+                                            ↑
+                                        </span>
+                                    @elseif ($category['difference'] < 0)
+                                        -¥{{ number_format(abs($category['difference'])) }}
+
+                                        <span aria-hidden="true">
+                                            ↓
+                                        </span>
+                                    @else
+                                        ¥0
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

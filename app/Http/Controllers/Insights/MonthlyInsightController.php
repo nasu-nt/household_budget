@@ -13,6 +13,7 @@ use Illuminate\View\View;
 class MonthlyInsightController extends Controller
 {
     private const DEMO_MONTH = '2026-06';
+    private const COMPARISON_PERIOD_COUNT = 6;
 
     /**
      * 現在の予算期間へ移動する。
@@ -99,6 +100,11 @@ class MonthlyInsightController extends Controller
             ->user()
             ->getAuthIdentifier();
 
+        [
+            $isEndOfMonth,
+            $closingDay,
+        ] = $this->budgetPeriodSettings($userId);
+
         if ($isDemoUser) {
             /*
              * デモアカウントは表示期間そのものも固定する。
@@ -117,11 +123,6 @@ class MonthlyInsightController extends Controller
 
             $currentPeriodMonth = self::DEMO_MONTH;
         } else {
-            [
-                $isEndOfMonth,
-                $closingDay,
-            ] = $this->budgetPeriodSettings($userId);
-
             /*
              * URLで指定された月の締め日を、
              * 予算期間の終了日として扱う。
@@ -165,6 +166,110 @@ class MonthlyInsightController extends Controller
             ->sum('amount');
 
         /*
+        * 選択期間の直前にある予算期間を取得する。
+        *
+        * 例:
+        * 現在期間 2026-05-28〜2026-06-27
+        * 前期間   2026-04-28〜2026-05-27
+        */
+        $previousPeriodEnd = $periodStart->subDay();
+
+        $previousPeriodStart = $this->periodStartForEnd(
+            $previousPeriodEnd,
+            $isEndOfMonth,
+            $closingDay,
+        );
+
+        /*
+        * 前期間の支出合計。
+        */
+        $previousPeriodTotal = (int) Expense::query()
+            ->where('user_id', $userId)
+            ->whereBetween('expense_date', [
+                $previousPeriodStart->toDateString(),
+                $previousPeriodEnd->toDateString(),
+            ])
+            ->sum('amount');
+
+        $previousPeriodDifference = $currentPeriodTotal
+            - $previousPeriodTotal;
+
+        $previousPeriodDifferencePercentage =
+            $this->comparisonPercentage(
+                $currentPeriodTotal,
+                $previousPeriodTotal,
+            );
+
+        /*
+        * 直前6期間の開始日を取得する。
+        *
+        * 現在期間が2026-05-28〜2026-06-27の場合:
+        * 2025-11-28〜2026-05-27
+        */
+        $firstComparisonPeriodEnd = $periodEnd
+            ->subMonthsNoOverflow(
+                self::COMPARISON_PERIOD_COUNT,
+            );
+
+        $sixPeriodStart = $this->periodStartForEnd(
+            $firstComparisonPeriodEnd,
+            $isEndOfMonth,
+            $closingDay,
+        );
+
+        $sixPeriodEnd = $previousPeriodEnd;
+
+        /*
+        * 直前6期間の支出合計と平均。
+        *
+        * 支出がない期間も0円の期間として扱うため、
+        * 常に6で割る。
+        */
+        $sixPeriodTotal = (int) Expense::query()
+            ->where('user_id', $userId)
+            ->whereBetween('expense_date', [
+                $sixPeriodStart->toDateString(),
+                $sixPeriodEnd->toDateString(),
+            ])
+            ->sum('amount');
+
+        $sixPeriodAverage = (int) round(
+            $sixPeriodTotal
+            / self::COMPARISON_PERIOD_COUNT,
+        );
+
+        $sixPeriodAverageDifference = $currentPeriodTotal
+            - $sixPeriodAverage;
+
+        $sixPeriodAverageDifferencePercentage =
+            $this->comparisonPercentage(
+                $currentPeriodTotal,
+                $sixPeriodAverage,
+            );
+
+        /*
+        * 前期間のカテゴリ別支出。
+        *
+        * 現在期間に存在するカテゴリとの比較に使用する。
+        */
+        $previousCategoryTotals = Expense::query()
+            ->where('user_id', $userId)
+            ->whereBetween('expense_date', [
+                $previousPeriodStart->toDateString(),
+                $previousPeriodEnd->toDateString(),
+            ])
+            ->select('category_id')
+            ->selectRaw(
+                'SUM(amount) AS total',
+            )
+            ->groupBy('category_id')
+            ->pluck('total', 'category_id')
+            ->map(
+                fn ($amount): int => (int) $amount
+            )
+            ->all();
+
+        /*
         * 選択された予算期間の支出をカテゴリ別に集計する。
         *
         * アーカイブ済みカテゴリも過去の支出には表示するため、
@@ -203,16 +308,25 @@ class MonthlyInsightController extends Controller
             )
             ->get()
             ->map(function ($category) use (
-                $currentPeriodTotal
+                $currentPeriodTotal,
+                $previousCategoryTotals,
             ): array {
+                $categoryId = (int) $category->id;
                 $amount = (int) $category->total;
+
+                $previousAmount = (int) (
+                    $previousCategoryTotals[$categoryId]
+                    ?? 0
+                );
+
+                $difference = $amount - $previousAmount;
 
                 $percentage = $currentPeriodTotal > 0
                     ? ($amount / $currentPeriodTotal) * 100
                     : 0;
 
                 return [
-                    'id' => (int) $category->id,
+                    'id' => $categoryId,
                     'name' => (string) $category->name,
                     'color' => (string) $category->color_code,
                     'amount' => $amount,
@@ -234,6 +348,11 @@ class MonthlyInsightController extends Controller
                         ),
                         4,
                     ),
+
+                    'previousAmount' => $previousAmount,
+                    'difference' => $difference,
+                    'differenceClass' =>
+                        $this->comparisonClass($difference),
                 ];
             })
             ->all();
@@ -268,6 +387,37 @@ class MonthlyInsightController extends Controller
 
             'currentPeriodTotal' =>
                 $currentPeriodTotal,
+
+            'previousPeriodTotal' =>
+                $previousPeriodTotal,
+
+            'previousPeriodDifference' =>
+                $previousPeriodDifference,
+
+            'previousPeriodDifferencePercentage' =>
+                $previousPeriodDifferencePercentage,
+
+            'previousPeriodDifferenceClass' =>
+                $this->comparisonClass(
+                    $previousPeriodDifference,
+                ),
+
+            'sixPeriodTotal' =>
+                $sixPeriodTotal,
+
+            'sixPeriodAverage' =>
+                $sixPeriodAverage,
+
+            'sixPeriodAverageDifference' =>
+                $sixPeriodAverageDifference,
+
+            'sixPeriodAverageDifferencePercentage' =>
+                $sixPeriodAverageDifferencePercentage,
+
+            'sixPeriodAverageDifferenceClass' =>
+                $this->comparisonClass(
+                    $sixPeriodAverageDifference,
+                ),
 
             'categorySpending' =>
                 $categorySpending,
@@ -408,6 +558,42 @@ class MonthlyInsightController extends Controller
             $month->month,
             $day,
         );
+    }
+
+    /**
+     * 比較対象との差額割合を取得する。
+     *
+     * 比較対象が0円の場合は割合を計算できないため、
+     * nullを返す。
+     */
+    private function comparisonPercentage(
+        int $currentAmount,
+        int $comparisonAmount,
+    ): ?float {
+        if ($comparisonAmount === 0) {
+            return null;
+        }
+
+        $difference = $currentAmount
+            - $comparisonAmount;
+
+        return round(
+            ($difference / $comparisonAmount) * 100,
+            1,
+        );
+    }
+
+    /**
+     * 支出差額に応じた表示クラスを返す。
+     */
+    private function comparisonClass(
+        int $difference
+    ): string {
+        return match (true) {
+            $difference > 0 => 'is-increase',
+            $difference < 0 => 'is-decrease',
+            default => 'is-neutral',
+        };
     }
 
     /**
