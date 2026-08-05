@@ -328,23 +328,38 @@
             Records
         </h2>
 
-        <div class="daily-insights__records-card">
-            @if ($dailyRecords === [])
-                <p class="daily-insights__records-empty">
-                    No spending records for this day.
-                </p>
-            @else
-            @php
-                $createFormId = 'daily-record-create-form';
+        @php
+            $createFormId = 'daily-record-create-form';
 
-                $hasCreateRecordErrors =
-                    old('creating_record') === '1'
-                    && $errors->any();
-            @endphp
-                <table
-                    class="daily-insights__records-table"
-                    data-daily-records
-                >
+            $hasCreateRecordErrors =
+                old('creating_record') === '1'
+                && $errors->any();
+        @endphp
+
+        <div class="daily-insights__records-card">
+            <p
+                class="daily-insights__records-empty"
+                data-records-empty
+                @if (
+                    $dailyRecords !== []
+                    || $hasCreateRecordErrors
+                )
+                    hidden
+                @endif
+            >
+                No spending records for this day.
+            </p>
+
+            <table
+                class="daily-insights__records-table"
+                data-daily-records
+                @if (
+                    $dailyRecords === []
+                    && ! $hasCreateRecordErrors
+                )
+                    hidden
+                @endif
+            >
                     <colgroup>
                         <col class="daily-insights__record-col--time">
                         <col class="daily-insights__record-col--category">
@@ -625,6 +640,7 @@
                                                 : ($record['recordedTime'] ?? '') }}"
                                             step="60"
                                             aria-label="Recorded time"
+                                            novalidate
                                         >
 
                                         <img
@@ -662,7 +678,7 @@
                                                 @endif
                                             "
                                             aria-label="Category"
-                                            required
+                                            novalidate
                                         >
                                             @foreach ($recordCategories as $category)
                                                 <option
@@ -719,7 +735,7 @@
                                             data-money-input
                                             data-max-digits="10"
                                             aria-label="Amount"
-                                            required
+                                            novalidate
                                         >
                                     </div>
 
@@ -838,6 +854,7 @@
                                             'date' => $date,
                                         ]
                                     ) }}"
+                                    novalidate
                                 >
                                     @csrf
 
@@ -917,7 +934,7 @@
                                             @endif
                                         "
                                         aria-label="Category"
-                                        required
+                                        novalidate
                                     >
                                         <option value=""></option>
 
@@ -974,7 +991,7 @@
                                         data-money-input
                                         data-max-digits="10"
                                         aria-label="Amount"
-                                        required
+                                        novalidate
                                     >
                                 </div>
 
@@ -1046,7 +1063,6 @@
                         </tr>
                     </tfoot>
                 </table>
-            @endif
         </div>
         <div
             class="daily-insights__record-add-area"
