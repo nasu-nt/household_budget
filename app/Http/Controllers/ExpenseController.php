@@ -213,6 +213,10 @@ class ExpenseController extends Controller
                 __('Expense updated successfully.'),
             );
     }
+
+    /*
+     * Daily InsightsでのRecord新規作成用
+     */
     public function storeFromDailyInsights(
         Request $request,
         string $date
@@ -319,6 +323,83 @@ class ExpenseController extends Controller
             ->with(
                 'success',
                 __('Expense saved successfully.'),
+            );
+    }
+
+    /*
+    * Daily InsightsでのRecord削除用
+    */
+    public function destroyFromDailyInsights(
+        Request $request,
+        string $date,
+        int $expense
+    ): RedirectResponse {
+        /*
+        * URLの日付がYYYY-MM-DD形式か確認する。
+        */
+        $dateValidator = Validator::make(
+            [
+                'date' => $date,
+            ],
+            [
+                'date' => [
+                    'required',
+                    'date_format:Y-m-d',
+                ],
+            ],
+        );
+
+        if ($dateValidator->fails()) {
+            abort(404);
+        }
+
+        /*
+        * 削除後も、現在の並び順を維持する。
+        */
+        $validated = $request->validate([
+            'sort' => [
+                'nullable',
+                Rule::in([
+                    'recorded_time',
+                    'category',
+                    'amount',
+                ]),
+            ],
+
+            'direction' => [
+                'nullable',
+                Rule::in([
+                    'asc',
+                    'desc',
+                ]),
+            ],
+        ]);
+
+        /*
+        * ログインユーザー本人かつ、
+        * 表示中の日付に属する支出だけ取得する。
+        */
+        $expenseModel = Expense::query()
+            ->where('id', $expense)
+            ->where('user_id', $request->user()->id)
+            ->where('expense_date', $date)
+            ->firstOrFail();
+
+        $expenseModel->delete();
+
+        return redirect()
+            ->route('insights.daily', [
+                'date' => $date,
+                'sort' =>
+                    $validated['sort']
+                    ?? 'recorded_time',
+                'direction' =>
+                    $validated['direction']
+                    ?? 'desc',
+            ])
+            ->with(
+                'success',
+                __('Expense deleted successfully.'),
             );
     }
 }

@@ -171,7 +171,89 @@ function openCreateRow(
     timeInput?.focus();
 }
 
+let deleteTrigger = null;
+
+/*
+ * Record削除確認モーダルを開く。
+ */
+function openDeleteModal(
+    recordsSection,
+    deleteButton,
+) {
+    const modal = recordsSection.querySelector(
+        '[data-record-delete-modal]',
+    );
+
+    const form = recordsSection.querySelector(
+        '[data-record-delete-form]',
+    );
+
+    const target = recordsSection.querySelector(
+        '[data-record-delete-target]',
+    );
+
+    const deleteUrl =
+        deleteButton.dataset.recordDeleteUrl;
+
+    const deleteSummary =
+        deleteButton.dataset.recordDeleteSummary ?? '';
+
+    if (
+        !modal
+        || !form
+        || !target
+        || !deleteUrl
+    ) {
+        return;
+    }
+
+    deleteTrigger = deleteButton;
+
+    form.action = deleteUrl;
+    target.textContent = deleteSummary;
+
+    modal.hidden = false;
+
+    modal.querySelector(
+        '.daily-insights__delete-cancel',
+    )?.focus();
+}
+
 /**
+ * Record削除確認モーダルを閉じる。
+ */
+function closeDeleteModal(recordsSection) {
+    const modal = recordsSection.querySelector(
+        '[data-record-delete-modal]',
+    );
+
+    const form = recordsSection.querySelector(
+        '[data-record-delete-form]',
+    );
+
+    const target = recordsSection.querySelector(
+        '[data-record-delete-target]',
+    );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.hidden = true;
+
+    if (form) {
+        form.action = '';
+    }
+
+    if (target) {
+        target.textContent = '';
+    }
+
+    deleteTrigger?.focus();
+    deleteTrigger = null;
+}
+
+/*
  * Daily InsightsのRecords機能を初期化する。
  */
 export function initDailyInsightsRecords() {
@@ -201,6 +283,35 @@ export function initDailyInsightsRecords() {
             if (!(event.target instanceof Element)) {
                 return;
             }
+
+        /*
+        * Deleteボタン
+        */
+        const deleteButton = event.target.closest(
+            '[data-record-delete]',
+        );
+
+        if (deleteButton) {
+            openDeleteModal(
+                recordsSection,
+                deleteButton,
+            );
+
+            return;
+        }
+
+        /*
+        * モーダルのCancelまたは背景
+        */
+        const deleteCloseButton = event.target.closest(
+            '[data-record-delete-close]',
+        );
+
+        if (deleteCloseButton) {
+            closeDeleteModal(recordsSection);
+
+            return;
+        }
 
             /*
              * Edit
@@ -290,6 +401,31 @@ export function initDailyInsightsRecords() {
             }
 
             closeCreateRow(recordsSection);
+        },
+    );
+
+    /*
+     * Delete確認モーダルをEscキーで閉じる処理
+     */
+    document.addEventListener(
+        'keydown',
+        (event) => {
+            if (event.key !== 'Escape') {
+                return;
+            }
+
+            const modal = recordsSection.querySelector(
+                '[data-record-delete-modal]',
+            );
+
+            if (
+                !modal
+                || modal.hidden
+            ) {
+                return;
+            }
+
+            closeDeleteModal(recordsSection);
         },
     );
 }
