@@ -1555,4 +1555,172 @@
             min-width: 68rem;
         }
     }
+
+    /*
+     * Record削除確認モーダル
+     */
+    &__delete-modal {
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+
+        display: grid;
+        place-items: center;
+
+        box-sizing: border-box;
+        padding: 1.5rem;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__delete-modal-backdrop {
+        position: absolute;
+        inset: 0;
+
+        background-color: rgb(0 0 0 / 45%);
+    }
+
+    &__delete-dialog {
+        position: relative;
+        z-index: 1;
+
+        box-sizing: border-box;
+        width: min(100%, 30rem);
+        padding: 2rem;
+
+        color: var(--c-text);
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-card);
+        box-shadow: 0 1.25rem 3rem rgb(0 0 0 / 18%);
+    }
+
+    &__delete-title {
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    &__delete-description {
+        margin: 0.75rem 0 0;
+
+        color: var(--c-muted);
+        font-size: var(--fs-md);
+        line-height: 1.5;
+        text-align: center;
+    }
+
+    &__delete-target {
+        margin: 1.5rem 0 0;
+        padding: 1rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1.5;
+        text-align: center;
+        overflow-wrap: anywhere;
+
+        background-color: var(--c-surface-disabled);
+        border-radius: var(--r-control);
+    }
+
+    &__delete-form {
+        margin-top: 1.5rem;
+    }
+
+    &__delete-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    &__delete-cancel,
+    &__delete-confirm {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        min-width: 8rem;
+        height: 2.75rem;
+        padding-inline: 1rem;
+
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+
+        border-radius: var(--r-control);
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+    }
+
+    &__delete-cancel {
+        color: var(--c-text);
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+
+        &:hover {
+            background-color: var(--c-button-secondary-bg-hover);
+            border-color: var(--c-text);
+        }
+    }
+
+    &__delete-confirm {
+        color: var(--c-button-primary-text);
+
+        background-color: var(--c-danger);
+        border:
+            var(--border-width)
+            solid
+            var(--c-danger);
+
+        &:hover {
+            background-color: var(--c-danger-hover);
+            border-color: var(--c-danger-hover);
+        }
+    }
+
+    &__delete-cancel:focus-visible,
+    &__delete-confirm:focus-visible {
+        outline:
+            var(--border-width-strong)
+            solid
+            var(--c-active-indicator);
+        outline-offset: 0.125rem;
+    }
+
+    @media (max-width: 36rem) {
+        &__delete-dialog {
+            padding: 1.5rem;
+        }
+
+        &__delete-actions {
+            flex-direction: column-reverse;
+        }
+
+        &__delete-cancel,
+        &__delete-confirm {
+            width: 100%;
+        }
+    }
 }
