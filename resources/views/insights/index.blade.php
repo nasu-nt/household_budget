@@ -23,9 +23,7 @@
             </a>
 
             <a
-                href="{{ route('insights.monthly', [
-                    'month' => now()->format('Y-m'),
-                ]) }}"
+                href="{{ route('insights.monthly.current') }}"
                 class="insights-tabs__item
                     {{ $activeView === 'monthly' ? 'is-active' : '' }}"
                 @if ($activeView === 'monthly')
