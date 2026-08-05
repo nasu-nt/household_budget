@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Insights;
 
 use App\Http\Controllers\Controller;
 use App\Models\BudgetSetting;
+use App\Models\Expense;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -94,6 +95,10 @@ class MonthlyInsightController extends Controller
             abort(404);
         }
 
+        $userId = (int) $request
+            ->user()
+            ->getAuthIdentifier();
+
         if ($isDemoUser) {
             /*
              * デモアカウントは表示期間そのものも固定する。
@@ -112,10 +117,6 @@ class MonthlyInsightController extends Controller
 
             $currentPeriodMonth = self::DEMO_MONTH;
         } else {
-            $userId = (int) $request
-                ->user()
-                ->getAuthIdentifier();
-
             [
                 $isEndOfMonth,
                 $closingDay,
@@ -150,6 +151,93 @@ class MonthlyInsightController extends Controller
                 ->format('Y-m');
         }
 
+        /*
+        * 選択された予算期間の支出合計。
+        *
+        * 対象データがない場合、sum()は0になる。
+        */
+        $currentPeriodTotal = (int) Expense::query()
+            ->where('user_id', $userId)
+            ->whereBetween('expense_date', [
+                $periodStart->toDateString(),
+                $periodEnd->toDateString(),
+            ])
+            ->sum('amount');
+
+        /*
+        * 選択された予算期間の支出をカテゴリ別に集計する。
+        *
+        * アーカイブ済みカテゴリも過去の支出には表示するため、
+        * is_activeやarchived_atでは絞り込まない。
+        */
+        $categorySpending = Expense::query()
+            ->join(
+                'categories',
+                'categories.id',
+                '=',
+                'expenses.category_id',
+            )
+            ->where(
+                'expenses.user_id',
+                $userId,
+            )
+            ->whereBetween('expenses.expense_date', [
+                $periodStart->toDateString(),
+                $periodEnd->toDateString(),
+            ])
+            ->select([
+                'categories.id',
+                'categories.name',
+                'categories.color_code',
+            ])
+            ->selectRaw(
+                'SUM(expenses.amount) AS total',
+            )
+            ->groupBy([
+                'categories.id',
+                'categories.name',
+                'categories.color_code',
+            ])
+            ->orderByRaw(
+                'SUM(expenses.amount) DESC',
+            )
+            ->get()
+            ->map(function ($category) use (
+                $currentPeriodTotal
+            ): array {
+                $amount = (int) $category->total;
+
+                $percentage = $currentPeriodTotal > 0
+                    ? ($amount / $currentPeriodTotal) * 100
+                    : 0;
+
+                return [
+                    'id' => (int) $category->id,
+                    'name' => (string) $category->name,
+                    'color' => (string) $category->color_code,
+                    'amount' => $amount,
+
+                    /*
+                    * 画面に表示する整数の割合。
+                    */
+                    'percentage' => (int) round(
+                        $percentage,
+                    ),
+
+                    /*
+                    * 棒グラフには丸める前に近い割合を使う。
+                    */
+                    'barPercentage' => round(
+                        min(
+                            max($percentage, 0),
+                            100,
+                        ),
+                        4,
+                    ),
+                ];
+            })
+            ->all();
+
         return view('insights.index', [
             'activeView' => 'monthly',
             'month' => $month,
@@ -177,6 +265,12 @@ class MonthlyInsightController extends Controller
 
             'currentPeriodMonth' =>
                 $currentPeriodMonth,
+
+            'currentPeriodTotal' =>
+                $currentPeriodTotal,
+
+            'categorySpending' =>
+                $categorySpending,
         ]);
     }
 
