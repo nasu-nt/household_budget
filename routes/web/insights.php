@@ -30,8 +30,17 @@ Route::prefix('insights')
         Route::put('/days/{date}/records/{expense}',
             [ExpenseController::class, 'updateFromDailyInsights'],
             )->name('daily-record.update');
+        
+        Route::delete(
+            'days/{date}/records/{expense}',
+            [ExpenseController::class, 'destroyFromDailyInsights']
+        )->name('daily-record.destroy');
 
         // Monthly
+        // {month}は予算期間の終了月とする
+        // 【例】URL: /insights/months/2026-06
+        // ・月末締め 2026/06/01 ～ 2026/06/30
+        // ・27日締め 2026/05/28 ～ 2026/06/27
         Route::get('/months/{month}', [MonthlyInsightController::class, 'show'])
             ->where('month', '\d{4}-\d{2}')
             ->name('monthly');

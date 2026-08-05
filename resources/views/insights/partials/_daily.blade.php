@@ -791,10 +791,19 @@
                                             type="button"
                                             class="daily-insights__record-delete"
                                             data-record-delete
-                                            data-record-id="{{ $record['id'] }}"
-                                            aria-label="Delete {{ $record['categoryName'] }} expense"
+                                            data-record-delete-url="{{ route(
+                                                'insights.daily-record.destroy',
+                                                [
+                                                    'date' => $date,
+                                                    'expense' => $record['id'],
+                                                ]
+                                            ) }}"
+                                            data-record-delete-summary="{{
+                                                $record['categoryName']
+                                            }} / ¥{{ number_format($record['amount']) }}"
+                                            aria-haspopup="dialog"
+                                            aria-controls="daily-record-delete-modal"
                                         >
-
                                             <img
                                                 class="daily-insights__record-delete-icon"
                                                 src="{{ asset('images/icons/trash_1.svg') }}"
@@ -1040,25 +1049,103 @@
             @endif
         </div>
         <div
-        class="daily-insights__record-add-area"
-        data-record-add-row
-        @if ($hasCreateRecordErrors)
-            hidden
-        @endif
-    >
-        <button
-            type="button"
-            class="daily-insights__record-add"
-            data-record-add
+            class="daily-insights__record-add-area"
+            data-record-add-row
+            @if ($hasCreateRecordErrors)
+                hidden
+            @endif
         >
-            <span aria-hidden="true">
-                ＋
-            </span>
+            <button
+                type="button"
+                class="daily-insights__record-add"
+                data-record-add
+            >
+                <span aria-hidden="true">
+                    ＋
+                </span>
 
-            <span>
-                Add another record
-            </span>
-        </button>
-    </div>
+                <span>
+                    Add another record
+                </span>
+            </button>
+        </div>
+        {{-- Record削除確認モーダル --}}
+        <div
+            id="daily-record-delete-modal"
+            class="daily-insights__delete-modal"
+            data-record-delete-modal
+            hidden
+        >
+            <div
+                class="daily-insights__delete-modal-backdrop"
+                data-record-delete-close
+            ></div>
+
+            <section
+                class="daily-insights__delete-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="daily-record-delete-title"
+                aria-describedby="daily-record-delete-description"
+            >
+                <h3
+                    id="daily-record-delete-title"
+                    class="daily-insights__delete-title"
+                >
+                    Delete this record?
+                </h3>
+
+                <p
+                    id="daily-record-delete-description"
+                    class="daily-insights__delete-description"
+                >
+                    This action cannot be undone.
+                </p>
+
+                <p
+                    class="daily-insights__delete-target"
+                    data-record-delete-target
+                ></p>
+
+                <form
+                    method="POST"
+                    action=""
+                    class="daily-insights__delete-form"
+                    data-record-delete-form
+                >
+                    @csrf
+                    @method('DELETE')
+
+                    <input
+                        type="hidden"
+                        name="sort"
+                        value="{{ $recordSort }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="direction"
+                        value="{{ $recordDirection }}"
+                    >
+
+                    <div class="daily-insights__delete-actions">
+                        <button
+                            type="button"
+                            class="daily-insights__delete-cancel"
+                            data-record-delete-close
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="daily-insights__delete-confirm"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
     </section>
 </section>
