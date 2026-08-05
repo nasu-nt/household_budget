@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveDailyInsightExpenseRequest;
 use App\Models\Expense;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -87,15 +88,15 @@ class ExpenseController extends Controller
                     ? __('Expense saved successfully.')
                     : __(':count expenses saved successfully.', [
                         'count' => $expenseCount,
-                    ])
-        );
+                    ]),
+            );
     }
 
     /*
      * Daily InsightsでのRecord更新用
      */
     public function updateFromDailyInsights(
-        Request $request,
+        SaveDailyInsightExpenseRequest $request,
         string $date,
         int $expense
     ): RedirectResponse {
@@ -119,57 +120,7 @@ class ExpenseController extends Controller
         }
 
         $userId = $request->user()->id;
-
-        /*
-        * 編集フォームの入力内容を確認する。
-        */
-        $validated = $request->validate([
-            'recorded_time' => [
-                'nullable',
-                'date_format:H:i',
-            ],
-
-            'category_id' => [
-                'required',
-                'integer',
-                Rule::exists('categories', 'id')
-                    ->where(
-                        fn ($query) => $query
-                            ->where('user_id', $userId)
-                            ->where('is_active', true)
-                    ),
-            ],
-
-            'amount' => [
-                'required',
-                'integer',
-                'min:1',
-                'max:2147483647',
-            ],
-
-            'memo' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'sort' => [
-                'nullable',
-                Rule::in([
-                    'recorded_time',
-                    'category',
-                    'amount',
-                ]),
-            ],
-
-            'direction' => [
-                'nullable',
-                Rule::in([
-                    'asc',
-                    'desc',
-                ]),
-            ],
-        ]);
+        $validated = $request->validated();
 
         /*
         * ログインユーザー本人かつ、
@@ -213,8 +164,9 @@ class ExpenseController extends Controller
                 __('Expense updated successfully.'),
             );
     }
+
     public function storeFromDailyInsights(
-        Request $request,
+        SaveDailyInsightExpenseRequest $request,
         string $date
     ): RedirectResponse {
         /*
@@ -237,60 +189,7 @@ class ExpenseController extends Controller
         }
 
         $userId = $request->user()->id;
-
-        /*
-        * 新規レコードの入力値を確認する。
-        */
-        $validated = $request->validate([
-            'recorded_time' => [
-                'nullable',
-                'date_format:H:i',
-            ],
-
-            'category_id' => [
-                'required',
-                'integer',
-                Rule::exists('categories', 'id')
-                    ->where(
-                        fn ($query) => $query
-                            ->where('user_id', $userId)
-                            ->where('is_active', true)
-                    ),
-            ],
-
-            'amount' => [
-                'required',
-                'integer',
-                'min:1',
-                'max:2147483647',
-            ],
-
-            'memo' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            /*
-            * 保存後もRecordsの並び順を維持する。
-            */
-            'sort' => [
-                'nullable',
-                Rule::in([
-                    'recorded_time',
-                    'category',
-                    'amount',
-                ]),
-            ],
-
-            'direction' => [
-                'nullable',
-                Rule::in([
-                    'asc',
-                    'desc',
-                ]),
-            ],
-        ]);
+        $validated = $request->validated();
 
         $expense = new Expense();
         $expense->user_id = $userId;
