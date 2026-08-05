@@ -73,6 +73,10 @@ function closeAllEditRows(recordsTable) {
  * 新規追加行を閉じる。
  */
 function closeCreateRow(recordsSection) {
+    const recordsTable = recordsSection.querySelector(
+        '[data-daily-records]',
+    );
+
     const createRow = recordsSection.querySelector(
         '[data-record-create-row]',
     );
@@ -81,7 +85,15 @@ function closeCreateRow(recordsSection) {
         '[data-record-add-row]',
     );
 
-    if (!createRow || !addArea) {
+    const emptyMessage = recordsSection.querySelector(
+        '[data-records-empty]',
+    );
+
+    if (
+        !recordsTable
+        || !createRow
+        || !addArea
+    ) {
         return;
     }
 
@@ -90,6 +102,22 @@ function closeCreateRow(recordsSection) {
 
     createRow.hidden = true;
     addArea.hidden = false;
+
+    /*
+     * 通常のRecordが1件もない場合は、
+     * テーブルを閉じて0件メッセージを表示する。
+     */
+    const hasRecords = recordsTable.querySelector(
+        '[data-record-display-row]',
+    ) !== null;
+
+    if (!hasRecords) {
+        recordsTable.hidden = true;
+
+        if (emptyMessage) {
+            emptyMessage.hidden = false;
+        }
+    }
 }
 
 /**
@@ -107,11 +135,24 @@ function openCreateRow(
         '[data-record-add-row]',
     );
 
+    const emptyMessage = recordsSection.querySelector(
+        '[data-records-empty]',
+    );
+
     if (!createRow || !addArea) {
         return;
     }
 
     closeAllEditRows(recordsTable);
+
+    /*
+     * 0件時に非表示だったテーブルを表示する。
+     */
+    recordsTable.hidden = false;
+
+    if (emptyMessage) {
+        emptyMessage.hidden = true;
+    }
 
     addArea.hidden = true;
     createRow.hidden = false;
