@@ -107,19 +107,20 @@
                     @endif
                 </span>
 
+
                 <span class="monthly-insights__comparison-percentage">
                     @if ($previousPeriodDifferencePercentage === null)
                         (—)
+                    @elseif ($previousPeriodDifferencePercentage < 0)
+                        (&nbsp;-&nbsp;{{ number_format(
+                            abs($previousPeriodDifferencePercentage),
+                            1
+                        ) }}%&nbsp;)
                     @else
-                        (
-                        @if ($previousPeriodDifferencePercentage > 0)
-                            +
-                        @endif
-                        {{ number_format(
+                        (&nbsp;+&nbsp;{{number_format(
                             $previousPeriodDifferencePercentage,
                             1
-                        ) }}%
-                        )
+                        ) }}%&nbsp;)
                     @endif
                 </span>
             </p>
@@ -149,16 +150,16 @@
                 <span class="monthly-insights__comparison-percentage">
                     @if ($sixPeriodAverageDifferencePercentage === null)
                         (—)
+                    @elseif ($sixPeriodAverageDifferencePercentage < 0)
+                        (&nbsp-&nbsp;{{ number_format(
+                            abs($sixPeriodAverageDifferencePercentage),
+                            1
+                        ) }}%&nbsp)
                     @else
-                        (
-                        @if ($sixPeriodAverageDifferencePercentage > 0)
-                            +
-                        @endif
-                        {{ number_format(
+                        (&nbsp+&nbsp{{ number_format(
                             $sixPeriodAverageDifferencePercentage,
                             1
-                        ) }}%
-                        )
+                        ) }}%&nbsp)
                     @endif
                 </span>
             </p>
@@ -274,21 +275,33 @@
                                         {{ $category['differenceClass'] }}
                                     "
                                 >
-                                    @if ($category['difference'] > 0)
-                                        +¥{{ number_format($category['difference']) }}
-
-                                        <span aria-hidden="true">
-                                            ↑
+                                    <div class="monthly-insights__category-comparison-content">
+                                        <span class="monthly-insights__category-comparison-value">
+                                            @if ($category['difference'] > 0)
+                                                +¥{{ number_format($category['difference']) }}
+                                            @elseif ($category['difference'] < 0)
+                                                -¥{{ number_format(abs($category['difference'])) }}
+                                            @else
+                                                ¥0
+                                            @endif
                                         </span>
-                                    @elseif ($category['difference'] < 0)
-                                        -¥{{ number_format(abs($category['difference'])) }}
 
-                                        <span aria-hidden="true">
-                                            ↓
-                                        </span>
-                                    @else
-                                        ¥0
-                                    @endif
+                                        @if ($category['difference'] > 0)
+                                            <img
+                                                class="monthly-insights__category-comparison-icon"
+                                                src="{{ asset('images/icons/allow-up1.svg') }}"
+                                                alt=""
+                                                aria-hidden="true"
+                                            >
+                                        @elseif ($category['difference'] < 0)
+                                            <img
+                                                class="monthly-insights__category-comparison-icon"
+                                                src="{{ asset('images/icons/allow-down_1.svg') }}"
+                                                alt=""
+                                                aria-hidden="true"
+                                            >
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -311,7 +324,11 @@
                                 100%
                             </td>
 
-                            <td class="monthly-insights__category-total-chart">
+                            {{-- Totalのバー --}}
+                            <td
+                                colspan="2"
+                                class="monthly-insights__category-total-chart"
+                            >
                                 <div
                                     class="monthly-insights__category-total-bar"
                                     aria-hidden="true"
@@ -329,13 +346,32 @@
                                     @endforeach
                                 </div>
                             </td>
-
-                            <td
-                                class="monthly-insights__category-total-comparison"
-                            ></td>
                         </tr>
                     </tfoot>
                 </table>
+            <div class="monthly-insights__category-records-action">
+                <div
+                    class="monthly-insights__category-records-tooltip"
+                    tabindex="0"
+                    aria-describedby="category-records-coming-soon"
+                >
+                    <button
+                        type="button"
+                        class="monthly-insights__category-records-button"
+                        disabled
+                    >
+                        View records from all categories
+                    </button>
+
+                    <span
+                        id="category-records-coming-soon"
+                        class="monthly-insights__category-records-message"
+                        role="tooltip"
+                    >
+                        Coming soon — this feature is still under development.
+                    </span>
+                </div>
+            </div>
             @endif
         </div>
     </section>
