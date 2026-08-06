@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Insights;
 use App\Http\Controllers\Controller;
 use App\Models\BudgetSetting;
 use App\Models\Expense;
+use App\Models\MonthlyNote;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -153,6 +154,23 @@ class MonthlyInsightController extends Controller
             $currentPeriodMonth = $currentPeriodEnd
                 ->format('Y-m');
         }
+
+        /*
+        * 選択された予算期間のMonthly Noteを取得する。
+        *
+        * ノートが保存されていない場合はnullになる。
+        */
+        $monthlyNote = MonthlyNote::query()
+            ->where('user_id', $userId)
+            ->where(
+                'period_start_date',
+                $periodStart->toDateString(),
+            )
+            ->where(
+                'period_end_date',
+                $periodEnd->toDateString(),
+            )
+            ->value('note');
 
         /*
         * 選択された予算期間の支出合計。
@@ -610,6 +628,11 @@ class MonthlyInsightController extends Controller
             'activeView' => 'monthly',
             'month' => $month,
             'isDemoUser' => $isDemoUser,
+
+            'monthlyNote' => $monthlyNote,
+
+            'periodStartDate' =>
+                $periodStart->format('Y-m-d'),
 
             'periodStartDate' =>
                 $periodStart->format('Y-m-d'),

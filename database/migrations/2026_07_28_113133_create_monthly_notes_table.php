@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -20,24 +19,26 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->date('period_start_date');
+
             $table->date('period_end_date');
 
             $table->text('note')->nullable();
 
             $table->timestamps();
 
-            $table->unique([
-                'user_id',
-                'period_start_date',
-                'period_end_date',
-            ]);
+            /*
+             * 同じユーザー・同じ予算期間には、
+             * ノートを1件だけ登録できるようにする。
+             */
+            $table->unique(
+                [
+                    'user_id',
+                    'period_start_date',
+                    'period_end_date',
+                ],
+                'monthly_notes_user_period_unique',
+            );
         });
-
-        DB::statement('
-            ALTER TABLE monthly_notes
-            ADD CONSTRAINT monthly_notes_period_check
-            CHECK (period_end_date >= period_start_date)
-        ');
     }
 
     /**

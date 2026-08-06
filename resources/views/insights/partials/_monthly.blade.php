@@ -821,4 +821,65 @@
             </ul>
         </div>
     </section>
+
+    {{-- Monthly Notesフォーム --}}
+    <section
+        class="monthly-insights__notes"
+        aria-labelledby="monthly-insights-notes-title"
+    >
+        <h2
+            id="monthly-insights-notes-title"
+            class="monthly-insights__notes-title"
+        >
+            Monthly Notes
+        </h2>
+
+        <form
+            method="POST"
+            action="{{ route(
+                'insights.monthly-note.update',
+                [
+                    'month' => $month,
+                ]
+            ) }}"
+            class="monthly-insights__notes-form"
+        >
+            @csrf
+            @method('PUT')
+
+            <div class="monthly-insights__notes-field">
+                <textarea
+                    id="monthly-note"
+                    name="note"
+                    class="
+                        monthly-insights__notes-input
+                        @error('note') is-invalid @enderror
+                    "
+                    rows="1"
+                    maxlength="500"
+                    placeholder="Add a note about this period's spending..."
+                    @error('note')
+                        aria-describedby="monthly-note-error"
+                    @enderror
+                >{{ old('note', $monthlyNote ?? '') }}</textarea>
+
+                @error('note')
+                    <p
+                        id="monthly-note-error"
+                        class="monthly-insights__notes-error"
+                        role="alert"
+                    >
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+
+            <button
+                type="submit"
+                class="monthly-insights__notes-save"
+            >
+                Save
+            </button>
+        </form>
+    </section>
 </section>

@@ -1473,6 +1473,169 @@
         }
     }
 
+        /*
+     * 月間メモ
+     */
+    &__notes {
+        width: calc(100% - 2.4rem);
+        margin-top: 2.25rem;
+        margin-left: 1.2rem;
+    }
+
+    &__notes-title {
+        margin: 0 0 0.875rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    &__notes-form {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr)
+            8.5rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    &__notes-field {
+        display: grid;
+        gap: 0.375rem;
+
+        min-width: 0;
+    }
+
+    &__notes-input {
+        display: block;
+
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.5rem 1.25rem;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        line-height: 1.5;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+
+        resize: none;
+
+        &::placeholder {
+            color: var(--c-muted);
+            opacity: 1;
+        }
+
+        &:hover {
+            border-color: var(--c-text);
+        }
+
+        &:focus {
+            border-color: var(--c-active-indicator);
+            outline: none;
+            box-shadow:
+                0
+                0
+                0
+                0.25rem
+                rgb(37 99 235 / 15%);
+        }
+
+        &.is-invalid {
+            border-color: var(--c-danger);
+
+            &:focus {
+                box-shadow:
+                    0
+                    0
+                    0
+                    0.25rem
+                    rgb(220 38 38 / 15%);
+            }
+        }
+    }
+
+    &__notes-error {
+        margin: 0;
+
+        color: var(--c-danger);
+        font-size: var(--fs-sm);
+        line-height: 1.4;
+    }
+
+    &__notes-save {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.5rem;
+
+        color: var(--c-button-primary-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+
+        background-color: var(--c-button-primary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-button-primary-border);
+        border-radius: var(--r-control);
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color:
+                var(--c-button-primary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    /*
+     * 月間メモ：スマートフォン
+     */
+    @media (max-width: 48rem) {
+        &__notes {
+            width: 100%;
+            margin-top: 2rem;
+            margin-left: 0;
+            padding-inline: 1rem;
+        }
+
+        &__notes-form {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        &__notes-save {
+            justify-self: end;
+
+            width: auto;
+            min-width: 8.5rem;
+        }
+    }
+    
     /*
      * スマートフォン
      */
