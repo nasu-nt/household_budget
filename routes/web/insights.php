@@ -4,6 +4,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\Insights\DailyInsightController;
 use App\Http\Controllers\Insights\DailyNoteController;
 use App\Http\Controllers\Insights\MonthlyInsightController;
+use App\Http\Controllers\Insights\MonthlyNoteController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('insights')
@@ -47,4 +48,9 @@ Route::prefix('insights')
         Route::get('/months/{month}', [MonthlyInsightController::class, 'show'])
             ->where('month', '\d{4}-\d{2}')
             ->name('monthly');
+
+        Route::put('/months/{month}/note', [ MonthlyNoteController::class, 'update'])
+        ->where('month', '\d{4}-\d{2}')
+        ->name('monthly-note.update');
+        
     });
