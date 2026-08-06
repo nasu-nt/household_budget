@@ -13,8 +13,6 @@ import { initDashboardCalendar } from './pages/dashboard/calendar';
 import { initDailyInsightsRecords } from './pages/insights/records';
 import { budgetSettingsForm } from './pages/settings/budget';
 
-import './pages/insights/chart';
-
 /*
  * Alpine.jsの初期設定
  */
@@ -28,11 +26,8 @@ Alpine.data(
 Alpine.start();
 
 /*
- * 通常のJavaScript機能を初期化する。
- *
- * DOMContentLoaded後に実行することで、
- * Blade内のHTML要素が読み込まれてから
- * querySelectorなどの処理を行える。
+ * HTMLの読み込みが完了してから、
+ * 各画面のJavaScript機能を初期化する。
  */
 document.addEventListener('DOMContentLoaded', () => {
     initToast();
@@ -44,4 +39,43 @@ document.addEventListener('DOMContentLoaded', () => {
     initDashboardSidebar();
     initDashboardCalendar();
     initDailyInsightsRecords();
+
+    /*
+     * Monthly Insightsを開いている場合だけ、
+     * Chart.jsを含むグラフ用ファイルを読み込む。
+     *
+     * グラフ側でエラーが発生しても、
+     * Dashboardのカレンダーなどは巻き込まない。
+     */
+    const monthlySpendingTrend =
+        document.querySelector(
+            '[data-monthly-spending-trend]',
+        );
+
+    if (!monthlySpendingTrend) {
+        return;
+    }
+
+    import('./pages/insights/chart.js')
+        .then((module) => {
+            const initMonthlySpendingChart =
+                module.default;
+
+            if (
+                typeof initMonthlySpendingChart
+                !== 'function'
+            ) {
+                throw new TypeError(
+                    'Monthly spending chart initializer was not found.',
+                );
+            }
+
+            initMonthlySpendingChart();
+        })
+        .catch((error) => {
+            console.error(
+                'Failed to load monthly spending chart.',
+                error,
+            );
+        });
 });

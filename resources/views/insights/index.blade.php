@@ -56,18 +56,33 @@
                     class="insights-demo__tooltip"
                     role="tooltip"
                 >
-                    <p>This account contains sample data.</p>
+                   <p>This account contains sample data.</p>
 
                     @if ($activeView === 'daily')
-                        <p>Daily Insights is fixed to June 19, 2026.</p>
-                        <p>The displayed date does not change.</p>
+                        <p>
+                            Daily Insights is available from
+                            May 28 to June 27, 2026.
+                        </p>
+
+                        <p>
+                            The Today button returns to June 19, 2026.
+                        </p>
                     @else
                         <p>
                             Monthly Insights shows data from
                             May 28 to June 27, 2026.
                         </p>
-                        <p>The displayed reporting period does not change.</p>
+
+                        <p>
+                            You can open Daily Insights for each day
+                            in this period.
+                        </p>
+
+                        <p>
+                            The displayed reporting period does not change.
+                        </p>
                     @endif
+
                     <p>You can add, edit, and delete sample data.</p>
                     <p>Sample data may be reset from time to time.</p>
                 </div>
