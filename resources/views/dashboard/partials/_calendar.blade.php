@@ -29,14 +29,16 @@
                 ◀
             </button>
 
-            {{--
-                月次Insightsへの仮リンク。
-                実装後にhrefを実際のURLへ変更する。
-            --}}
+            {{-- 月次Insightsへのリンク --}}
             <a
-                href="#"
+                href="{{ route('insights.monthly', [
+                    'month' => $dashboardDateObject->format('Y-m'),
+                ]) }}"
                 class="dashboard-calendar__month-link"
                 data-dashboard-calendar-month-link
+                data-monthly-insights-url-template="{{ route('insights.monthly', [
+                    'month' => '__MONTH__',
+                ]) }}"
                 aria-label="View monthly insights for {{ $dashboardMonthLabel }}"
             >
                 {{ $dashboardMonthLabel }}
@@ -128,6 +130,9 @@
         class="dashboard-calendar__body"
         data-dashboard-calendar
         data-dashboard-calendar-url="{{ route('dashboard.calendar') }}"
+        data-daily-insights-url-template="{{ route('insights.daily', [
+            'date' => '__DATE__',
+        ]) }}"
         @if ($isDemoUser)
             data-demo-date="{{ $dashboardDate }}"
         @endif

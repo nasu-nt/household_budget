@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Hash;
 class DemoDataSeeder extends Seeder
 {
     /**
-     * デモアカウントと、2026-05-28〜2026-06-27のモックデータを登録する。
+     * デモアカウントと、Monthly Insightsの比較に必要な
+     * 2025-11-28〜2026-06-27のモックデータを登録する。
      */
     public function run(): void
     {
@@ -99,16 +100,21 @@ class DemoDataSeeder extends Seeder
                 timestamp: $now,
             );
 
-            $this->createExpensesAndDailyNotes(
+            /*
+            * Monthly Insightsの前期間比較と
+            * 直前6期間平均に使用する過去データ。
+            */
+            $this->createHistoricalExpenses(
                 userId: $demoUser->id,
                 categoryIds: $categoryIds,
                 timestamp: $now,
             );
 
-            /*
-             * category_budgets と monthly_notes は、
-             * 添付されたExcelに登録値がないため、架空の値は作らず空のままにする。
-             */
+            $this->createExpensesAndDailyNotes(
+                userId: $demoUser->id,
+                categoryIds: $categoryIds,
+                timestamp: $now,
+            );
         });
     }
 
@@ -227,6 +233,243 @@ class DemoDataSeeder extends Seeder
     }
 
     /**
+     * Monthly Insightsの比較に使用する過去6期間の支出を作成する。
+     *
+     * 直前6期間:
+     * 2025-11-28〜2026-05-27
+     *
+     * 合計:
+     * 795,600円
+     *
+     * @param array<string, int> $categoryIds
+     */
+    private function createHistoricalExpenses(
+        int $userId,
+        array $categoryIds,
+        mixed $timestamp,
+    ): void {
+        /*
+        * 過去期間はMonthly Insightsの比較計算に使用する。
+        *
+        * デモアカウントでは表示期間を
+        * 2026-05-28〜2026-06-27に固定しているため、
+        * ここではカテゴリ単位の集計用レコードとして登録する。
+        */
+        $historicalData = [
+            /*
+            * 2025-11-28〜2025-12-27
+            * 合計: 129,800円
+            */
+            '2025-11-28 - 2025-12-27' => [
+                [
+                    'date' => '2025-12-01',
+                    'category' => 'Rent',
+                    'amount' => 42_000,
+                ],
+                [
+                    'date' => '2025-12-05',
+                    'category' => 'Food',
+                    'amount' => 46_200,
+                ],
+                [
+                    'date' => '2025-12-07',
+                    'category' => 'Utilities',
+                    'amount' => 11_600,
+                ],
+                [
+                    'date' => '2025-12-15',
+                    'category' => 'Entertainment',
+                    'amount' => 15_400,
+                ],
+                [
+                    'date' => '2025-12-20',
+                    'category' => 'Transport',
+                    'amount' => 14_600,
+                ],
+            ],
+
+            /*
+            * 2025-12-28〜2026-01-27
+            * 合計: 137,600円
+            */
+            '2025-12-28 - 2026-01-27' => [
+                [
+                    'date' => '2026-01-01',
+                    'category' => 'Rent',
+                    'amount' => 42_000,
+                ],
+                [
+                    'date' => '2026-01-05',
+                    'category' => 'Food',
+                    'amount' => 48_300,
+                ],
+                [
+                    'date' => '2026-01-07',
+                    'category' => 'Utilities',
+                    'amount' => 14_200,
+                ],
+                [
+                    'date' => '2026-01-15',
+                    'category' => 'Entertainment',
+                    'amount' => 18_100,
+                ],
+                [
+                    'date' => '2026-01-20',
+                    'category' => 'Transport',
+                    'amount' => 15_000,
+                ],
+            ],
+
+            /*
+            * 2026-01-28〜2026-02-27
+            * 合計: 130,900円
+            */
+            '2026-01-28 - 2026-02-27' => [
+                [
+                    'date' => '2026-02-01',
+                    'category' => 'Rent',
+                    'amount' => 42_000,
+                ],
+                [
+                    'date' => '2026-02-05',
+                    'category' => 'Food',
+                    'amount' => 45_700,
+                ],
+                [
+                    'date' => '2026-02-07',
+                    'category' => 'Utilities',
+                    'amount' => 12_000,
+                ],
+                [
+                    'date' => '2026-02-15',
+                    'category' => 'Entertainment',
+                    'amount' => 16_600,
+                ],
+                [
+                    'date' => '2026-02-20',
+                    'category' => 'Transport',
+                    'amount' => 14_600,
+                ],
+            ],
+
+            /*
+            * 2026-02-28〜2026-03-27
+            * 合計: 143,200円
+            */
+            '2026-02-28 - 2026-03-27' => [
+                [
+                    'date' => '2026-03-01',
+                    'category' => 'Rent',
+                    'amount' => 42_000,
+                ],
+                [
+                    'date' => '2026-03-05',
+                    'category' => 'Food',
+                    'amount' => 50_600,
+                ],
+                [
+                    'date' => '2026-03-07',
+                    'category' => 'Utilities',
+                    'amount' => 14_500,
+                ],
+                [
+                    'date' => '2026-03-15',
+                    'category' => 'Entertainment',
+                    'amount' => 20_500,
+                ],
+                [
+                    'date' => '2026-03-20',
+                    'category' => 'Transport',
+                    'amount' => 15_600,
+                ],
+            ],
+
+            /*
+            * 2026-03-28〜2026-04-27
+            * 合計: 132,600円
+            */
+            '2026-03-28 - 2026-04-27' => [
+                [
+                    'date' => '2026-04-01',
+                    'category' => 'Rent',
+                    'amount' => 42_000,
+                ],
+                [
+                    'date' => '2026-04-05',
+                    'category' => 'Food',
+                    'amount' => 47_100,
+                ],
+                [
+                    'date' => '2026-04-07',
+                    'category' => 'Utilities',
+                    'amount' => 11_800,
+                ],
+                [
+                    'date' => '2026-04-15',
+                    'category' => 'Entertainment',
+                    'amount' => 17_400,
+                ],
+                [
+                    'date' => '2026-04-20',
+                    'category' => 'Transport',
+                    'amount' => 14_300,
+                ],
+            ],
+
+            /*
+            * 2026-04-28〜2026-05-27
+            * 合計: 121,500円
+            */
+            '2026-04-28 - 2026-05-27' => [
+                [
+                    'date' => '2026-05-01',
+                    'category' => 'Rent',
+                    'amount' => 42_000,
+                ],
+                [
+                    'date' => '2026-05-05',
+                    'category' => 'Food',
+                    'amount' => 44_000,
+                ],
+                [
+                    'date' => '2026-05-07',
+                    'category' => 'Utilities',
+                    'amount' => 7_400,
+                ],
+                [
+                    'date' => '2026-05-15',
+                    'category' => 'Entertainment',
+                    'amount' => 14_900,
+                ],
+                [
+                    'date' => '2026-05-20',
+                    'category' => 'Transport',
+                    'amount' => 13_200,
+                ],
+            ],
+        ];
+
+        $expenseRows = [];
+
+        foreach ($historicalData as $periodExpenses) {
+            foreach ($periodExpenses as $expense) {
+                $expenseRows[] = [
+                    'user_id' => $userId,
+                    'category_id' =>
+                        $categoryIds[$expense['category']],
+                    'amount' => $expense['amount'],
+                    'expense_date' => $expense['date'],
+                    'memo' => null,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
+            }
+        }
+
+        DB::table('expenses')->insert($expenseRows);
+    }
+
+    /**
      * @param array<string, int> $categoryIds
      */
     private function createExpensesAndDailyNotes(
@@ -309,7 +552,7 @@ class DemoDataSeeder extends Seeder
                 'expenses' => ['Food' => 1500, 'Transport' => 620],
             ],
             '2026-06-19' => [
-                'expenses' => ['Food' => 2900, 'Entertainment' => 1300],
+                'expenses' => ['Food' => 2900, 'Entertainment' => 1100, 'Transport' => 200],
             ],
             '2026-06-20' => [
                 'expenses' => ['Utilities' => 4400, 'Food' => 1200],

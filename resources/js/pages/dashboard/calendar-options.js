@@ -8,45 +8,31 @@ import {
 } from './calendar-utils';
 
 /**
- * 日別支出を、Insightsへのリンクとして表示する。
- *
- * Insights完成後はhrefを実際のURLへ変更する。
+ * 日別支出を、Daily Insightsへのリンクとして表示する。
  */
 const createAmountEventContent = (info) => {
     const amount = Number(
         info.event.extendedProps.total,
     );
 
-    const amountLink = document.createElement('a');
+    const dailyInsightsUrl = String(
+        info.event.extendedProps.dailyInsightsUrl,
+    );
+
+    const amountLink =
+        document.createElement('a');
 
     amountLink.className =
         'dashboard-calendar__amount-link';
 
-    /*
-     * TODO: Insights完成後にURLを設定する。
-     *
-     * 例:
-     * `/insights?date=${info.event.startStr}`
-     */
-    amountLink.href = '#';
+    amountLink.href = dailyInsightsUrl;
 
     amountLink.textContent =
         formatCurrency(amount);
 
     amountLink.setAttribute(
         'aria-label',
-        `${info.event.startStr} spending ${formatCurrency(amount)}`,
-    );
-
-    /*
-     * 現在はリンク先未実装のため、
-     * #への移動を止める。
-     */
-    amountLink.addEventListener(
-        'click',
-        (event) => {
-            event.preventDefault();
-        },
+        `${info.event.startStr} spending ${formatCurrency(amount)}. View daily insights.`,
     );
 
     return {
@@ -92,7 +78,7 @@ export const createCalendarOptions = ({
         /*
          * 最初に表示する日付。
          *
-         * デモユーザーの場合は2027-07-27、
+         * デモユーザーの場合は固定日、
          * 通常ユーザーの場合は実際の日付が渡される。
          */
         initialDate,
@@ -113,11 +99,14 @@ export const createCalendarOptions = ({
             'dashboard-calendar__weekday-inner',
 
         /*
-        * 日付セル右上の数字部分へ、
-        * アプリ側で管理するクラスを付ける。
-        */
-        dayCellTopClass: 'dashboard-calendar__day-top',
-        dayCellTopInnerClass: 'dashboard-calendar__day-number',
+         * 日付セル右上の数字部分へ、
+         * アプリ側で管理するクラスを付ける。
+         */
+        dayCellTopClass:
+            'dashboard-calendar__day-top',
+
+        dayCellTopInnerClass:
+            'dashboard-calendar__day-number',
 
         /*
          * 月曜日を週の開始日にする。
@@ -325,9 +314,10 @@ export const createCalendarOptions = ({
                 'important',
             );
 
-            const eventMain = eventElement.querySelector(
-                '.fc-event-main',
-            );
+            const eventMain =
+                eventElement.querySelector(
+                    '.fc-event-main',
+                );
 
             if (eventMain) {
                 eventMain.style.setProperty(
@@ -351,20 +341,16 @@ export const createCalendarOptions = ({
         },
 
         eventContent: createAmountEventContent,
-        eventClass: 'dashboard-calendar__amount-event',
+
+        eventClass:
+            'dashboard-calendar__amount-event',
     };
 
     /*
      * デモユーザーだけ、
      * FullCalendar内部の「今日」を固定する。
-     *
-<<<<<<< Updated upstream
-     * これにより、
-     * 2027-07-27が今日としてハイライトされる。
-=======
      * _calendar.blade.phpのdata-demo-dateが
      * 2026-06-27なら、6月27日が今日になる。
->>>>>>> Stashed changes
      */
     if (demoDate) {
         options.now = demoDate;

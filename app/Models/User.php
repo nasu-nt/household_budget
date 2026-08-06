@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasOne(AppearanceSetting::class);
     }
 
+    public function dailyNotes(): HasMany
+    {
+        return $this->hasMany(DailyNote::class);
+    }
+
     /**
      * Send a password reset notification to the user.
      */

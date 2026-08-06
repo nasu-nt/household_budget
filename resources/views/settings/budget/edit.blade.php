@@ -118,15 +118,27 @@
                                                         is-invalid
                                                     @enderror"
                                                 value="{{ number_format($monthlyBudget) }}"
-                                                x-model="monthlyBudgetInput"
-                                                x-on:input="
+                                                x-bind:value="monthlyBudgetInput"
+                                                x-on:compositionstart="
+                                                    isComposing = true
+                                                "
+                                                x-on:compositionend="
+                                                    isComposing = false;
                                                     updateMonthlyBudget(
                                                         $event.target.value
                                                     )
                                                 "
+                                                x-on:input="
+                                                    if (! isComposing) {
+                                                        updateMonthlyBudget(
+                                                            $event.target.value
+                                                        )
+                                                    }"
                                                 inputmode="numeric"
                                                 autocomplete="off"
                                                 maxlength="13"
+                                                data-max-digits="10"
+                                                pattern="[0-9,]*"
                                                 required
                                                 @error('monthly_budget')
                                                     aria-invalid="true"
@@ -179,15 +191,26 @@
                                                         is-invalid
                                                     @enderror"
                                                 value="{{ number_format($monthlyLimit) }}"
-                                                x-model="monthlyLimitInput"
-                                                x-on:input="
+                                                x-bind:value="monthlyLimitInput"
+                                                x-on:compositionstart="
+                                                    isComposing = true
+                                                "
+                                                x-on:compositionend="
+                                                    isComposing = false;
                                                     updateMonthlyLimit(
                                                         $event.target.value
-                                                    )
-                                                "
+                                                    )"
+                                                x-on:input="
+                                                    if (! isComposing) {
+                                                        updateMonthlyLimit(
+                                                            $event.target.value
+                                                        )
+                                                    }"
                                                 inputmode="numeric"
                                                 autocomplete="off"
                                                 maxlength="13"
+                                                data-max-digits="10"
+                                                pattern="[0-9,]*"
                                                 required
                                                 @error('monthly_limit')
                                                     aria-invalid="true"
@@ -213,9 +236,6 @@
                                         budget-form__closing-row"
                                     role="group"
                                     aria-labelledby="closing-day-label"
-                                    x-data="{
-                                        closingIsEndOfMonth: @js($isEndOfMonth)
-                                    }"
                                 >
                                     <span
                                         id="closing-day-label"
@@ -225,7 +245,10 @@
                                         {{ __('Closing Day') }}
                                     </span>
 
-                                    <div class="settings-form__control">
+                                    <div
+                                        class="settings-form__control
+                                            budget-form__closing-control"
+                                    >
                                         <div
                                             class="budget-form__closing-controls"
                                         >
@@ -237,9 +260,8 @@
                                                     name="is_end_of_month"
                                                     value="1"
                                                     @checked($isEndOfMonth)
-                                                    x-bind:checked="closingIsEndOfMonth"
+                                                    x-bind:checked="isEndOfMonth"
                                                     x-on:change="
-                                                        closingIsEndOfMonth = true;
                                                         isEndOfMonth = true
                                                     "
                                                 >
@@ -257,9 +279,8 @@
                                                     name="is_end_of_month"
                                                     value="0"
                                                     @checked(! $isEndOfMonth)
-                                                    x-bind:checked="! closingIsEndOfMonth"
+                                                    x-bind:checked="! isEndOfMonth"
                                                     x-on:change="
-                                                        closingIsEndOfMonth = false;
                                                         isEndOfMonth = false
                                                     "
                                                 >
@@ -272,7 +293,7 @@
                                             <div
                                                 class="budget-form__select-wrapper"
                                                 x-bind:class="{
-                                                    'is-disabled': closingIsEndOfMonth
+                                                    'is-disabled': isEndOfMonth
                                                 }"
                                             >
                                                 <select
@@ -283,8 +304,8 @@
                                                             is-invalid
                                                         @enderror"
                                                     x-model.number="closingDay"
-                                                    x-bind:disabled="closingIsEndOfMonth"
-                                                    x-bind:aria-disabled="closingIsEndOfMonth.toString()"
+                                                    x-bind:disabled="isEndOfMonth"
+                                                    x-bind:aria-disabled="isEndOfMonth.toString()"
                                                     aria-label="{{ __('Specific closing day') }}"
                                                     @error('closing_day')
                                                         aria-invalid="true"
