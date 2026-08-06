@@ -375,4 +375,121 @@
             @endif
         </div>
     </section>
+
+    {{-- 日別支出推移 --}}
+    <section
+        class="monthly-insights__trend"
+        aria-labelledby="monthly-insights-trend-title"
+        data-monthly-spending-trend
+    >
+        <h2
+            id="monthly-insights-trend-title"
+            class="monthly-insights__section-title"
+        >
+            Daily spending trend
+        </h2>
+
+        <div class="monthly-insights__trend-card">
+            @if (
+                $highestSpendingDay === null
+                || $lowestSpendingDay === null
+            )
+                <p class="monthly-insights__trend-empty">
+                    No spending recorded for this period.
+                </p>
+            @else
+                <div class="monthly-insights__trend-legend">
+                    <div class="monthly-insights__trend-legend-item">
+                        <span
+                            class="
+                                monthly-insights__trend-legend-dot
+                                monthly-insights__trend-legend-dot--highest
+                            "
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            Highest
+                        </span>
+
+                        <strong>
+                            ¥{{ number_format(
+                                $highestSpendingDay['amount']
+                            ) }}
+                        </strong>
+
+                        <time datetime="{{ $highestSpendingDay['date'] }}">
+                            ({{ $highestSpendingDay['label'] }})
+                        </time>
+                    </div>
+
+                    <div class="monthly-insights__trend-legend-item">
+                        <span
+                            class="
+                                monthly-insights__trend-legend-dot
+                                monthly-insights__trend-legend-dot--lowest
+                            "
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            Lowest
+                        </span>
+
+                        <strong>
+                            ¥{{ number_format(
+                                $lowestSpendingDay['amount']
+                            ) }}
+                        </strong>
+
+                        <time datetime="{{ $lowestSpendingDay['date'] }}">
+                            ({{ $lowestSpendingDay['label'] }})
+                        </time>
+                    </div>
+                </div>
+
+                <div class="monthly-insights__trend-chart-wrapper">
+                    <canvas
+                        class="monthly-insights__trend-chart"
+                        data-monthly-spending-chart
+                        data-daily-url-template="{{ route(
+                            'insights.daily',
+                            [
+                                'date' => '__DATE__',
+                            ]
+                        ) }}"
+                        aria-label="
+                            Daily spending bar chart for the selected period
+                        "
+                        role="img"
+                    >
+                        Daily spending chart
+                    </canvas>
+                </div>
+
+                <div class="monthly-insights__trend-guide">
+                    <img
+                        class="monthly-insights__trend-guide-icon"
+                        src="{{ asset(
+                            'images/icons/Information_1.svg'
+                        ) }}"
+                        alt=""
+                        aria-hidden="true"
+                    >
+
+                    <p>
+                        Tap a bar to view that day’s details.
+                    </p>
+                </div>
+
+                <script
+                    type="application/json"
+                    data-monthly-spending-trend-data
+                >
+                    @json($dailySpendingTrend)
+                </script>
+            @endif
+        </div>
+    </section>
+
 </section>

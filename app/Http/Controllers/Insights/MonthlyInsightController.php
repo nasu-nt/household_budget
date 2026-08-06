@@ -357,6 +357,144 @@ class MonthlyInsightController extends Controller
             })
             ->all();
 
+        /*
+        * 選択された予算期間の支出を日別に集計する。
+        *
+        * 支出が登録されていない日は、この取得結果には含まれない。
+        */
+        $dailyTotals = Expense::query()
+            ->where('user_id', $userId)
+            ->whereBetween('expense_date', [
+                $periodStart->toDateString(),
+                $periodEnd->toDateString(),
+            ])
+            ->select([
+                'expense_date',
+            ])
+            ->selectRaw(
+                'SUM(amount) AS total',
+            )
+            ->groupBy('expense_date')
+            ->orderBy('expense_date')
+            ->get()
+            ->mapWithKeys(function ($expense): array {
+                $date = CarbonImmutable::parse(
+                    (string) $expense->expense_date,
+                )->toDateString();
+
+                return [
+                    $date => (int) $expense->total,
+                ];
+            })
+            ->all();
+
+        /*
+        * 支出がない日も0円として含め、
+        * 予算期間内のすべての日付を作る。
+        */
+        $dailySpendingTrend = [];
+
+        for (
+            $dateCursor = $periodStart;
+            $dateCursor->lessThanOrEqualTo($periodEnd);
+            $dateCursor = $dateCursor->addDay()
+        ) {
+            $date = $dateCursor->toDateString();
+
+            $dailySpendingTrend[] = [
+                /*
+                * Daily Insightsへの遷移に使用する日付。
+                */
+                'date' => $date,
+
+                /*
+                * グラフのX軸などに表示する短い日付。
+                */
+                'label' => $dateCursor->format('n/j'),
+
+                /*
+                * その日の支出合計。
+                * 支出がない日は0円。
+                */
+                'amount' => (int) (
+                    $dailyTotals[$date]
+                    ?? 0
+                ),
+            ];
+        }
+
+        /*
+        * Lowestの判定では、
+        * 支出がない0円の日を対象外にする。
+        */
+        $spendingDays = array_values(
+            array_filter(
+                $dailySpendingTrend,
+                fn (array $day): bool =>
+                    $day['amount'] > 0,
+            ),
+        );
+
+        $highestSpendingDay = null;
+        $lowestSpendingDay = null;
+
+        /*
+        * 支出がある日から、
+        * 最高額と最低額の日を取得する。
+        *
+        * 同額の日が複数ある場合は、
+        * 期間内で最初の日を使用する。
+        */
+        foreach ($spendingDays as $day) {
+            if (
+                $highestSpendingDay === null
+                || $day['amount']
+                    > $highestSpendingDay['amount']
+            ) {
+                $highestSpendingDay = $day;
+            }
+
+            if (
+                $lowestSpendingDay === null
+                || $day['amount']
+                    < $lowestSpendingDay['amount']
+            ) {
+                $lowestSpendingDay = $day;
+            }
+        }
+
+        /*
+        * Chart.jsで棒の色を変更できるように、
+        * 各日へ状態を追加する。
+        */
+        $dailySpendingTrend = array_map(
+            function (array $day) use (
+                $highestSpendingDay,
+                $lowestSpendingDay,
+            ): array {
+                $status = 'default';
+
+                if (
+                    $highestSpendingDay !== null
+                    && $day['date']
+                        === $highestSpendingDay['date']
+                ) {
+                    $status = 'highest';
+                } elseif (
+                    $lowestSpendingDay !== null
+                    && $day['date']
+                        === $lowestSpendingDay['date']
+                ) {
+                    $status = 'lowest';
+                }
+
+                $day['status'] = $status;
+
+                return $day;
+            },
+            $dailySpendingTrend,
+        );
+
         return view('insights.index', [
             'activeView' => 'monthly',
             'month' => $month,
@@ -421,6 +559,15 @@ class MonthlyInsightController extends Controller
 
             'categorySpending' =>
                 $categorySpending,
+
+            'dailySpendingTrend' =>
+                $dailySpendingTrend,
+
+            'highestSpendingDay' =>
+                $highestSpendingDay,
+
+            'lowestSpendingDay' =>
+                $lowestSpendingDay,
         ]);
     }
 

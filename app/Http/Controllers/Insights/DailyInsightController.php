@@ -20,16 +20,25 @@ class DailyInsightController extends Controller
         $isDemoUser = $request->user()?->email
             === config('demo.email', 'demo@example.com');
 
+        /*
+         * デモアカウントで「Today」として扱う日付。
+         */
         $demoDate = '2026-06-19';
 
         /*
-         * デモアカウントでは表示日を固定する。
-         */
-        if ($isDemoUser && $date !== $demoDate) {
-            return redirect()->route('insights.daily', [
-                'date' => $demoDate,
-            ]);
-        }
+        * デモアカウントで閲覧できる予算期間。
+        */
+        $demoPeriodStart = CarbonImmutable::create(
+            2026,
+            5,
+            28,
+        )->startOfDay();
+
+        $demoPeriodEnd = CarbonImmutable::create(
+            2026,
+            6,
+            27,
+        )->startOfDay();
 
         try {
             $selectedDate = CarbonImmutable::createFromFormat(
@@ -42,6 +51,25 @@ class DailyInsightController extends Controller
 
         if ($selectedDate->format('Y-m-d') !== $date) {
             abort(404);
+        }
+
+        /*
+        * デモアカウントでは、
+        * Monthly Insightsの対象期間内だけ閲覧を許可する。
+        *
+        * 期間外の日付へアクセスした場合は、
+        * デモ上のTodayである2026-06-19へ戻す。
+        */
+        if (
+            $isDemoUser
+            && (
+                $selectedDate->lessThan($demoPeriodStart)
+                || $selectedDate->greaterThan($demoPeriodEnd)
+            )
+        ) {
+            return redirect()->route('insights.daily', [
+                'date' => $demoDate,
+            ]);
         }
 
         $userId = (int) $request
