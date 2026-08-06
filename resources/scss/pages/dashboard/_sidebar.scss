@@ -5,16 +5,21 @@
     * 右側のdashboard-mainと同じ高さまで伸ばす。
     */
     .dashboard__sidebar {
-        position: relative;
+        position: sticky;
         z-index: 10;
+        top: 0;
 
         display: flex;
         flex: 0 0 var(--sidebar-width);
         flex-direction: column;
-        align-self: stretch;
+        align-self: flex-start;
 
         width: var(--sidebar-width);
         min-height: 0;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
         margin-left: 0;
         box-sizing: border-box;
 
@@ -67,30 +72,31 @@
 
         overflow-x: hidden;
         overflow-y: auto;
-        overscroll-behavior: contain;
+
+        /*
+         * Sidebarが最下部まで到達した後は、
+         * ページ全体へスクロールを引き継ぐ。
+         */
+        overscroll-behavior-y: auto;
+        -webkit-overflow-scrolling: touch;
 
         background-color: var(--c-surface);
 
-        scrollbar-color: var(--c-disabled) transparent;
-        scrollbar-width: thin;
+        /*
+         * スクロール機能は残し、
+         * スクロールバーだけ非表示にする。
+         */
 
+        // Firefox
+        scrollbar-width: none;
+
+        // Internet Explorer・旧Edge
+        -ms-overflow-style: none;
+
+        // Chrome・Edge・Safari
         &::-webkit-scrollbar {
-            width: 0.25rem;
-        }
-
-        &::-webkit-scrollbar-track {
-            background-color: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            min-height: 2.5rem;
-
-            background-color: var(--c-disabled);
-            border-radius: var(--r-swatch);
-        }
-
-        &::-webkit-scrollbar-thumb:hover {
-            background-color: var(--c-text);
+            width: 0;
+            height: 0;
         }
     }
 
@@ -170,6 +176,20 @@
 }
 
 @media (max-width: 40rem) {
+    .dashboard__sidebar {
+        position: relative;
+        top: auto;
+
+        align-self: stretch;
+
+        height: auto;
+        max-height: none;
+    }
+
+    .dashboard__sidebar-scroll {
+        overflow-y: visible;
+    }
+
     .dashboard-layout {
         --sidebar-width:
             calc(
