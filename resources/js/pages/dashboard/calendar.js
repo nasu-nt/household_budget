@@ -80,6 +80,17 @@ export const initDashboardCalendar = () => {
     const calendarUrl =
         calendarElement.dataset.dashboardCalendarUrl;
 
+<<<<<<< Updated upstream
+=======
+    const dailyInsightsUrlTemplate =
+        calendarElement.dataset
+            .dailyInsightsUrlTemplate;
+
+    /*
+     * デモユーザーの場合は2026-06-27、
+     * 通常ユーザーの場合はundefinedになる。
+     */
+>>>>>>> Stashed changes
     const demoDate =
         calendarElement.dataset.demoDate;
 
@@ -113,6 +124,11 @@ export const initDashboardCalendar = () => {
             '[data-dashboard-calendar-spending]',
         );
 
+    const expenseForm =
+        document.querySelector(
+            '[data-expense-form]',
+        );
+
     /*
      * ========================================
      * 2. カレンダーの状態を保持する
@@ -126,7 +142,7 @@ export const initDashboardCalendar = () => {
      * 2027-07-27
      *
      * 値:
-     * 対応する<td>要素
+     * 対応するtd要素
      */
     const dayCellElements = new Map();
 
@@ -252,7 +268,7 @@ export const initDashboardCalendar = () => {
         );
     };
 
-    /*
+    /**
      * 月次Insightsリンクと選択日ラベルを更新する。
      */
     const updateDateLabels = (dateString) => {
@@ -288,14 +304,50 @@ export const initDashboardCalendar = () => {
         }
     };
 
-    /*
+    /**
+     * Log your spendingの日付欄を、
+     * カレンダーで選択した日付へ変更する。
+     */
+    const updateExpenseFormDate = (date) => {
+        if (!expenseForm) {
+            return;
+        }
+
+        /*
+         * Add another expenseで追加される行にも
+         * 選択日を使用できるようにする。
+         */
+        expenseForm.dataset.defaultDate = date;
+
+        const expenseDateInputs =
+            expenseForm.querySelectorAll(
+                '[data-expense-field="expense_date"]',
+            );
+
+        expenseDateInputs.forEach(
+            (expenseDateInput) => {
+                expenseDateInput.value = date;
+            },
+        );
+    };
+
+    /**
      * 選択日を変更する。
      */
-    const selectDate = (date) => {
+    const selectDate = (
+        date,
+        {
+            syncExpenseForm = true,
+        } = {},
+    ) => {
         selectedDate = date;
 
         if (dateInput) {
             dateInput.value = date;
+        }
+
+        if (syncExpenseForm) {
+            updateExpenseFormDate(date);
         }
 
         updateDateLabels(date);
@@ -432,10 +484,6 @@ export const initDashboardCalendar = () => {
             dayCellElements,
             applyStatusToDayCell,
 
-            /*
-             * calendar-options.jsから
-             * 現在の選択日を取得するための関数。
-             */
             getSelectedDate: () => {
                 return selectedDate;
             },
@@ -452,8 +500,17 @@ export const initDashboardCalendar = () => {
 
     /*
      * 初期選択日を入力欄・セル・支出額へ反映する。
+     *
+     * バリデーションエラー後の入力内容を
+     * 勝手に上書きしないよう、
+     * 初期表示時は支出フォームを同期しない。
      */
-    selectDate(selectedDate);
+    selectDate(
+        selectedDate,
+        {
+            syncExpenseForm: false,
+        },
+    );
 
     /*
      * ========================================

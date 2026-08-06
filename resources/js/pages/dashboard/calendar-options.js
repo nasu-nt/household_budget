@@ -69,6 +69,14 @@ export const createCalendarOptions = ({
     getSelectedDate,
     selectDate,
 }) => {
+    /*
+     * 通常ユーザーは実際の今日、
+     * デモユーザーはDashboardの固定日を
+     * 「今日」として扱う。
+     */
+    const todayDate = demoDate
+        || toLocalDateString(new Date());
+
     const options = {
         plugins: [
             themePlugin,
@@ -183,6 +191,9 @@ export const createCalendarOptions = ({
                 info.date,
             );
 
+            const isToday =
+                date === todayDate;
+
             /*
              * 日付からセル要素を取得できるように、
              * Mapへ保存する。
@@ -191,6 +202,38 @@ export const createCalendarOptions = ({
                 date,
                 info.el,
             );
+
+            /*
+             * 通常ユーザーでは実際の今日、
+             * デモユーザーでは2026-06-27のセルへ
+             * is-todayクラスを付ける。
+             */
+            info.el.classList.toggle(
+                'is-today',
+                isToday,
+            );
+
+            /*
+             * スクリーンリーダーにも、
+             * 今日の日付であることを伝える。
+             */
+            const dayNumberElement =
+                info.el.querySelector(
+                    '.dashboard-calendar__day-number',
+                );
+
+            if (dayNumberElement) {
+                if (isToday) {
+                    dayNumberElement.setAttribute(
+                        'aria-current',
+                        'date',
+                    );
+                } else {
+                    dayNumberElement.removeAttribute(
+                        'aria-current',
+                    );
+                }
+            }
 
             /*
              * APIから取得済みのステータスがあれば、
@@ -229,6 +272,12 @@ export const createCalendarOptions = ({
             selectDate(info.dateStr);
         },
 
+        /**
+         * 金額イベントが画面へ追加されたときの処理。
+         *
+         * FullCalendarのテーマが付ける背景色や枠線を
+         * JavaScript側でも透明化する。
+         */
         eventDidMount: (info) => {
             const eventElement = info.el;
 
@@ -309,8 +358,13 @@ export const createCalendarOptions = ({
      * デモユーザーだけ、
      * FullCalendar内部の「今日」を固定する。
      *
+<<<<<<< Updated upstream
      * これにより、
      * 2027-07-27が今日としてハイライトされる。
+=======
+     * _calendar.blade.phpのdata-demo-dateが
+     * 2026-06-27なら、6月27日が今日になる。
+>>>>>>> Stashed changes
      */
     if (demoDate) {
         options.now = demoDate;
