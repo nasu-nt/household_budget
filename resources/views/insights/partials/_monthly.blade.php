@@ -495,5 +495,330 @@
             @endif
         </div>
     </section>
+ 
+    {{-- 累積支出の進捗 --}}
+    <section
+        class="monthly-insights__progress"
+        aria-labelledby="monthly-insights-progress-title"
+    >
+        <div class="monthly-insights__progress-heading">
+            <h2
+                id="monthly-insights-progress-title"
+                class="monthly-insights__section-title"
+            >
+                Cumulative progress
+            </h2>
 
+            <p class="monthly-insights__progress-period">
+                Budget period: 
+                {{ $periodStartLabel }}
+                -
+                {{ $periodEndLabel }}
+                ({{ $periodDays }} days)
+            </p>
+        </div>
+
+        <div class="monthly-insights__progress-card">
+            {{-- 金額サマリー --}}
+            <div class="monthly-insights__progress-summary">
+                <div class="monthly-insights__progress-summary-item">
+                    <p class="monthly-insights__progress-summary-label">
+                        Total spent
+                    </p>
+
+                    <p class="monthly-insights__progress-summary-amount">
+                        ¥{{ number_format($currentPeriodTotal) }}
+                    </p>
+
+                    <p class="monthly-insights__progress-summary-note">
+                        ({{ $budgetUsagePercentage }}% of budget)
+                    </p>
+                </div>
+
+                <div class="monthly-insights__progress-summary-item">
+                    @if ($overBudgetAmount > 0)
+                        <p class="monthly-insights__progress-summary-label">
+                            Over budget
+                        </p>
+
+                        <p
+                            class="
+                                monthly-insights__progress-summary-amount
+                                is-over
+                            "
+                        >
+                            +¥{{ number_format($overBudgetAmount) }}
+                        </p>
+                    @else
+                        <p class="monthly-insights__progress-summary-label">
+                            Within budget
+                        </p>
+
+                        <p
+                            class="
+                                monthly-insights__progress-summary-amount
+                                is-within
+                            "
+                        >
+                            ¥0
+                        </p>
+                    @endif
+                </div>
+
+                <div class="monthly-insights__progress-summary-item">
+                    @if ($overLimitAmount > 0)
+                        <p class="monthly-insights__progress-summary-label">
+                            Over limit
+                        </p>
+
+                        <p
+                            class="
+                                monthly-insights__progress-summary-amount
+                                is-over
+                            "
+                        >
+                            +¥{{ number_format($overLimitAmount) }}
+                        </p>
+                    @else
+                        <p class="monthly-insights__progress-summary-label">
+                            Remaining to limit
+                        </p>
+
+                        <p class="monthly-insights__progress-summary-amount">
+                            ¥{{ number_format(
+                                $remainingToLimitAmount
+                            ) }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+
+            {{--
+                プログレスバーと各金額の位置。
+
+                Controllerで計算した割合を、
+                CSSカスタムプロパティとしてSCSSへ渡す。
+            --}}
+            <div
+                class="monthly-insights__progress-visual"
+                style="
+                    --progress-eighty-position:
+                        {{ $eightyPercentPosition }}%;
+
+                    --progress-budget-position:
+                        {{ $monthlyBudgetPosition }}%;
+
+                    --progress-limit-position:
+                        {{ $spendingLimitPosition }}%;
+
+                    --progress-current-position:
+                        {{ $currentSpendingPosition }}%;
+                "
+            >
+                <div
+                    class="monthly-insights__progress-bar"
+                    role="meter"
+                    aria-label="Current spending progress"
+                    aria-valuemin="0"
+                    aria-valuemax="{{ $spendingLimit }}"
+                    aria-valuenow="{{ min(
+                        $currentPeriodTotal,
+                        $spendingLimit
+                    ) }}"
+                    aria-valuetext="
+                        ¥{{ number_format($currentPeriodTotal) }}
+                        spent.
+                        Monthly budget:
+                        ¥{{ number_format($monthlyBudget) }}.
+                        Spending limit:
+                        ¥{{ number_format($spendingLimit) }}.
+                    "
+                >
+                    <span
+                        class="
+                            monthly-insights__progress-segment
+                            monthly-insights__progress-segment--within
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span
+                        class="
+                            monthly-insights__progress-segment
+                            monthly-insights__progress-segment--slightly-high
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span
+                        class="
+                            monthly-insights__progress-segment
+                            monthly-insights__progress-segment--over-budget
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span
+                        class="
+                            monthly-insights__progress-segment
+                            monthly-insights__progress-segment--over-limit
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    {{-- 現在の支出位置 --}}
+                    <span
+                        class="monthly-insights__progress-current"
+                        aria-hidden="true"
+                    >
+                        <span class="monthly-insights__progress-current-label">
+                            Current
+                        </span>
+
+                        <span class="monthly-insights__progress-current-line">
+                        </span>
+
+                        <span class="monthly-insights__progress-current-dot">
+                        </span>
+                    </span>
+                </div>
+
+                {{-- バーの下に表示する基準金額 --}}
+                <div class="monthly-insights__progress-scale">
+                    <span class="monthly-insights__progress-zero">
+                        ¥0
+                    </span>
+
+                    <div
+                        class="
+                            monthly-insights__progress-marker
+                            monthly-insights__progress-marker--eighty
+                        "
+                    >
+                        <img
+                            class="monthly-insights__progress-marker-arrow"
+                            src="{{ asset('images/icons/allow-up_2.svg') }}"
+                            alt=""
+                            aria-hidden="true"
+                        >
+                        <span class="monthly-insights__progress-marker-label">
+                            80% of budget
+                        </span>
+
+                        <strong class="monthly-insights__progress-marker-amount">
+                            ¥{{ number_format($eightyPercentBudget) }}
+                        </strong>
+                    </div>
+
+                    <div
+                        class="
+                            monthly-insights__progress-marker
+                            monthly-insights__progress-marker--budget
+                        "
+                    >
+                        <img
+                            class="monthly-insights__progress-marker-arrow"
+                            src="{{ asset('images/icons/allow-up_2.svg') }}"
+                            alt=""
+                            aria-hidden="true"
+                        >
+                        <span class="monthly-insights__progress-marker-label">
+                            Monthly Budget
+                        </span>
+
+                        <strong class="monthly-insights__progress-marker-amount">
+                            ¥{{ number_format($monthlyBudget) }}
+                        </strong>
+                    </div>
+
+                    <div
+                        class="
+                            monthly-insights__progress-marker
+                            monthly-insights__progress-marker--limit
+                        "
+                    >
+                        <img
+                            class="monthly-insights__progress-marker-arrow"
+                            src="{{ asset('images/icons/allow-up_2.svg') }}"
+                            alt=""
+                            aria-hidden="true"
+                        >
+                        <span class="monthly-insights__progress-marker-label">
+                            Spending Limit
+                        </span>
+
+                        <strong class="monthly-insights__progress-marker-amount">
+                            ¥{{ number_format($spendingLimit) }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            {{-- 色の意味 --}}
+            <ul
+                class="monthly-insights__progress-legend"
+                aria-label="Spending progress legend"
+            >
+                <li class="monthly-insights__progress-legend-item">
+                    <span
+                        class="
+                            monthly-insights__progress-legend-color
+                            monthly-insights__progress-legend-color--within
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span class="monthly-insights__progress-legend-text">
+                        <strong>Within budget</strong>
+                        <span>Up to 80% of budget</span>
+                    </span>
+                </li>
+
+                <li class="monthly-insights__progress-legend-item">
+                    <span
+                        class="
+                            monthly-insights__progress-legend-color
+                            monthly-insights__progress-legend-color--slightly-high
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span class="monthly-insights__progress-legend-text">
+                        <strong>Slightly high</strong>
+                        <span>80%-100% of budget</span>
+                    </span>
+                </li>
+
+                <li class="monthly-insights__progress-legend-item">
+                    <span
+                        class="
+                            monthly-insights__progress-legend-color
+                            monthly-insights__progress-legend-color--over-budget
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span class="monthly-insights__progress-legend-text">
+                        <strong>Over budget</strong>
+                        <span>Above budget, up to the limit</span>
+                    </span>
+                </li>
+
+                <li class="monthly-insights__progress-legend-item">
+                    <span
+                        class="
+                            monthly-insights__progress-legend-color
+                            monthly-insights__progress-legend-color--over-limit
+                        "
+                        aria-hidden="true"
+                    ></span>
+
+                    <span class="monthly-insights__progress-legend-text">
+                        <strong>Over limit</strong>
+                        <span>Above limit</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </section>
 </section>
