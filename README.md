@@ -35,6 +35,8 @@
 ### Subscriptions Settings
 ![Subscriptions_Settings](docs/screenshots/3_subscriptions_settings.png)
 
+### Monthly Insights
+![Monthly Insights](docs/screenshots/4_monthly_insights.png)
 
 ## Features
 
