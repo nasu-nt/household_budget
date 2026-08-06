@@ -92,6 +92,33 @@ export default function initMonthlySpendingChart() {
     });
 
     /*
+     * グラフで使用する色をCSS変数から取得する。
+     * CSS変数が取得できない場合は、
+     * 右側のフォールバック色を使用する。
+     */
+    const rootStyles = window.getComputedStyle(
+        document.documentElement,
+    );
+
+    const textColor =
+        rootStyles
+            .getPropertyValue('--c-text')
+            .trim()
+        || '#333333';
+
+    const gridColor =
+        rootStyles
+            .getPropertyValue('--c-border')
+            .trim()
+        || 'rgba(0, 0, 0, 0.12)';
+
+    const axisColor =
+        rootStyles
+            .getPropertyValue('--c-border-strong')
+            .trim()
+        || '#666666';
+
+    /*
      * Viteの再読み込みなどによる二重生成を防ぐ。
      */
     const existingChart = Chart.getChart(canvas);
@@ -168,14 +195,32 @@ export default function initMonthlySpendingChart() {
                 x: {
                     offset: true,
 
+                    /*
+                     * グラフ下部の横軸。
+                     * widthで線の太さを変更する。
+                     */
+                    border: {
+                        display: true,
+                        color: axisColor,
+                        width: 2,
+                    },
+
                     ticks: {
                         autoSkip: false,
+                        color: textColor,
                         minRotation: 90,
                         maxRotation: 90,
 
                         /*
-                         * 期間開始日から7日ごとに
-                         * X軸の日付を表示する。
+                         * X軸の日付文字を大きくする。
+                         */
+                        font: {
+                            size: 14,
+                        },
+
+                        /*
+                         * 期間開始日を0番目として、
+                         * 0・7・14・21・28番目だけ表示する。
                          */
                         callback(value, index) {
                             if (index % 7 !== 0) {
@@ -192,7 +237,19 @@ export default function initMonthlySpendingChart() {
                 y: {
                     beginAtZero: true,
 
+                    /*
+                     * グラフ左側の縦軸。
+                     * widthで線の太さを変更する。
+                     */
+                    border: {
+                        display: true,
+                        color: axisColor,
+                        width: 2,
+                    },
+
                     ticks: {
+                        color: textColor,
+
                         callback(value) {
                             return `¥${yenFormatter.format(
                                 Number(value),

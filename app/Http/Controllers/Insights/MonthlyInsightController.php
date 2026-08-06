@@ -103,6 +103,8 @@ class MonthlyInsightController extends Controller
         [
             $isEndOfMonth,
             $closingDay,
+            $monthlyBudget,
+            $spendingLimit,
         ] = $this->budgetPeriodSettings($userId);
 
         if ($isDemoUser) {
@@ -164,6 +166,115 @@ class MonthlyInsightController extends Controller
                 $periodEnd->toDateString(),
             ])
             ->sum('amount');
+
+            /*
+            * 予算期間の日数。
+            *
+            * 開始日と終了日の両方を含めるため、
+            * 日付の差へ1日を加える。
+            */
+            $periodDays = (int) $periodStart
+                ->diffInDays($periodEnd) + 1;
+
+            /*
+            * 予算の80%に当たる金額。
+            *
+            * Within budgetとSlightly highの
+            * 境界として使用する。
+            */
+            $eightyPercentBudget = (int) round(
+                $monthlyBudget * 0.8,
+            );
+
+            /*
+            * 月間予算に対する現在の支出割合。
+            *
+            * 月間予算が0円の場合は、
+            * 0除算を避けるため0%とする。
+            */
+            $budgetUsagePercentage = $monthlyBudget > 0
+                ? (int) round(
+                    ($currentPeriodTotal / $monthlyBudget)
+                    * 100,
+                )
+                : 0;
+
+            /*
+            * 月間予算を超えた金額。
+            *
+            * 予算内の場合は0円。
+            */
+            $overBudgetAmount = max(
+                $currentPeriodTotal - $monthlyBudget,
+                0,
+            );
+
+            /*
+            * Spending Limitまで残っている金額。
+            *
+            * 上限を超えている場合は0円。
+            */
+            $remainingToLimitAmount = max(
+                $spendingLimit - $currentPeriodTotal,
+                0,
+            );
+
+            /*
+            * Spending Limitを超えた金額。
+            *
+            * 今後、上限超過時の表示切り替えに使用する。
+            */
+            $overLimitAmount = max(
+                $currentPeriodTotal - $spendingLimit,
+                0,
+            );
+
+            /*
+            * プログレスバー全体の最大金額。
+            *
+            * Spending Limitの右側にも赤い領域を残すため、
+            * 最大額より5%大きい値を表示範囲とする。
+            *
+            * 支出が上限額を超えた場合も、
+            * 現在位置がバー外へ出ないようにする。
+            */
+            $progressMaximum = max(
+                1,
+                (int) ceil(
+                    max(
+                        $monthlyBudget,
+                        $spendingLimit,
+                        $currentPeriodTotal,
+                    ) * 1.05,
+                ),
+            );
+
+            /*
+            * 各金額をプログレスバー上の位置へ変換する。
+            */
+            $eightyPercentPosition =
+                $this->progressPosition(
+                    $eightyPercentBudget,
+                    $progressMaximum,
+                );
+
+            $monthlyBudgetPosition =
+                $this->progressPosition(
+                    $monthlyBudget,
+                    $progressMaximum,
+                );
+
+            $spendingLimitPosition =
+                $this->progressPosition(
+                    $spendingLimit,
+                    $progressMaximum,
+                );
+
+            $currentSpendingPosition =
+                $this->progressPosition(
+                    $currentPeriodTotal,
+                    $progressMaximum,
+                );
 
         /*
         * 選択期間の直前にある予算期間を取得する。
@@ -526,6 +637,42 @@ class MonthlyInsightController extends Controller
             'currentPeriodTotal' =>
                 $currentPeriodTotal,
 
+            'periodDays' =>
+                $periodDays,
+
+            'monthlyBudget' =>
+                $monthlyBudget,
+
+            'spendingLimit' =>
+                $spendingLimit,
+
+            'eightyPercentBudget' =>
+                $eightyPercentBudget,
+
+            'budgetUsagePercentage' =>
+                $budgetUsagePercentage,
+
+            'overBudgetAmount' =>
+                $overBudgetAmount,
+
+            'remainingToLimitAmount' =>
+                $remainingToLimitAmount,
+
+            'overLimitAmount' =>
+                $overLimitAmount,
+
+            'eightyPercentPosition' =>
+                $eightyPercentPosition,
+
+            'monthlyBudgetPosition' =>
+                $monthlyBudgetPosition,
+
+            'spendingLimitPosition' =>
+                $spendingLimitPosition,
+
+            'currentSpendingPosition' =>
+                $currentSpendingPosition,
+
             'previousPeriodTotal' =>
                 $previousPeriodTotal,
 
@@ -572,9 +719,14 @@ class MonthlyInsightController extends Controller
     }
 
     /**
-     * ユーザーの締め日設定を取得する。
+     * ユーザーの予算期間と金額設定を取得する。
      *
-     * @return array{0: bool, 1: int|null}
+     * @return array{
+     *     0: bool,
+     *     1: int|null,
+     *     2: int,
+     *     3: int
+     * }
      */
     private function budgetPeriodSettings(
         int $userId
@@ -600,9 +752,25 @@ class MonthlyInsightController extends Controller
             ? null
             : (int) $closingDayValue;
 
+        $monthlyBudget = (int) (
+            $budgetSetting?->monthly_budget
+            ?? BudgetSetting::DEFAULT_VALUES[
+                'monthly_budget'
+            ]
+        );
+
+        $spendingLimit = (int) (
+            $budgetSetting?->monthly_limit
+            ?? BudgetSetting::DEFAULT_VALUES[
+                'monthly_limit'
+            ]
+        );
+
         return [
             $isEndOfMonth,
             $closingDay,
+            $monthlyBudget,
+            $spendingLimit,
         ];
     }
 
@@ -704,6 +872,32 @@ class MonthlyInsightController extends Controller
             $month->year,
             $month->month,
             $day,
+        );
+    }
+
+    /**
+     * 金額をプログレスバー上の割合へ変換する。
+     *
+     * 0%未満または100%を超える値にならないよう、
+     * 表示範囲内へ補正する。
+     */
+    private function progressPosition(
+        int $amount,
+        int $maximum,
+    ): float {
+        if ($maximum <= 0) {
+            return 0;
+        }
+
+        return round(
+            min(
+                max(
+                    ($amount / $maximum) * 100,
+                    0,
+                ),
+                100,
+            ),
+            4,
         );
     }
 

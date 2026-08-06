@@ -419,7 +419,9 @@
                         </strong>
 
                         <time datetime="{{ $highestSpendingDay['date'] }}">
-                            ({{ $highestSpendingDay['label'] }})
+                            ({{ \Illuminate\Support\Carbon::parse(
+                                $highestSpendingDay['date']
+                            )->format('Y/n/j') }})
                         </time>
                     </div>
 
@@ -442,9 +444,11 @@
                             ) }}
                         </strong>
 
-                        <time datetime="{{ $lowestSpendingDay['date'] }}">
-                            ({{ $lowestSpendingDay['label'] }})
-                        </time>
+                    <time datetime="{{ $lowestSpendingDay['date'] }}">
+                        ({{ \Illuminate\Support\Carbon::parse(
+                            $lowestSpendingDay['date']
+                        )->format('Y/n/j') }})
+                    </time>
                     </div>
                 </div>
 
