@@ -1,41 +1,129 @@
-const DIGITS_ONLY = /[^\d]/g;
+const NON_DIGIT_PATTERN = /\D/g;
 
-function formatAmount(value) {
-    const digits = value.replace(DIGITS_ONLY, '');
+let isInitialized = false;
 
-    return digits
-        ? Number(digits).toLocaleString('ja-JP')
-        : '';
+function formatAmount(input) {
+    const maxDigits = Number.parseInt(
+        input.dataset.maxDigits ?? '10',
+        10,
+    );
+
+    const digits = input.value
+        .normalize('NFKC')
+        .replace(NON_DIGIT_PATTERN, '')
+        .slice(0, maxDigits);
+
+    return digits === ''
+        ? ''
+        : Number(digits).toLocaleString('ja-JP');
+}
+
+function formatMoneyInput(input) {
+    const selectionStart =
+        input.selectionStart ?? input.value.length;
+
+    const positionFromEnd =
+        input.value.length - selectionStart;
+
+    input.value = formatAmount(input);
+
+    const newPosition = Math.max(
+        input.value.length - positionFromEnd,
+        0,
+    );
+
+    input.setSelectionRange(
+        newPosition,
+        newPosition,
+    );
+}
+
+function getMoneyInput(target) {
+    if (!(target instanceof HTMLInputElement)) {
+        return null;
+    }
+
+    if (!target.matches('[data-money-input]')) {
+        return null;
+    }
+
+    return target;
 }
 
 export function initMoneyInputs() {
-    document.querySelectorAll('[data-money-input]').forEach((input) => {
-        // バリデーションエラー後のold値も、初期表示時にカンマ区切りにする
-        input.value = formatAmount(input.value);
+    if (isInitialized) {
+        return;
+    }
 
-        input.addEventListener('input', () => {
-            // カンマを増減してもカーソルが大きくずれないよう、
-            // 入力欄の末尾からの距離を保存する
-            const selectionStart = input.selectionStart ?? input.value.length;
-            const positionFromEnd =
-                input.value.length - selectionStart;
+    isInitialized = true;
 
-            input.value = formatAmount(input.value);
+    document.querySelectorAll(
+        '[data-money-input]',
+    ).forEach((input) => {
+        if (!(input instanceof HTMLInputElement)) {
+            return;
+        }
 
-            const newPosition = Math.max(
-                input.value.length - positionFromEnd,
-                0
+        input.value = formatAmount(input);
+    });
+
+    document.addEventListener('input', (event) => {
+        const input = getMoneyInput(event.target);
+
+        if (!input) {
+            return;
+        }
+
+        /*
+         * IMEで全角数字を入力している途中では、
+         * 文字を削除・整形しない。
+         */
+        if (
+            event instanceof InputEvent
+            && event.isComposing
+        ) {
+            return;
+        }
+
+        formatMoneyInput(input);
+    });
+
+    /*
+     * IMEの変換確定後に、全角数字を半角へ変換する。
+     */
+    document.addEventListener(
+        'compositionend',
+        (event) => {
+            const input = getMoneyInput(event.target);
+
+            if (!input) {
+                return;
+            }
+
+            formatMoneyInput(input);
+        },
+    );
+
+    document.addEventListener('submit', (event) => {
+        const form = event.target;
+
+        if (!(form instanceof HTMLFormElement)) {
+            return;
+        }
+
+        Array.from(form.elements).forEach((element) => {
+            if (!(element instanceof HTMLInputElement)) {
+                return;
+            }
+
+            if (!element.matches('[data-money-input]')) {
+                return;
+            }
+
+            element.value = element.value.replace(
+                /,/g,
+                '',
             );
-
-            input.setSelectionRange(
-                newPosition,
-                newPosition
-            );
-        });
-
-        // Laravelへ送信する直前にカンマを削除する
-        input.closest('form')?.addEventListener('submit', () => {
-            input.value = input.value.replace(/,/g, '');
         });
     });
 }

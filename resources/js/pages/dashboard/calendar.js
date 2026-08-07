@@ -62,9 +62,13 @@ export const initDashboardCalendar = () => {
         '[data-dashboard-calendar-month-link]',
     );
 
-    const spendingDateElement = document.querySelector(
-        '[data-dashboard-calendar-spending-date]',
-    );
+    const monthlyInsightsUrlTemplate =
+        monthLink?.dataset.monthlyInsightsUrlTemplate;
+
+    const spendingDateElement =
+        document.querySelector(
+            '[data-dashboard-calendar-spending-date]',
+        );
 
     /*
      * ダッシュボード以外の画面では、
@@ -80,12 +84,23 @@ export const initDashboardCalendar = () => {
     const calendarUrl =
         calendarElement.dataset.dashboardCalendarUrl;
 
+    const dailyInsightsUrlTemplate =
+        calendarElement.dataset
+            .dailyInsightsUrlTemplate;
+
+    /*
+     * デモユーザーの場合は2026-06-27、
+     * 通常ユーザーの場合はundefinedになる。
+     */
     const demoDate =
         calendarElement.dataset.demoDate;
 
-    if (!calendarUrl) {
+    if (
+        !calendarUrl
+        || !dailyInsightsUrlTemplate
+    ) {
         console.error(
-            'Calendar data URL is not defined.',
+            'Calendar URL is not defined.',
         );
 
         return;
@@ -113,6 +128,11 @@ export const initDashboardCalendar = () => {
             '[data-dashboard-calendar-spending]',
         );
 
+    const expenseForm =
+        document.querySelector(
+            '[data-expense-form]',
+        );
+
     /*
      * ========================================
      * 2. カレンダーの状態を保持する
@@ -123,10 +143,10 @@ export const initDashboardCalendar = () => {
      * 日付ごとのFullCalendarセル要素。
      *
      * キー:
-     * 2027-07-27
+     * 2026-06-19
      *
      * 値:
-     * 対応する<td>要素
+     * 対応するtd要素
      */
     const dayCellElements = new Map();
 
@@ -134,7 +154,7 @@ export const initDashboardCalendar = () => {
      * 日付ごとの支出合計。
      *
      * キー:
-     * 2027-07-27
+     * 2026-06-19
      *
      * 値:
      * 2680
@@ -145,7 +165,7 @@ export const initDashboardCalendar = () => {
      * 日付ごとの予算ステータス。
      *
      * キー:
-     * 2027-07-27
+     * 2026-06-19
      *
      * 値:
      * all_goodなど
@@ -252,50 +272,102 @@ export const initDashboardCalendar = () => {
         );
     };
 
-    /*
+    /**
      * 月次Insightsリンクと選択日ラベルを更新する。
      */
     const updateDateLabels = (dateString) => {
-        const date = parseDateString(dateString);
+        const date =
+            parseDateString(dateString);
 
-        const monthName = new Intl.DateTimeFormat(
-            'en-US',
-            {
-                month: 'long',
-                year: 'numeric',
-            },
-        ).format(date);
+        const monthName =
+            new Intl.DateTimeFormat(
+                'en-US',
+                {
+                    month: 'long',
+                    year: 'numeric',
+                },
+            ).format(date);
 
         if (monthLink) {
+            const monthValue = [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, '0'),
+            ].join('-');
+
             monthLink.textContent = monthName;
 
             monthLink.setAttribute(
                 'aria-label',
                 `View monthly insights for ${monthName}`,
             );
+
+            if (monthlyInsightsUrlTemplate) {
+                monthLink.href =
+                    monthlyInsightsUrlTemplate.replace(
+                        '__MONTH__',
+                        monthValue,
+                    );
+            }
         }
 
         if (spendingDateElement) {
-            const shortMonthName = new Intl.DateTimeFormat(
-                'en-US',
-                {
-                    month: 'short',
-                },
-            ).format(date);
+            const shortMonthName =
+                new Intl.DateTimeFormat(
+                    'en-US',
+                    {
+                        month: 'short',
+                    },
+                ).format(date);
 
             spendingDateElement.textContent =
                 `${shortMonthName} ${date.getDate()}`;
         }
     };
 
-    /*
+    /**
+     * Log your spendingの日付欄を、
+     * カレンダーで選択した日付へ変更する。
+     */
+    const updateExpenseFormDate = (date) => {
+        if (!expenseForm) {
+            return;
+        }
+
+        /*
+         * Add another expenseで追加される行にも
+         * 選択日を使用できるようにする。
+         */
+        expenseForm.dataset.defaultDate = date;
+
+        const expenseDateInputs =
+            expenseForm.querySelectorAll(
+                '[data-expense-field="expense_date"]',
+            );
+
+        expenseDateInputs.forEach(
+            (expenseDateInput) => {
+                expenseDateInput.value = date;
+            },
+        );
+    };
+
+    /**
      * 選択日を変更する。
      */
-    const selectDate = (date) => {
+    const selectDate = (
+        date,
+        {
+            syncExpenseForm = true,
+        } = {},
+    ) => {
         selectedDate = date;
 
         if (dateInput) {
             dateInput.value = date;
+        }
+
+        if (syncExpenseForm) {
+            updateExpenseFormDate(date);
         }
 
         updateDateLabels(date);
@@ -356,10 +428,16 @@ export const initDashboardCalendar = () => {
                         calendarDay.status,
                     );
 
+                    const dailyInsightsUrl =
+                        dailyInsightsUrlTemplate.replace(
+                            '__DATE__',
+                            calendarDay.date,
+                        );
+
                     /*
-                    * 選択日の支出表示や
-                    * セルの色分けに使用するため保存する。
-                    */
+                     * 選択日の支出表示や
+                     * セルの色分けに使用するため保存する。
+                     */
                     dailySpending.set(
                         calendarDay.date,
                         total,
@@ -378,18 +456,17 @@ export const initDashboardCalendar = () => {
                         id:
                             `daily-spending-${calendarDay.date}`,
 
-                        /*
-                        * eventContentで独自表示するため、
-                        * titleは空にする。
-                        */
                         title: '',
 
-                        start: calendarDay.date,
+                        start:
+                            calendarDay.date,
+
                         allDay: true,
 
                         extendedProps: {
                             total,
                             status,
+                            dailyInsightsUrl,
                         },
                     };
                 },
@@ -432,10 +509,6 @@ export const initDashboardCalendar = () => {
             dayCellElements,
             applyStatusToDayCell,
 
-            /*
-             * calendar-options.jsから
-             * 現在の選択日を取得するための関数。
-             */
             getSelectedDate: () => {
                 return selectedDate;
             },
@@ -452,8 +525,17 @@ export const initDashboardCalendar = () => {
 
     /*
      * 初期選択日を入力欄・セル・支出額へ反映する。
+     *
+     * バリデーションエラー後の入力内容を
+     * 勝手に上書きしないよう、
+     * 初期表示時は支出フォームを同期しない。
      */
-    selectDate(selectedDate);
+    selectDate(
+        selectedDate,
+        {
+            syncExpenseForm: false,
+        },
+    );
 
     /*
      * ========================================
@@ -506,6 +588,7 @@ export const initDashboardCalendar = () => {
                 );
 
             selectDate(previousDate);
+
             calendar.gotoDate(
                 previousDate,
             );
@@ -525,18 +608,10 @@ export const initDashboardCalendar = () => {
                 );
 
             selectDate(nextDate);
+
             calendar.gotoDate(
                 nextDate,
             );
         },
     );
-
-    monthLink?.addEventListener('click', (event) => {
-        /*
-        * TODO:
-        * Monthly Insights完成後に削除し、
-        * 実際のURLへ遷移させる。
-        */
-        event.preventDefault();
-    });
 };

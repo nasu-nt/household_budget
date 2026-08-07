@@ -108,9 +108,11 @@
                 border-color 0.15s ease;
 
             &:hover {
-                border:
-                var(--border-width) solid var(--c-primary);
                 background-color: var(--c-primary-weak);
+                border:
+                    var(--border-width)
+                    solid
+                    var(--c-primary);
             }
 
             &:focus-visible {
@@ -123,9 +125,9 @@
         }
 
         /*
-        * 日付入力は画面上では隠し、
-        * 独自のカレンダーアイコンから開く。
-        */
+         * 日付入力は画面上では隠し、
+         * 独自のカレンダーアイコンから開く。
+         */
         &__date-picker-wrapper {
             position: relative;
 
@@ -201,19 +203,22 @@
 
                 font-size: 0.9375rem;
             }
-            
+
             /*
              * 選択中の日付
+             *
+             * position: relativeを日付セルへ付けると、
+             * FullCalendarの金額イベント配置の基準が変わり、
+             * 金額が横へずれるため使用しない。
              */
             .is-selected {
-                position: block;
-                z-index: 2;
-
-                outline:
+                box-shadow:
+                    inset
+                    0
+                    0
+                    0
                     0.1875rem
-                    solid
                     var(--c-active-indicator);
-                outline-offset: -0.1875rem;
             }
 
             /*
@@ -290,6 +295,38 @@
         }
 
         /*
+         * 今日の日付番号
+         *
+         * calendar-options.jsで日付セルへ
+         * is-todayクラスを付ける。
+         * 疑似要素なのでレイアウトは動かさない。
+         */
+        & &__body .is-today &__day-number {
+            position: relative;
+        }
+
+        & &__body .is-today &__day-number::after {
+            content: '';
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            box-sizing: border-box;
+            width: 1.75rem;
+            height: 1.75rem;
+
+            border:
+                var(--border-width-strong)
+                solid
+                var(--c-text);
+            border-radius: 50%;
+
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /*
          * 選択日の支出合計
          */
         &__spending {
@@ -312,9 +349,10 @@
         }
 
         &__spending-date {
+            margin-right: 0.25rem;
+
             font-size: 1.22rem;
             font-weight: 500;
-            margin-right: 0.25rem;
         }
 
         /*
@@ -394,9 +432,10 @@
 
         &__demo-trigger {
             display: inline-flex;
-            margin: -1rem 1rem 0.5rem 0;
             align-items: center;
             gap: 0.375rem;
+
+            margin: -1rem 1rem 0.5rem 0;
 
             color: var(--c-primary);
             font-size: 0.875rem;
@@ -416,10 +455,10 @@
 
         &__demo-icon {
             display: block;
+            flex: 0 0 auto;
 
             width: 1rem;
             height: 1rem;
-            flex: 0 0 auto;
         }
 
         &__demo-label {
@@ -441,7 +480,12 @@
             font-size: 0.8125rem;
             line-height: 1.5;
 
-            background-color: color-mix(in srgb, var(--c-surface) 92%, transparent);
+            background-color:
+                color-mix(
+                    in srgb,
+                    var(--c-surface) 92%,
+                    transparent
+                );
             border: 1px solid var(--c-border);
             border-radius: var(--r-control);
             box-shadow: var(--shadow-card);
@@ -449,6 +493,7 @@
             opacity: 0;
             visibility: hidden;
             transform: translateY(-0.25rem);
+
             transition:
                 opacity 0.18s ease,
                 visibility 0.18s ease,
@@ -486,8 +531,8 @@
         max-width: none;
 
         &__amount-link {
-                margin: 0.125rem auto 0;
-            }
+            margin: 0.125rem auto 0;
+        }
 
         &__summary {
             flex-direction: column;
@@ -517,140 +562,110 @@
 }
 
 /*
- * FullCalendarの日別支出リンク
+ * FullCalendarが生成する外側のイベント。
  *
- * FullCalendar標準のイベント装飾を消し、
- * 独自の黒枠リンクをセル中央へ固定する。
+ * CSS変数と通常プロパティの両方を透明にして、
+ * Classicテーマの青背景を確実に消す。
  */
-.dashboard-calendar__body {
-    /*
-     * FullCalendar側のイベント配置領域。
-     *
-     * どの曜日でも同じ基準で中央揃えにする。
-     */
-    .fc-daygrid-day-events {
-        margin-inline: 0 !important;
+.fc-event.dashboard-calendar__amount-event,
+.fc-h-event.dashboard-calendar__amount-event,
+.fc-daygrid-event.dashboard-calendar__amount-event {
+    display: block !important;
+
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0;
+    margin: 0.25rem 0 0 !important;
+    padding: 0 !important;
+
+    color: var(--c-text) !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/*
+ * FullCalendar内部のラッパー。
+ */
+.dashboard-calendar__amount-event
+.fc-event-main,
+.dashboard-calendar__amount-event
+.fc-event-main-frame {
+    display: grid !important;
+    place-items: center !important;
+
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    color: var(--c-text) !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/*
+ * 実際に見える金額リンク。
+ *
+ * 最大幅を固定しているため、
+ * 左右どの曜日でも同じ位置・同じ大きさになる。
+ */
+.dashboard-calendar__amount-link {
+    position: relative;
+
+    display: grid;
+    place-items: center;
+
+    width: 8rem;
+    height: 1.75rem;
+    padding: 0 0.375rem;
+
+    color: var(--c-text);
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    text-align: center;
+
+    &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0.1rem;
+        left: 0;
+
+        width: 4.5rem;
+        height: 1.5px;
+        margin-inline: auto;
+
+        background-color: var(--c-border-strong);
+
+        content: '';
+        opacity: 0;
+
+        transition: opacity 0.25s ease;
     }
 
-    .fc-daygrid-event-harness {
-        display: grid !important;
-        place-items: center !important;
-
-        box-sizing: border-box;
-        width: 100% !important;
-        min-width: 0;
-        margin-inline: 0 !important;
+    &:hover::after,
+    &:focus-visible::after {
+        opacity: 1;
     }
 
     /*
-     * FullCalendarが生成する外側のイベント。
-     *
-     * CSS変数と通常プロパティの両方を透明にして、
-     * Classicテーマの青背景を確実に消す。
+     * outlineは要素サイズに影響しないので、
+     * キーボード操作時にも位置がずれない。
      */
-    .fc-event.dashboard-calendar__amount-event,
-    .fc-h-event.dashboard-calendar__amount-event,
-    .fc-daygrid-event.dashboard-calendar__amount-event {
-        --fc-event-bg-color: !important;
-        --fc-event-border-color: !important;
-        --fc-event-text-color: !important;
-
-        display: block !important;
-
-        box-sizing: border-box;
-        width: 100% !important;
-        min-width: 0;
-        margin: 0.25rem 0 0 !important;
-        padding: 0 !important;
-
-        color: var(--c-text) !important;
-
-        background: transparent !important;
-        border: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        transform: none !important;
-    }
-
-    /*
-     * FullCalendar内部のラッパー。
-     */
-    .dashboard-calendar__amount-event
-    .fc-event-main,
-    .dashboard-calendar__amount-event
-    .fc-event-main-frame {
-        display: grid !important;
-        place-items: center !important;
-
-        box-sizing: border-box;
-        width: 100% !important;
-        min-width: 0;
-        margin: 0 !important;
-        padding: 0 !important;
-
-        color: var(--c-text) !important;
-        background: transparent !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        transform: none !important;
-    }
-
-    /*
-     * 実際に見える金額リンク。
-     *
-     * 最大幅を固定しているため、
-     * 左右どの曜日でも同じ位置・同じ大きさになる。
-     */
-    .dashboard-calendar__amount-link {
-        position: relative;
-
-        display: grid;
-        place-items: center;
-
-        width: 8rem;
-        height: 1.75rem;
-        padding: 0 0.375rem;
-
-        color: var(--c-text);
-        font-size: 0.9rem;
-        font-weight: 700;
-        font-variant-numeric: tabular-nums;
-        line-height: 1;
-        text-align: center;
-
-        &::after {
-            position: absolute;
-            bottom: 0.1rem;
-            right: 0;
-            left: 0;
-            margin-inline: auto;
-
-            width: 4.5rem;
-            height: 1.5px;
-            background-color: var(--c-border-strong);
-
-            content: '';
-            opacity: 0;
-
-            transition: opacity 0.25s ease;
-        }
-
-        &:hover::after,
-        &:focus-visible::after {
-            opacity: 1;
-        }
-
-        /*
-         * outlineは要素サイズに影響しないので、
-         * キーボード操作時にも位置がずれない。
-         */
-        &:focus-visible {
-            outline:
-                var(--border-width-strong)
-                solid
-                var(--c-active-indicator);
-            outline-offset: 0.125rem;
-        }
+    &:focus-visible {
+        outline:
+            var(--border-width-strong)
+            solid
+            var(--c-active-indicator);
+        outline-offset: 0.125rem;
     }
 }
 

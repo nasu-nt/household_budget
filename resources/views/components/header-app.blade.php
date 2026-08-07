@@ -15,7 +15,7 @@
             </a>
             {{-- Insights --}}
             <a
-                href=""
+                href="{{ route('insights.index') }}"
                 class="app-header__link {{ request()->routeIs('insights.*') ? 'is-active' : '' }}"
                 @if (request()->routeIs('insights.*')) aria-current="page" @endif
             >

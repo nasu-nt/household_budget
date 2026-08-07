@@ -1,0 +1,1712 @@
+.monthly-insights {
+
+    /*
+     * 期間ナビゲーション
+     */
+    &__header {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr)
+            auto
+            minmax(0, 1fr);
+        align-items: center;
+        gap: 1.5rem;
+
+        width: 100%;
+        padding: 0 2rem 1.5rem;
+    }
+
+    &__controls {
+        grid-column: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    &__nav-button {
+        display: inline-grid;
+        flex: 0 0 auto;
+        place-items: center;
+
+        width: var(--l-control-h);
+        height: var(--l-control-h);
+        padding: 0;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: 1.125rem;
+        line-height: 1;
+        text-decoration: none;
+
+        background-color: var(--c-button-secondary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-swatch);
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color:
+                var(--c-button-secondary-bg-hover);
+            border-color: var(--c-border-strong);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    &__period {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        min-width: 16.5rem;
+        height: var(--l-control-h);
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-page-title);
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    &__current-button {
+        grid-column: 3;
+        justify-self: end;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateX(1rem);
+
+        box-sizing: border-box;
+        min-width: 11rem;
+        height: var(--l-control-h);
+        padding-inline: 1.5rem;
+
+        color: var(--c-button-primary-text);
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+
+        background-color: var(--c-button-primary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-button-primary-border);
+        border-radius: var(--r-control);
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color:
+                var(--c-button-primary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+
+        &.is-current {
+            cursor: default;
+        }
+    }
+
+    /*
+     * 支出サマリー
+     */
+    &__summary {
+        display: grid;
+        grid-template-columns:
+            minmax(22rem, 1.35fr)
+            minmax(11rem, 1fr)
+            minmax(13rem, 1fr);
+        align-items: stretch;
+
+        width: 100%;
+        padding: 1.32rem 1rem 1.65rem 2.5rem;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-card);
+    }
+
+    &__summary-main {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+
+        min-width: 0;
+        padding-right: 2rem;
+    }
+
+    &__summary-icon-wrapper {
+        display: inline-grid;
+        flex: 0 0 auto;
+        place-items: center;
+
+        width: 4.5rem;
+        height: 4.5rem;
+
+        background-color: var(--c-icon-tile-bg);
+        border-radius: 0.75rem;
+    }
+
+    &__summary-icon {
+        display: block;
+
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    &__summary-spending {
+        display: grid;
+        gap: 0.75rem;
+
+        min-width: 0;
+    }
+
+    &__summary-title {
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: nowrap;
+        transform: translateY(-0.05rem);
+    }
+
+    &__summary-amount {
+        margin: 0;
+        padding-top: 0.25rem;
+
+        color: var(--c-text);
+        font-size: 2.25rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+    }
+
+    &__comparison {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+
+        min-width: 0;
+        padding-inline: 2rem;
+
+        border-left:
+            var(--border-width)
+            solid
+            var(--c-border);
+
+        &:nth-of-type(2),
+        &:nth-of-type(3) {
+            transform: translateX(0.8rem);
+        }
+    }
+
+    &__comparison-label {
+        display: grid;
+        place-items: center;
+
+        min-height: 2rem;
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-lg);
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    &__comparison-amount {
+        display: grid;
+        justify-items: center;
+        width: 100%;
+        margin: 0;
+
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1;
+
+        &.is-increase {
+            color: var(--c-danger);
+        }
+
+        &.is-decrease {
+            color: var(--c-success);
+        }
+
+        &.is-neutral {
+            color: var(--c-muted);
+        }
+    }
+
+    &__comparison-amount > span {
+        display: block;
+        min-width: 8rem;
+        text-align: center;
+    }
+
+    &__comparison-percentage {
+        min-width: 6rem;
+        padding-top: 0.25rem;
+        font-size: 1.25rem;
+    }
+
+    /*
+     * カテゴリ別支出
+     */
+    &__categories {
+        margin-top: 2.25rem;
+        width: 100%;
+        margin-left: 1.2rem;
+    }
+
+    &__section-title {
+        margin: 0 0 0.875rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    &__categories-card {
+        width: calc(100% - 2.4rem);
+        padding: 1rem 1.5rem 1.4rem 1.5rem;
+
+        // PCでは横スクロールさせない
+        overflow-x: visible;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-card);
+    }
+
+    &__categories-table {
+        width: 100%;
+        // PCで不要な最小幅を持たせない
+        min-width: 0;
+
+        table-layout: fixed;
+        border-collapse: collapse;
+
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /*
+     * 各列の横幅
+     */
+    &__category-col--name {
+        width: 28%;
+    }
+
+    &__category-col--amount {
+        width: 12%;
+    }
+
+    &__category-col--percentage {
+        width: 8%;
+    }
+
+    &__category-col--chart {
+        width: 35%;
+    }
+
+    &__category-col--comparison {
+        width: 17%;
+    }
+
+    /*
+     * 表の見出し
+     */
+    &__categories-table thead th {
+        padding: 0 0 0.25rem;
+
+        color: var(--c-muted);
+        font-size: var(--fs-sm);
+        font-weight: 400;
+        line-height: 1.3;
+        text-align: center;
+    }
+
+    &__category-heading-empty {
+        color: transparent;
+    }
+
+    /*
+     * カテゴリ行
+     */
+    &__category-row th,
+    &__category-row td {
+        padding-block: 0.45rem;
+        vertical-align: middle;
+    }
+
+    &__category-name {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        min-width: 0;
+        padding-right: 1rem;
+
+        font-weight: 700;
+        text-align: left;
+    }
+
+    &__category-color {
+        display: inline-block;
+        flex: 0 0 auto;
+
+        width: 1.5rem;
+        height: 1.5rem;
+
+        background-color: var(--category-color);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: 0.25rem;
+    }
+
+    &__category-amount,
+    &__category-percentage {
+        padding-right: 1.5rem;
+
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &__category-percentage {
+        text-align: center;
+    }
+
+    &__category-chart {
+        padding-inline: 1rem 1.5rem;
+    }
+
+    /*
+     * 各カテゴリの割合バー
+     */
+    &__category-track {
+        width: 100%;
+        height: 1.2rem;
+
+        overflow: hidden;
+
+        background-color: var(--c-surface-disabled);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: 999px;
+    }
+
+    &__category-fill {
+        display: block;
+
+        width: var(--category-width);
+        height: 100%;
+
+        background-color: var(--category-color);
+        border-radius: 999px;
+    }
+
+    /*
+     * 前期間との比較
+     */
+    &__category-comparison {
+        padding-left: 1rem;
+
+        font-weight: 700;
+        white-space: nowrap;
+
+        &.is-increase {
+            color: var(--c-danger);
+        }
+
+        &.is-decrease {
+            color: var(--c-success);
+        }
+
+        &.is-neutral {
+            color: var(--c-text);
+        }
+    }
+
+    &__category-comparison-content {
+        display: grid;
+        grid-template-columns: max-content 1rem;
+        align-items: center;
+        justify-content: end;
+        column-gap: 0.4rem;
+
+        width: 100%;
+    }
+
+    &__category-comparison-value {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__category-comparison-icon {
+        display: block;
+
+        width: 1rem;
+        height: 1rem;
+        object-fit: contain;
+    }
+
+    // ボーダー位置調整
+    &__category-row:last-child th,
+    &__category-row:last-child td {
+        padding-bottom: 1rem;
+    }
+
+    /*
+     * Total行
+     */
+    &__category-total-row {
+        border-top:
+            var(--border-width)
+            solid
+            var(--c-border);
+    }
+
+    &__category-total-row th,
+    &__category-total-row td {
+        padding-top: 1.3rem;
+        vertical-align: middle;
+    }
+
+    &__category-total-label {
+        font-weight: 900;
+        text-align: left;
+    }
+
+    &__category-total-amount {
+        padding-right: 1.5rem;
+
+        font-weight: 700;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &__category-total-percentage {
+        padding-right: 1.5rem;
+
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &__category-total-chart {
+        padding-inline: 1rem 0;
+    }
+
+    /*
+     * Totalの積み上げバー
+     */
+    &__category-total-bar {
+        display: flex;
+
+        width: 100%;
+        height: 1.2rem;
+
+        overflow: hidden;
+
+        background-color: var(--c-surface-disabled);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: 999px;
+    }
+
+    &__category-total-segment {
+        display: block;
+        flex: 0 0 var(--category-width);
+
+        height: 100%;
+
+        background-color: var(--category-color);
+    }
+
+    /*
+     * 支出がない場合
+     */
+    &__categories-empty {
+        margin: 0;
+        padding: 2rem 1rem;
+
+        color: var(--c-muted);
+        text-align: center;
+    }
+
+    &__categories-empty-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 1.25rem 1rem 0;
+
+        border-top:
+            var(--border-width)
+            solid
+            var(--c-border);
+    }
+
+    /*
+     * 「View records from all categories」ボタン
+     */
+    &__category-records-action {
+        margin-top: 1rem;
+    }
+
+    &__category-records-tooltip {
+        position: relative;
+
+        display: inline-block;
+
+        cursor: help;
+
+        &:hover,
+        &:focus-within {
+            .monthly-insights__category-records-message {
+                visibility: visible;
+                opacity: 1;
+                transform:
+                    translateX(0)
+                    translateY(-50%);
+            }
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.25rem;
+            border-radius: var(--r-control);
+        }
+    }
+
+    &__category-records-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-height: 2.25rem;
+        padding: 0.5rem 0.775rem;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-sm);
+        line-height: 1.2;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+
+        &:disabled {
+            color: var(--c-text);
+
+            cursor: help;
+            opacity: 1;
+
+            /*
+            * hoverを親要素で確実に受け取るため。
+            */
+            pointer-events: none;
+        }
+    }
+
+    &__category-records-message {
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 0.75rem);
+        z-index: 10;
+
+        width: max-content;
+        max-width: 18rem;
+        padding: 0.625rem 0.75rem;
+
+        visibility: hidden;
+
+        color: var(--c-button-primary-text);
+        font-size: var(--fs-sm);
+        line-height: 1.4;
+        white-space: normal;
+
+        background-color: var(--c-button-primary-bg);
+        border-radius: var(--r-control);
+
+        opacity: 0;
+        transform:
+            translateX(-0.25rem)
+            translateY(-50%);
+
+        transition:
+            opacity 0.15s ease,
+            transform 0.15s ease,
+            visibility 0.15s ease;
+
+        &::after {
+            position: absolute;
+            top: 50%;
+            right: 100%;
+
+            width: 0;
+            height: 0;
+
+            content: '';
+
+            border: 0.375rem solid transparent;
+            border-right-color: var(--c-button-primary-bg);
+
+            transform: translateY(-50%);
+        }
+    }
+
+     /*
+     * 日別支出推移
+     */
+    &__trend {
+        width: 100%;
+        margin-top: 2.25rem;
+        margin-left: 1.2rem;
+    }
+
+    &__trend-card {
+        width: calc(100% - 2.4rem);
+        padding: 1.5rem 2.5rem 1.5rem;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-card);
+    }
+
+    /*
+    * Highest・Lowest
+    */
+    &__trend-legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        // center から変更
+        justify-content: flex-start;
+        margin-left: 5rem;
+
+        gap: 1rem 2.5rem;
+        margin-bottom: 0.5rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-ms);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.4;
+    }
+
+    &__trend-legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        white-space: nowrap;
+    }
+
+    &__trend-legend-item strong {
+        font-weight: 700;
+    }
+
+    &__trend-legend-dot {
+        display: inline-block;
+        flex: 0 0 auto;
+
+        width: 1rem;
+        height: 1rem;
+
+        border-radius: var(--r-pill);
+
+        &--highest {
+            background-color: #ef1717;
+        }
+
+        &--lowest {
+            background-color: #2563eb;
+        }
+    }
+
+    /*
+     * Chart.jsの表示領域
+     */
+    &__trend-chart-wrapper {
+        position: relative;
+
+        width: 100%;
+        min-width: 0;
+    }
+
+    &__trend-chart {
+        display: block;
+
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /*
+     * 棒グラフの操作案内
+     */
+    &__trend-guide {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+
+        margin: 1.25rem 0rem 0 1rem;
+        padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-mg);
+        line-height: 1.4;
+
+        background-color: var(--c-surface-disabled);
+        border-radius: var(--r-swatch);
+    }
+
+    &__trend-guide-icon {
+        display: block;
+        flex: 0 0 auto;
+
+        width: 1rem;
+        height: 1rem;
+    }
+
+    &__trend-guide p {
+        margin: 0;
+    }
+
+    /*
+     * 支出データがない場合
+     */
+    &__trend-empty {
+        margin: 0;
+        padding: 3rem 1rem;
+
+        color: var(--c-muted);
+        text-align: center;
+    }
+
+    /*
+     * タブレット
+     */
+    @media (max-width: 64rem) {
+        &__summary {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        &__summary-main {
+            display: flex;
+            align-items: center;
+
+            gap: 0.75rem;
+
+            min-width: 0;
+            padding-right: 2rem;
+        }
+
+        &__comparison {
+            margin-top: 1.5rem;
+
+            &:nth-of-type(2) {
+                border-left: 0;
+            }
+        }
+
+        &__categories-card {
+            padding-inline: 1.5rem;
+        }
+    }
+
+    /*
+     * 期間ナビゲーションのレスポンシブ
+     */
+    @media (max-width: 48rem) {
+        &__header {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: 1.25rem 1rem;
+        }
+
+        &__controls {
+            grid-column: 1;
+            gap: 0.75rem;
+        }
+
+        &__period {
+            min-width: 17rem;
+            font-size: var(--fs-lg);
+        }
+
+        &__current-button {
+            grid-column: 1;
+            justify-self: center;
+        }
+
+        &__category-records-message {
+            top: auto;
+            bottom: calc(100% + 0.625rem);
+            left: 0;
+
+            transform: translateY(0.25rem);
+
+            &::after {
+                top: 100%;
+                right: auto;
+                left: 1.5rem;
+
+                border-color: transparent;
+                border-top-color: var(--c-button-primary-bg);
+
+                transform: none;
+            }
+        }
+
+        &__category-records-tooltip {
+            &:hover,
+            &:focus-within {
+                .monthly-insights__category-records-message {
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+
+    /*
+     * 累積支出の進捗
+     */
+    &__progress {
+        width: 100%;
+        margin-top: 2.25rem;
+        margin-left: 1.2rem;
+    }
+
+    &__progress-heading {
+        display: flex;
+        align-items: baseline;
+        gap: 1.75rem;
+
+        width: calc(100% - 2.4rem);
+        margin-bottom: 0.875rem;
+    }
+
+    &__progress-heading &__section-title {
+        margin-bottom: 0;
+    }
+
+    &__progress-period {
+        margin: 0;
+        transform: translateY(0.05rem);
+        color: var(--c-muted);
+        font-size: var(--fs-xs);
+        line-height: 1.4;
+    }
+
+    &__progress-card {
+        /*
+         * 今回の画面用カラー。
+         *
+         * 配置が完成したあと、
+         * Appearance Settingsの色との連携へ変更できる。
+         */
+        --progress-within-color: #43b02a;
+        --progress-slightly-high-color: #ffdc5d;
+        --progress-over-budget-color: #ff8a4c;
+        --progress-over-limit-color: #ef1717;
+
+        width: calc(100% - 2.4rem);
+        padding: 1.25rem 2.5rem 2rem;
+
+        color: var(--c-text);
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border);
+        border-radius: var(--r-card);
+    }
+
+    /*
+     * 上部の金額サマリー
+     */
+    &__progress-summary {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr 1fr;
+        align-items: stretch;
+
+        margin-bottom: 3rem;
+    }
+
+    &__progress-summary-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.35rem;
+
+        min-width: 0;
+        min-height: 5.5rem;
+        padding-inline: 2rem;
+
+        text-align: center;
+
+        &:first-child {
+            align-items: flex-start;
+            padding-left: 1rem;
+
+            text-align: left;
+        }
+        
+        &:not(:first-child) {
+            background-image: linear-gradient(
+                var(--c-border),
+                var(--c-border)
+            );
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-size: 1px 70%;
+        }
+    }
+
+    &__progress-summary-label {
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    &__progress-summary-amount {
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.15;
+
+        &.is-over {
+            color: var(--c-danger);
+        }
+
+        &.is-within {
+            color: var(--c-success);
+        }
+    }
+
+    &__progress-summary-note {
+        margin: 0;
+
+        color: var(--c-text);
+        font-size: var(--fs-sm);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.35;
+    }
+
+    /*
+     * プログレスバー全体
+     */
+    &__progress-visual {
+        position: relative;
+
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    &__progress-bar {
+        position: relative;
+
+        width: 100%;
+        height: 1.6rem;
+
+        border-radius: var(--r-pill);
+    }
+
+    /*
+     * 4色の区間
+     */
+    &__progress-segment {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+
+        display: block;
+
+        &--within {
+            left: 0;
+
+            width:
+                var(--progress-eighty-position);
+
+            background-color:
+                var(--progress-within-color);
+
+            border-radius:
+                var(--r-pill)
+                0
+                0
+                var(--r-pill);
+        }
+
+        &--slightly-high {
+            left:
+                var(--progress-eighty-position);
+
+            width:
+                calc(
+                    var(--progress-budget-position)
+                    - var(--progress-eighty-position)
+                );
+
+            background-color:
+                var(--progress-slightly-high-color);
+        }
+
+        &--over-budget {
+            left:
+                var(--progress-budget-position);
+
+            width:
+                calc(
+                    var(--progress-limit-position)
+                    - var(--progress-budget-position)
+                );
+
+            background-color:
+                var(--progress-over-budget-color);
+        }
+
+        &--over-limit {
+            right: 0;
+            left:
+                var(--progress-limit-position);
+
+            background-color:
+                var(--progress-over-limit-color);
+
+            border-radius:
+                0
+                var(--r-pill)
+                var(--r-pill)
+                0;
+        }
+    }
+
+    /*
+     * 現在位置
+     */
+    &__progress-current {
+        position: absolute;
+        top: -1.75rem;
+        left:
+            var(--progress-current-position);
+        z-index: 2;
+
+        width: 0;
+        height: 3rem;
+
+        color: var(--c-text);
+
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+
+    &__progress-current-label {
+        position: absolute;
+        top: 0;
+        left: 50%;
+
+        font-size: var(--fs-sm);
+        line-height: 1;
+        white-space: nowrap;
+
+        transform: translateX(-50%);
+    }
+
+    &__progress-current-line {
+        position: absolute;
+        top: 1.4rem;
+        left: 50%;
+
+        width: var(--border-width-strong);
+        height: 1.0rem;
+
+        background-color: var(--c-text);
+
+        transform: translateX(-50%);
+    }
+
+    &__progress-current-dot {
+        position: absolute;
+        top: 2.25rem;
+        left: 50%;
+
+        width: 0.625rem;
+        height: 0.625rem;
+
+        background-color: var(--c-text);
+        border-radius: var(--r-pill);
+
+        transform: translateX(-50%);
+    }
+
+    /*
+     * バー下の基準金額
+     */
+    &__progress-scale {
+        position: relative;
+
+        width: 100%;
+        height: 4.75rem;
+        margin-top: 0.5rem;
+    }
+
+    &__progress-zero {
+        position: absolute;
+        top: -0.25rem;
+        left: -0.05rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-sm);
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__progress-marker {
+        position: absolute;
+        top: -0.3rem;
+        z-index: 1;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 10rem;
+
+        color: var(--c-text);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.3;
+        text-align: center;
+
+        transform: translateX(-50%);
+
+        &--eighty {
+            left:
+                var(--progress-eighty-position);
+        }
+
+        &--budget {
+            left:
+                var(--progress-budget-position);
+        }
+
+        &--limit {
+            left:
+                var(--progress-limit-position);
+        }
+    }
+
+    &__progress-marker-arrow {
+        display: block;
+
+        width: 0.75rem;
+        height: 0.75rem;
+        margin-bottom: 0.1rem;
+
+        object-fit: contain;
+    }
+
+    &__progress-marker-label {
+        display: block;
+
+        font-size: var(--fs-xs);
+        white-space: nowrap;
+    }
+
+    &__progress-marker-amount {
+        display: block;
+
+        font-size: var(--fs-sm);
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /*
+     * 色の凡例
+     */
+    &__progress-legend {
+        display: grid;
+        grid-template-columns:
+            1.1fr
+            1.15fr
+            1.35fr
+            1fr;
+        gap: 1.5rem 1rem;
+
+        width: 100%;
+        margin: 0.5rem 0 0;
+        padding: 0;
+    }
+
+    &__progress-legend-item {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+
+        min-width: 0;
+    }
+
+    &__progress-legend-color {
+        display: block;
+        flex: 0 0 auto;
+
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.15rem;
+
+        border-radius: var(--r-swatch);
+
+        &--within {
+            background-color:
+                var(--progress-within-color);
+        }
+
+        &--slightly-high {
+            background-color:
+                var(--progress-slightly-high-color);
+        }
+
+        &--over-budget {
+            background-color:
+                var(--progress-over-budget-color);
+        }
+
+        &--over-limit {
+            background-color:
+                var(--progress-over-limit-color);
+        }
+    }
+
+    &__progress-legend-text {
+        display: grid;
+        gap: 0.15rem;
+
+        min-width: 0;
+
+        font-size: 0.8rem;
+        line-height: 1.35;
+
+        strong,
+        span {
+            display: block;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+    }
+
+    /*
+     * 累積支出の進捗：タブレット
+     */
+    @media (max-width: 64rem) {
+        &__progress-card {
+            padding-inline: 2rem;
+        }
+
+        &__progress-summary-item {
+            padding-inline: 1.25rem;
+        }
+
+        &__progress-legend {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    /*
+     * 累積支出の進捗：小さいタブレット
+     */
+    @media (max-width: 48rem) {
+        &__progress {
+            margin-left: 0;
+            padding-inline: 1rem;
+        }
+
+        &__progress-heading {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+
+            width: 100%;
+        }
+
+        &__progress-period {
+            font-size: var(--fs-md);
+        }
+
+        &__progress-card {
+            width: 100%;
+            padding: 1.5rem;
+        }
+
+        &__progress-summary {
+            grid-template-columns: 1fr;
+
+            margin-bottom: 3rem;
+        }
+
+        &__progress-summary-item {
+            align-items: flex-start;
+
+            min-height: auto;
+            padding: 1rem 0;
+
+            text-align: left;
+
+            &:first-child {
+                padding: 0 0 1rem;
+            }
+
+            &:not(:first-child) {
+                border-top:
+                    var(--border-width)
+                    solid
+                    var(--c-border);
+                border-left: 0;
+            }
+        }
+
+        &__progress-legend {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /*
+     * 累積支出の進捗：スマートフォン
+     */
+    @media (max-width: 40rem) {
+        &__progress-card {
+            overflow-x: auto;
+
+            padding: 1.25rem 1rem;
+
+            scrollbar-gutter: stable;
+        }
+
+        &__progress-summary {
+            min-width: 0;
+        }
+
+        /*
+         * 基準ラベル同士の重なりを避けるため、
+         * バー部分だけ最小幅を持たせる。
+         */
+        &__progress-visual {
+            min-width: 38rem;
+        }
+
+        &__progress-marker {
+            width: 8rem;
+        }
+
+        &__progress-marker-label,
+        &__progress-marker-amount {
+            font-size: var(--fs-sm);
+        }
+
+        &__progress-legend {
+            min-width: 0;
+        }
+    }
+
+        /*
+     * 月間メモ
+     */
+    &__notes {
+        width: calc(100% - 2.4rem);
+        margin-top: 2.25rem;
+        margin-left: 1.2rem;
+    }
+
+    &__notes-title {
+        margin: 0 0 0.875rem;
+
+        color: var(--c-text);
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    &__notes-form {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr)
+            8.5rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    &__notes-field {
+        display: grid;
+        gap: 0.375rem;
+
+        min-width: 0;
+    }
+
+    &__notes-input {
+        display: block;
+
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.5rem 1.25rem;
+
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        line-height: 1.5;
+
+        background-color: var(--c-surface);
+        border:
+            var(--border-width)
+            solid
+            var(--c-border-strong);
+        border-radius: var(--r-control);
+
+        resize: none;
+
+        &::placeholder {
+            color: var(--c-muted);
+            opacity: 1;
+        }
+
+        &:hover {
+            border-color: var(--c-text);
+        }
+
+        &:focus {
+            border-color: var(--c-active-indicator);
+            outline: none;
+            box-shadow:
+                0
+                0
+                0
+                0.25rem
+                rgb(37 99 235 / 15%);
+        }
+
+        &.is-invalid {
+            border-color: var(--c-danger);
+
+            &:focus {
+                box-shadow:
+                    0
+                    0
+                    0
+                    0.25rem
+                    rgb(220 38 38 / 15%);
+            }
+        }
+    }
+
+    &__notes-error {
+        margin: 0;
+
+        color: var(--c-danger);
+        font-size: var(--fs-sm);
+        line-height: 1.4;
+    }
+
+    &__notes-save {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.5rem;
+
+        color: var(--c-button-primary-text);
+        font: inherit;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        line-height: 1;
+
+        background-color: var(--c-button-primary-bg);
+        border:
+            var(--border-width)
+            solid
+            var(--c-button-primary-border);
+        border-radius: var(--r-control);
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            background-color:
+                var(--c-button-primary-bg-hover);
+        }
+
+        &:focus-visible {
+            outline:
+                var(--border-width-strong)
+                solid
+                var(--c-active-indicator);
+            outline-offset: 0.125rem;
+        }
+    }
+
+    /*
+     * 月間メモ：スマートフォン
+     */
+    @media (max-width: 48rem) {
+        &__notes {
+            width: 100%;
+            margin-top: 2rem;
+            margin-left: 0;
+            padding-inline: 1rem;
+        }
+
+        &__notes-form {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        &__notes-save {
+            justify-self: end;
+
+            width: auto;
+            min-width: 8.5rem;
+        }
+    }
+    
+    /*
+     * スマートフォン
+     */
+    @media (max-width: 40rem) {
+        &__controls {
+            gap: 0.5rem;
+        }
+
+        &__period {
+            min-width: 0;
+            font-size: var(--fs-md);
+        }
+
+        &__summary {
+            grid-template-columns: 1fr;
+            padding: 1.25rem;
+        }
+
+        &__summary-main {
+            justify-content: flex-start;
+            gap: 1rem;
+        }
+
+        &__summary-title {
+            font-size: var(--fs-sm);
+            white-space: normal;
+        }
+
+        &__summary-amount {
+            font-size: 1.75rem;
+            text-align: left;
+        }
+
+        &__comparison {
+            margin-top: 0;
+            padding: 1.25rem 0;
+
+            border-left: 0;
+            border-top:
+                var(--border-width)
+                solid
+                var(--c-border);
+
+            &:nth-of-type(2) {
+                border-top: 0;
+            }
+        }
+
+        &__comparison-label {
+            min-height: auto;
+            font-size: var(--fs-md);
+        }
+
+        &__comparison-amount {
+            font-size: 1.5rem;
+        }
+
+        &__comparison-percentage {
+            font-size: var(--fs-md);
+        }
+
+        &__categories {
+            margin-top: 2rem;
+        }
+
+        &__section-title {
+            font-size: var(--fs-lg);
+        }
+
+        &__categories-card {
+            padding: 1rem;
+        }
+    }
+}

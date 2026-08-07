@@ -29,14 +29,16 @@
                 ◀
             </button>
 
-            {{--
-                月次Insightsへの仮リンク。
-                実装後にhrefを実際のURLへ変更する。
-            --}}
+            {{-- 月次Insightsへのリンク --}}
             <a
-                href="#"
+                href="{{ route('insights.monthly', [
+                    'month' => $dashboardDateObject->format('Y-m'),
+                ]) }}"
                 class="dashboard-calendar__month-link"
                 data-dashboard-calendar-month-link
+                data-monthly-insights-url-template="{{ route('insights.monthly', [
+                    'month' => '__MONTH__',
+                ]) }}"
                 aria-label="View monthly insights for {{ $dashboardMonthLabel }}"
             >
                 {{ $dashboardMonthLabel }}
@@ -128,6 +130,9 @@
         class="dashboard-calendar__body"
         data-dashboard-calendar
         data-dashboard-calendar-url="{{ route('dashboard.calendar') }}"
+        data-daily-insights-url-template="{{ route('insights.daily', [
+            'date' => '__DATE__',
+        ]) }}"
         @if ($isDemoUser)
             data-demo-date="{{ $dashboardDate }}"
         @endif
@@ -140,32 +145,40 @@
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--all-good"
+                style="background-color: {{ $appearanceSetting->all_good_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>All good</span>
         </li>
 
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--slightly-high"
+                style="background-color: {{ $appearanceSetting->slightly_high_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>Slightly high</span>
         </li>
 
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--over-budget"
+                style="background-color: {{ $appearanceSetting->over_budget_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>Over budget</span>
         </li>
 
         <li class="dashboard-calendar__legend-item">
             <span
                 class="dashboard-calendar__legend-color dashboard-calendar__legend-color--over-limit"
+                style="background-color: {{ $appearanceSetting->over_limit_color }};"
                 aria-hidden="true"
             ></span>
+
             <span>Over limit</span>
         </li>
     </ul>
