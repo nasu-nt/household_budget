@@ -11,10 +11,10 @@
         </p>
     </header>
 
-    <div class="settings-delete__actions">
+    <div class="profile-delete__actions">
         <button
             type="button"
-            class="settings-delete__button"
+            class="profile-delete__button"
             x-data=""
             x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
         >
@@ -30,22 +30,22 @@
         <form
             method="post"
             action="{{ route('settings.profile.destroy') }}"
-            class="p-6"
+            class="profile-delete__modal"
         >
             @csrf
             @method('delete')
 
-            <h2 class="text-lg font-medium text-gray-900">
+            <h2 class="profile-delete__modal-title">
                 {{ __('Are you sure you want to delete your account?') }}
             </h2>
 
-            <p class="mt-1 text-sm text-gray-600">
+            <p class="profile-delete__modal-description">
                 {{ __('Once your account is deleted, all of its resources and data will be permanently deleted.') }}
                 <br>
                 {{ __('Please enter your password to confirm you would like to permanently delete your account.') }}
             </p>
 
-            <div class="mt-6">
+            <div class="profile-delete__modal-field">
                 <label
                     for="delete_account_password"
                     class="sr-only"
@@ -57,7 +57,7 @@
                     id="delete_account_password"
                     name="password"
                     type="password"
-                    class="settings-form__input settings-delete__modal-input
+                    class="settings-form__input profile-delete__modal-input
                         @error('password', 'userDeletion') is-invalid @enderror"
                     placeholder="{{ __('Password') }}"
                     autocomplete="current-password"
@@ -78,12 +78,12 @@
                 @enderror
             </div>
 
-            <div class="mt-6 flex justify-end">
+            <div class="profile-delete__modal-actions">
                 <x-secondary-button x-on:click="$dispatch('close')">
                     {{ __('Cancel') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3">
+                <x-danger-button class="s">
                     {{ __('Delete Account') }}
                 </x-danger-button>
             </div>
