@@ -89,4 +89,9 @@ class User extends Authenticatable
         $this->notify(new CustomResetPasswordNotification($token));
     }
 
+    public function isDemoAccount(): bool
+    {
+        return $this->email === config('demo.email');
+    }
+
 }

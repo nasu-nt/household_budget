@@ -1,7 +1,5 @@
 @use '../../components/card';
 @use '../../components/form';
-@use './categories';
-@use './subscriptions';
 
 .settings-page {
     min-height: calc(100dvh - var(--l-header-h));
@@ -41,15 +39,6 @@
     &__sections {
         display: grid;
     }
-
-    &__danger-zone {
-        margin-top: 1.5rem;
-        padding-top: 1.75rem;
-        border-top:
-            var(--border-width)
-            solid
-            var(--c-border);
-    }
 }
 
 .settings-card {  
@@ -62,11 +51,6 @@
 
     & + & {
         margin-top: 2.5rem;
-    }
-
-    &--delete {
-        padding-top: 1.75rem;
-        padding-bottom: 2.25rem;
     }
 
     &__header {
@@ -210,36 +194,6 @@
     &__verification-status {
         margin-top: 0.25rem !important;
         color: var(--c-success);
-    }
-}
-
-.settings-delete {
-    &__actions {
-        display: flex;
-        justify-content: center;
-        margin-top: 2rem;
-    }
-
-    &__button {
-        @include form.button(
-            $width: 13.5rem,
-            $margin: 0
-        );
-
-        height: 2.5rem;
-        background-color: var(--c-danger);
-        border-color: var(--c-danger);
-        font-size: var(--fs-sm);
-
-        &:hover:not(:disabled) {
-            background-color: var(--c-danger-hover);
-            border-color: var(--c-danger-hover);
-        }
-    }
-
-    &__modal-input {
-        width: 100%;
-        max-width: 24rem;
     }
 }
 

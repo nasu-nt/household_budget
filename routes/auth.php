@@ -11,18 +11,17 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
+// デモアカウントでログイン画面に遷移したときに強制ログアウト
+Route::get('login', [AuthenticatedSessionController::class, 'create'])
+    ->name('login');
+
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
-    Route::post('/demo-login', [AuthenticatedSessionController::class, 'demo'])
+    Route::post('demo-login', [AuthenticatedSessionController::class, 'demo'])
         ->name('demo.login');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])

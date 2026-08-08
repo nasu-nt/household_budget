@@ -15,8 +15,23 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View|RedirectResponse
     {
+        $user = $request->user();
+
+        if ($user?->isDemoAccount()) {
+            Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login');
+        }
+
+        if ($user) {
+            return redirect()->route('dashboard');
+        }
+
         return view('auth.login');
     }
 
