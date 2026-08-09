@@ -23,7 +23,9 @@
         </div>
     @endsession
 
-    <main class="guest-main login">
+    <main class="guest-main login"
+        data-login-page
+    >
         <div class="login-card">
             <h2 class="title">Sign in</h2>
             <div class="login-form">
