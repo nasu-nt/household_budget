@@ -1,12 +1,18 @@
 {{-- resources/views/dashboard/partials/_expense-form.blade.php --}}
-
 @php
+    $isDemoUser = auth()->user()?->email
+        === config('demo.email', 'demo@example.com');
+
+    $defaultExpenseDate = $isDemoUser
+        ? '2026-06-27'
+        : now('Asia/Tokyo')->format('Y-m-d');
+
     $expenseRows = old('expenses');
 
     if (! is_array($expenseRows) || $expenseRows === []) {
         $expenseRows = [
             [
-                'expense_date' => now()->format('Y-m-d'),
+                'expense_date' => $defaultExpenseDate,
                 'recorded_time' => '',
                 'category_id' => '',
                 'amount' => '',
@@ -48,7 +54,7 @@
         method="POST"
         action="{{ route('expenses.store') }}"
         data-expense-form
-        data-default-date="{{ now()->format('Y-m-d') }}"
+        data-default-date="{{ $defaultExpenseDate }}"
     >
         @csrf
 
