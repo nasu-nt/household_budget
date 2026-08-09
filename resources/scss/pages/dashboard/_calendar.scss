@@ -221,21 +221,17 @@
                     var(--c-active-indicator);
             }
 
-            /*
-             * 日別の予算ステータス
-             */
+            // 日別の予算ステータス
             .is-all-good {
                 background-color: var(--calendar-all-good);
             }
 
             .is-slightly-high {
-                background-color:
-                    var(--calendar-slightly-high);
+                background-color: var(--calendar-slightly-high);
             }
 
             .is-over-budget {
-                background-color:
-                    var(--calendar-over-budget);
+                background-color: var(--calendar-over-budget);
             }
 
             .is-over-limit {
@@ -355,9 +351,7 @@
             font-weight: 500;
         }
 
-        /*
-         * ステータス凡例
-         */
+        // ステータス凡例
         &__legend {
             display: flex;
             flex-wrap: wrap;
@@ -421,6 +415,9 @@
             min-width: 28rem;
         }
 
+        /**
+         * Demo Account
+         */
         &__demo {
             position: relative;
 

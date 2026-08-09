@@ -2,14 +2,18 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 
-import { initToast } from './components/toast';
+// Components
+import { initAppearanceStatus } from './components/appearance-status';
+import { initColorPickers } from './components/color-picker';
+import { initFormErrorClear } from './components/form-error-clear';
 import { initMoneyInputs } from './components/money-input';
 import { initPasswordToggle } from './components/password-toggle';
-import { initFormErrorClear } from './components/form-error-clear';
-import { initColorPickers } from './components/color-picker';
-import { initAppearanceSettings } from './components/appearance-settings';
-import { initDashboardSidebar } from './pages/dashboard/sidebar';
+import { initToast } from './components/toast';
+
+// Pages
+import { initLoginPage } from './pages/auth/login';
 import { initDashboardCalendar } from './pages/dashboard/calendar';
+import { initDashboardSidebar } from './pages/dashboard/sidebar';
 import { initDailyInsightsRecords } from './pages/insights/records';
 import { budgetSettingsForm } from './pages/settings/budget';
 
@@ -30,14 +34,18 @@ Alpine.start();
  * 各画面のJavaScript機能を初期化する。
  */
 document.addEventListener('DOMContentLoaded', () => {
-    initToast();
+    // Components
+    initAppearanceStatus();
+    initColorPickers();
+    initFormErrorClear();
     initMoneyInputs();
     initPasswordToggle();
-    initFormErrorClear();
-    initColorPickers();
-    initAppearanceSettings();
-    initDashboardSidebar();
+    initToast();
+
+    // Pages
+    initLoginPage();
     initDashboardCalendar();
+    initDashboardSidebar();
     initDailyInsightsRecords();
 
     /*

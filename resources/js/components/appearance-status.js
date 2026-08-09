@@ -1,3 +1,5 @@
+const HEX_COLOR_PATTERN = /^#[0-9A-F]{6}$/;
+
 function normalizeColorCode(value) {
     return value.trim().toUpperCase();
 }
@@ -14,8 +16,14 @@ function syncColorPair(pair, color) {
     colorCode.value = color;
 }
 
-export function initAppearanceSettings() {
+export function initAppearanceStatus() {
     document.querySelectorAll('[data-appearance-settings]').forEach((form) => {
+        if (form.dataset.appearanceSettingsInitialized === 'true') {
+            return;
+        }
+
+        form.dataset.appearanceSettingsInitialized = 'true';
+
         const colorPairs = form.querySelectorAll('[data-color-pair]');
 
         colorPairs.forEach((pair) => {
