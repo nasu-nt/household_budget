@@ -17,6 +17,9 @@
             class="profile-delete__button"
             x-data=""
             x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+            @if ($user->isDemoAccount())
+                disabled
+            @endif
         >
             {{ __('Delete account') }}
         </button>
