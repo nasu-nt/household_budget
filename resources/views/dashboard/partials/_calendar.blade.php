@@ -17,6 +17,12 @@
 <section
     class="dashboard-calendar"
     aria-label="Monthly spending calendar"
+    style="
+        --calendar-all-good: {{ $appearanceSetting->all_good_color ?? 'var(--c-all-good)' }};
+        --calendar-slightly-high: {{ $appearanceSetting->slightly_high_color ?? 'var(--c-slightly-high)' }};
+        --calendar-over-budget: {{ $appearanceSetting->over_budget_color ?? 'var(--c-over-budget)' }};
+        --calendar-over-limit: {{ $appearanceSetting->over_limit_color ?? 'var(--c-over-limit)' }};
+    "
 >
     <header class="dashboard-calendar__summary">
         <div class="dashboard-calendar__controls">
@@ -125,6 +131,7 @@
         </div>
     </header>
 
+    {{-- FullCalendar --}}
     <div
         id="calendar"
         class="dashboard-calendar__body"
