@@ -1,10 +1,11 @@
+{{-- resources/views/dashboard/partials/_calendar.blade.php --}}
 @php
     $isDemoUser = auth()->user()?->email
         === config('demo.email', 'demo@example.com');
 
     $dashboardDate = $isDemoUser
         ? '2026-06-27'
-        : now()->format('Y-m-d');
+        : now('Asia/Tokyo')->format('Y-m-d');
 
     $dashboardDateObject = \Illuminate\Support\Carbon::parse(
         $dashboardDate,
