@@ -45,6 +45,13 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        if ($request->user()->isDemoAccount()) {
+            abort(
+                403,
+                __('profile.demo_account_delete_disabled')
+            );
+        }
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);

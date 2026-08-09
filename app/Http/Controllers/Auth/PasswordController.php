@@ -15,6 +15,14 @@ class PasswordController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        // デモアカウントのとき
+        if ($request->user()->isDemoAccount()) {
+            abort(
+                403,
+                __('profile.demo_password_change_disabled')
+            );
+        }
+
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
             'password' => ['required', Password::defaults()],
