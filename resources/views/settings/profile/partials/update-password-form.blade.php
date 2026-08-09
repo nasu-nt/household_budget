@@ -38,6 +38,9 @@
                             required
                             autocomplete="current-password"
                             data-error-target="current_password"
+                            @if ($user->isDemoAccount())
+                                disabled
+                            @endif
                             @error('current_password', 'updatePassword')
                                 aria-invalid="true"
                                 aria-describedby="current-password-error"
@@ -50,6 +53,9 @@
                             data-toggle-password
                             data-target="#update_password_current_password"
                             aria-label="{{ __('Show password') }}"
+                            @if ($user->isDemoAccount())
+                                disabled
+                            @endif
                         >
                             <img
                                 src="{{ asset('images/icons/eye-slash.svg') }}"
@@ -88,6 +94,9 @@
                             required
                             autocomplete="new-password"
                             data-error-target="password"
+                            @if ($user->isDemoAccount())
+                                disabled
+                            @endif
                             @error('password', 'updatePassword')
                                 aria-invalid="true"
                                 aria-describedby="new-password-error"
@@ -99,6 +108,9 @@
                             data-toggle-password
                             data-target="#update_password_password"
                             aria-label="{{ __('Show password') }}"
+                            @if ($user->isDemoAccount())
+                                disabled
+                            @endif
                         >
                         <img
                             src="{{ asset('images/icons/eye-slash.svg') }}"
@@ -137,6 +149,9 @@
                             required
                             autocomplete="new-password"
                             data-error-target="password_confirmation"
+                            @if ($user->isDemoAccount())
+                                disabled
+                            @endif
                             @error('password_confirmation', 'updatePassword')
                                 aria-invalid="true"
                                 aria-describedby="password-confirmation-error"
@@ -149,6 +164,9 @@
                             data-toggle-password
                             data-target="#update_password_password_confirmation"
                             aria-label="{{ __('Show password') }}"
+                            @if ($user->isDemoAccount())
+                                disabled
+                            @endif
                         >
                             <img
                                 src="{{ asset('images/icons/eye-slash.svg') }}"
@@ -174,6 +192,9 @@
                 <button
                     type="submit"
                     class="settings-form__button"
+                    @if ($user->isDemoAccount())
+                        disabled
+                    @endif
                 >
                     {{ __('Update Password') }}
                 </button>

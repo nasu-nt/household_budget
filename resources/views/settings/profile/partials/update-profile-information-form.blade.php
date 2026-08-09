@@ -90,6 +90,10 @@
                             aria-invalid="true"
                             aria-describedby="email-error"
                         @enderror
+                        {{-- Demo AccountのときはReadOnly(Nameと同じリクエストで送ってるため)--}}
+                        @if ($user->isDemoAccount())
+                            readonly
+                        @endif
                     >
 
                     @error('email')

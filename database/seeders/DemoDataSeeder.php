@@ -552,7 +552,23 @@ class DemoDataSeeder extends Seeder
                 'expenses' => ['Food' => 1500, 'Transport' => 620],
             ],
             '2026-06-19' => [
-                'expenses' => ['Food' => 2900, 'Entertainment' => 1100, 'Transport' => 200],
+                'expenses' => [
+                    'Food' => [
+                        'amount' => 2900,
+                        'recorded_time' => '20:15:00',
+                        'memo' => 'UberEats',
+                    ],
+                    'Entertainment' => [
+                        'amount' => 1100,
+                        'recorded_time' => '18:40:00',
+                        'memo' => null,
+                    ],
+                    'Transport' => [
+                        'amount' => 200,
+                        'recorded_time' => '12:10:00',
+                        'memo' => 'bus',
+                    ],
+                ],
             ],
             '2026-06-20' => [
                 'expenses' => ['Utilities' => 4400, 'Food' => 1200],
@@ -595,13 +611,19 @@ class DemoDataSeeder extends Seeder
         $dailyNoteRows = [];
 
         foreach ($dailyData as $date => $data) {
-            foreach ($data['expenses'] as $categoryName => $amount) {
+            // 既存のやつを変更したくなかったので
+            foreach ($data['expenses'] as $categoryName => $expense) {
+                $expenseData = is_array($expense)
+                    ? $expense
+                    : ['amount' => $expense];
+
                 $expenseRows[] = [
                     'user_id' => $userId,
                     'category_id' => $categoryIds[$categoryName],
-                    'amount' => $amount,
+                    'amount' => $expenseData['amount'],
                     'expense_date' => $date,
-                    'memo' => null,
+                    'recorded_time' => $expenseData['recorded_time'] ?? null,
+                    'memo' => $expenseData['memo'] ?? null,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                 ];
