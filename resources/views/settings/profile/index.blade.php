@@ -23,10 +23,47 @@
                 @include('settings.partials.settings-menu')
             </aside>
 
-            <div class="settings-page__main">
+        <div class="settings-page__main">
+            <div class="settings-profile__header">
                 <h1 class="settings-page__title">
                     {{ __('Account Settings') }}
                 </h1>
+
+                @if ($user->isDemoAccount())
+                    <div
+                        class="settings-profile__demo"
+                        tabindex="0"
+                    >
+                        <span class="settings-profile__demo-trigger">
+                            <img
+                                class="settings-profile__demo-icon"
+                                src="{{ asset('images/icons/Information_1.svg') }}"
+                                alt=""
+                                aria-hidden="true"
+                            >
+
+                            <span class="settings-profile__demo-label">
+                                {{ __('Demo Account') }}
+                            </span>
+                        </span>
+
+                        <div
+                            class="settings-profile__demo-tooltip"
+                            role="tooltip"
+                        >
+                            <p>
+                                {{ __('Some account settings are disabled for the demo account.') }}
+                            </p>
+                            <p>
+                                {{ __('Email and password changes are not available.') }}
+                            </p>
+                            <p>
+                                {{ __('The demo account cannot be deleted.') }}
+                            </p>
+                        </div>
+                    </div>
+                @endif
+            </div>
 
                 <div class="settings-page__sections">
                     {{-- Profile Information --}}
