@@ -41,7 +41,9 @@
 ## Features
 
 - ユーザー登録・ログイン
+- パスワード再設定メールの送信（Mailtrap Sandboxで動作確認）
 - 支出の一括登録（最大5件）
+- 支出の編集・削除
 - 月間カレンダーによる日別支出の表示
 - 日別支出額と予算状態の色分け
 - 月間予算・支出上限・締め日の設定
@@ -50,7 +52,6 @@
 - カレンダーのステータス色のカスタマイズ
 - 定期支出（サブスクリプション）の登録・編集
 - 日別・月別の支出分析とグラフ表示
-- 支出の編集・削除
 - デモアカウントによる操作確認
 
 ## Technologies
@@ -63,9 +64,10 @@
 | Database | PostgreSQL | 支出・予算・設定データの管理 |
 | Development | Docker / Laravel Sail | 開発環境の統一 |
 | Build | Vite | JavaScript・SCSSのビルド |
-| Deployment | Northflank | Webアプリケーションの公開 |
 | Calendar | FullCalendar | 月間カレンダーの表示と操作 |
 | Visualization | Chart.js | 月次の支出推移をグラフ表示 |
+| Deployment | Northflank | Webアプリケーションの公開 |
+| Email Testing | Mailtrap | パスワード再設定メールの動作確認 |
 | Design | Canva | UI設計・画面仕様書の作成 |
 
 ## Design and Implementation
